@@ -1,0 +1,70 @@
+@import "../../../variables";
+
+body {
+  background-color: var(--secondary);
+}
+
+.m-header {
+  height: 50px !important;
+}
+
+.m-subheader {
+  margin: 0;
+  padding: 0;
+  .m-nav__item.active {
+    font-weight: 500;
+  }
+}
+
+.m-footer {
+  background-color: white;
+  height: 50px;
+  min-height: 50px;
+
+  .m-footer__copyright a {
+    color: $cloudteam-brand-color;
+  }
+}
+
+.m-brand img {
+  max-width: 110px;
+  height: auto
+}
+
+.m-body .m-content {
+  padding: 0;
+}
+
+.mt-6 {
+  margin-top: 2rem !important;
+}
+
+@media (min-width: 1025px) {
+  .m-body .m-container.m-container--responsive .m-wrapper {
+    padding: 0 20px;
+  }
+  .m-header--fixed .m-body {
+    padding-top: 50px !important;
+  }
+  .m-brand .m-brand__logo, .m-brand .m-brand__tools {
+    height: 50px !important;
+  }
+  .m-footer--push.m-aside-left--enabled:not(.m-footer--fixed) .m-footer {
+    margin-top: -50px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .m-body .m-container.m-container--fluid .m-wrapper, .m-body .m-container.m-container--responsive .m-wrapper {
+    padding: 0 5px;
+  }
+  .m-portlet {
+    .m-portlet__head{
+      padding: 0 1rem;
+    }
+    .m-portlet__body {
+      padding: .5rem 1.2rem !important;
+
+    }
+  }
+}

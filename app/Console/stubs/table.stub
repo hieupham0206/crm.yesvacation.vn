@@ -1,0 +1,81 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Models\{{modelName}};
+TableNamespace
+
+class {{modelName}}Table extends DataTable {
+	public function getColumn(): string {
+		$column = $this->column;
+
+		switch ( $column ) {
+		    {{tableSort}}
+			default:
+				$column = '{{crudName}}.id';
+				break;
+		}
+
+		return $column;
+	}
+
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
+	public function getData(): array {
+		$this->column = $this->getColumn();
+		${{crudNameSingular}}s       = $this->getModels();
+		$dataArray    = [];
+		$modelName    = (new {{modelName}})->classLabel(true);
+
+        $canUpdate{{modelName}} = can('update-{{crudNameSingular}}');
+        $canDelete{{modelName}} = can('delete-{{crudNameSingular}}');
+
+		/** @var {{modelName}}[] ${{crudNameSingular}}s */
+		foreach ( ${{crudNameSingular}}s as ${{crudNameSingular}} ) {
+		    $btnEdit = $btnDelete = '';
+
+		    if ($canUpdate{{modelName}}) {
+		        $btnEdit = ' <a href="' . route( '{{crudName}}.edit', ${{crudNameSingular}}, false ) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __( 'Edit' ) . '">
+					<i class="fa fa-edit"></i>
+				</a>';
+		    }
+
+		    if ($canDelete{{modelName}}) {
+                $btnDelete = ' <button type="button" data-title="'.__('Delete').' ' . $modelName . ' ' . ${{crudNameSingular}}->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                data-url="' . route( '{{crudName}}.destroy', ${{crudNameSingular}}, false ) . '" title="' . __( 'Delete' ). '">
+                    <i class="fa fa-trash"></i>
+                </button>';
+            }
+
+			$dataArray[] = [
+				'<label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand"><input type="checkbox" value="'.${{crudNameSingular}}->id.'"><span></span></label>',
+				{{tableValue}}
+				'<a href="' . route( '{{crudName}}.show', ${{crudNameSingular}}, false ) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __( 'View' ) . '">
+					<i class="fa fa-eye"></i>
+				</a>' . $btnEdit . $btnDelete
+			];
+		}
+
+		return $dataArray;
+	}
+
+	/**
+	 * @return {{modelName}}[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+	 */
+	public function getModels() {
+		${{crudNameSingular}}s = {{modelName}}::query();
+
+		$this->totalFilteredRecords = $this->totalRecords = ${{crudNameSingular}}s->count();
+
+        if ($this->isFilterNotEmpty) {
+            ${{crudNameSingular}}s->filters($this->filters);
+
+            $this->totalFilteredRecords = ${{crudNameSingular}}s->count();
+        }
+
+		return ${{crudNameSingular}}s->limit( $this->length )->offset( $this->start )
+		                 ->orderBy( $this->column, $this->direction )->get();
+	}
+}

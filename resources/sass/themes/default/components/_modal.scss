@@ -1,0 +1,34 @@
+@import "../../../variables";
+
+.modal {
+  .modal-content {
+    .modal-header, .modal-footer {
+      padding: 2rem;
+      border: none;
+      .close {
+        padding-top: 1.9rem;
+      }
+    }
+    .modal-footer {
+      background-color: var(--light);
+    }
+  }
+
+  //contextual modal
+  $contexts: danger primnary warning success info brand;
+  @each $context in $contexts {
+    &.modal-#{$context} {
+      .modal-header {
+        background-color: var(--#{$context});
+        .modal-title, .close {
+          color: white;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+.modal-open {
+  overflow: hidden !important;
+}

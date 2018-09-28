@@ -1,0 +1,16 @@
+
+.m-aside-menu.m-aside-menu--skin-light .m-menu__nav>.m-menu__item.m-menu__item--active>.m-menu__heading, .m-aside-menu.m-aside-menu--skin-light .m-menu__nav>.m-menu__item.m-menu__item--active>.m-menu__link {
+  background-color: white;
+}
+
+@media (min-width: 1025px) {
+  .m-aside-left--minimize .m-aside-menu.m-aside-menu--submenu-skin-light .m-menu__nav .m-menu__item:not([m-menu-submenu-mode='accordion']).m-menu__item--hover>.m-menu__submenu .m-menu__subnav .m-menu__item.m-menu__item--active>.m-menu__heading, .m-aside-left--minimize .m-aside-menu.m-aside-menu--submenu-skin-light .m-menu__nav .m-menu__item:not([m-menu-submenu-mode='accordion']).m-menu__item--hover>.m-menu__submenu .m-menu__subnav .m-menu__item.m-menu__item--active>.m-menu__link, .m-aside-menu.m-aside-menu--dropdown.m-aside-menu--submenu-skin-light .m-menu__nav .m-menu__item:not([m-menu-submenu-mode='accordion']).m-menu__item--hover>.m-menu__submenu .m-menu__subnav .m-menu__item.m-menu__item--active>.m-menu__heading, .m-aside-menu.m-aside-menu--dropdown.m-aside-menu--submenu-skin-light .m-menu__nav .m-menu__item:not([m-menu-submenu-mode='accordion']).m-menu__item--hover>.m-menu__submenu .m-menu__subnav .m-menu__item.m-menu__item--active>.m-menu__link {
+    background-color: white;
+  }
+  .m-aside-left.m-aside-left--skin-light {
+    box-shadow: 13px -2px 17px -12px rgba(41,50,66,0.05);
+  }
+  .m-aside-left {
+    margin-top: -40px;
+  }
+}

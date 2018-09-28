@@ -1,0 +1,194 @@
+@import "../../../variables";
+
+input {
+  caret-color: $company-color
+}
+
+.m-form {
+  .m-form__actions {
+    padding: 2rem;
+  }
+  .m-form__group {
+    .form-control-label, .col-form-label, > label {
+      color: $text-color;
+    }
+  }
+  .form-control-labe, label {
+    font-weight: 500;
+  }
+  &.m-form--group-seperator-dashed .m-form__group {
+    padding: 1rem 0;
+  }
+}
+
+.form-control[readonly], .form-control {
+  border-color: $border-color;
+  color: $text-color;
+  font-family: Montserrat, sans-serif;
+}
+
+.numeric, .number {
+  text-align: right !important;
+}
+
+@media (min-width: 1025px) {
+  .m-form .m-form__group:last-child {
+    padding-bottom: 15px;
+  }
+}
+
+@media (max-width: 1025px) {
+  .m-form__group-sub {
+    padding-bottom: 15px;
+  }
+  .m-form.m-form--group-seperator .m-form__group, .m-form.m-form--group-seperator-dashed .m-form__group {
+    padding: 15px;
+  }
+}
+
+//PLUGIN
+.select2-container--default .select2-selection--multiple, .select2-container--default .select2-selection--single {
+  border-color: $border-color;
+}
+
+.input-group > .custom-file, .input-group > .custom-select, .input-group > .form-control {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.datepicker tbody tr > td.day.today {
+  background: $company-color;
+}
+
+.datepicker tbody tr > td.day.selected, .datepicker tbody tr > td.day.selected:hover, .datepicker tbody tr > td.day.active, .datepicker tbody tr > td.day.active:hover {
+  background: darken($company-color, 6%);
+}
+
+//iOs input auto zoom
+
+/* ----------- iPhone 5, 5S, 5C and 5SE ----------- */
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) {
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+
+}
+
+/* Portrait */
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait) {
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+}
+
+/* Landscape */
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape) {
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+
+}
+
+/* ----------- iPhone 6, 6S, 7 and 8 ----------- */
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+
+}
+
+/* Portrait */
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait) {
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+
+}
+
+/* Landscape */
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape) {
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+
+}
+
+/* ----------- iPhone 6+, 7+ and 8+ ----------- */
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (-webkit-min-device-pixel-ratio: 3) {
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+
+}
+
+/* Portrait */
+@media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (-webkit-min-device-pixel-ratio: 3) and (orientation: portrait) {
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+
+}
+
+/* Landscape */
+@media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (-webkit-min-device-pixel-ratio: 3) and (orientation: landscape) {
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+
+}
+
+/* ----------- iPhone X ----------- */
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 375px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 3) {
+  select,
+  textarea,
+  input {
+    font-size: 16px !important;
+  }
+
+}
+
+/* Portrait */
+@media only screen and (min-device-width: 375px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 3) and (orientation: portrait) {
+  select,
+  textarea,
+  input {
+    font-size: 16px !important;
+  }
+
+}
+
+/* Landscape */
+@media only screen and (min-device-width: 375px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 3) and (orientation: landscape) {
+  select,
+  textarea,
+  input {
+    font-size: 16px !important;
+  }
+
+}

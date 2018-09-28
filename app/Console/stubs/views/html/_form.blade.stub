@@ -1,0 +1,19 @@
+@php /** @var \App\Models\%%modelNameCap%% $%%crudNameSingular%% */ @endphp
+
+<form id="%%crudName%%_form" class="m-form m-form--label-align-right m-form--group-seperator-dashed m-form--state" method="post" action="{{ $action }}">
+    @csrf
+    @isset($method)
+        @method('put')
+    @endisset
+    <div class="m-portlet__body">
+        <div class="form-group m-form__group row">
+			%%formFieldsHtml%%
+		</div>
+    </div>
+    <div class="m-portlet__foot m-portlet__foot--fit m-portlet__foot-no-border">
+        <div class="m-form__actions m-form__actions--right">
+            <button class="btn btn-brand m-btn m-btn--icon m-btn--custom"><span><i class="fa fa-save"></i><span>@lang('Save')</span></span></button>
+            <a href="{{ route('%%route%%.index') }}" class="btn btn-secondary m-btn m-btn--icon m-btn--custom"><span><i class="fa fa-ban"></i><span>@lang('Cancel')</span></span></a>
+        </div>
+    </div>
+</form>

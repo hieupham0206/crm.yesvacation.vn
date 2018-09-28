@@ -1,0 +1,167 @@
+<?php
+
+namespace DummyNamespace;
+
+BaseController
+use App\Models\{{modelName}};
+use App\Tables\TableFacade;
+TableNamespace
+use Illuminate\Http\Request;
+
+class DummyClass extends Controller
+{
+     /**
+      * Tên dùng để phân quyền
+      * @var string
+      */
+	 protected $name = '{{crudNameSingular}}';
+
+    /**
+     * Hiển thị trang danh sách {{modelName}}.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        return view( '{{viewName}}.index' )->with('{{crudNameSingular}}', new {{modelName}});
+    }
+
+    /**
+     * Lấy danh sách {{modelName}} cho trang table ở trang index
+     * @return string
+     */
+    public function table() {
+    	return ( new TableFacade( new {{modelName}}Table() ) )->getDataTable();
+    }
+
+    /**
+     * Trang tạo mới {{modelName}}.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create()
+    {
+        return view('{{viewName}}.create')->with('{{crudNameSingular}}', new {{modelName}});
+    }
+
+    /**
+     * Lưu {{modelName}} mới.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function store(Request $request)
+    {
+        {{validationRules}}
+        $requestData = $request->all();
+        {{modelName}}::create($requestData);
+
+        return redirect(route('{{routeName}}.index'))->with('message', __( 'Data created successfully' ));
+    }
+
+    /**
+     * Trang xem chi tiết {{modelName}}.
+     *
+     * @param  {{modelName}} ${{crudNameSingular}}
+     * @return \Illuminate\View\View
+     */
+    public function show({{modelName}} ${{crudNameSingular}})
+    {
+        return view('{{viewName}}.show', compact('{{crudNameSingular}}'));
+    }
+
+    /**
+     * Trang cập nhật {{modelName}}.
+     *
+     * @param  {{modelName}} ${{crudNameSingular}}
+     * @return \Illuminate\View\View
+     */
+    public function edit({{modelName}} ${{crudNameSingular}})
+    {
+        return view('{{viewName}}.edit', compact('{{crudNameSingular}}'));
+    }
+
+    /**
+     * Cập nhật {{modelName}} tương ứng.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param  {{modelName}} ${{crudNameSingular}}
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function update(Request $request, {{modelName}} ${{crudNameSingular}})
+    {
+        {{validationRules}}
+        $requestData = $request->all();
+        ${{crudNameSingular}}->update($requestData);
+
+        return redirect(route('{{routeName}}.index'))->with('message', __( 'Data edited successfully' ));
+    }
+
+    /**
+     * Xóa {{modelName}}.
+     *
+     * @param {{modelName}} ${{crudNameSingular}}
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function destroy({{modelName}} ${{crudNameSingular}})
+    {
+        try {
+        	  ${{crudNameSingular}}->delete();
+        } catch ( \Exception $e ) {
+            return response()->json( [
+                'message' => "Error: {$e->getMessage()}"
+            ], $e->getCode() );
+        }
+
+        return response()->json( [
+            'message' => __('Data deleted successfully')
+        ] );
+    }
+
+    /**
+     * Xóa nhiều {{modelName}}.
+     *
+     * @return mixed|\Symfony\Component\HttpFoundation\ParameterBag
+     * @throws \Exception
+     */
+    public function destroys() {
+        try {
+            $ids = \request()->get( 'ids' );
+            {{modelName}}::destroy( $ids );
+        } catch ( \Exception $e ) {
+            return response()->json( [
+                'message' => "Error: {$e->getMessage()}"
+            ], $e->getCode() );
+        }
+
+        return response()->json( [
+            'message' => __( 'Data deleted successfully' )
+        ] );
+    }
+
+    /**
+     * Lấy danh sách {{modelName}} theo dạng json
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function {{crudName}}() {
+        $query  = request()->get( 'query', '' );
+        $page   = request()->get( 'page', 1 );
+        $excludeIds = request()->get( 'excludeIds', [] );
+        $offset = ( $page - 1 ) * 10;
+        ${{crudName}}  = {{modelName}}::query()->select( [ 'id', 'name' ] );
+
+        ${{crudName}}->filterWhere( [
+            [ 'name', 'like', $query ],
+            ['id', '!=', $excludeIds]
+        ]);
+
+        $totalCount = ${{crudName}}->count();
+        ${{crudName}}      = ${{crudName}}->offset($offset)->limit(10)->get();
+
+        return response()->json( [
+            'total_count' => $totalCount,
+            'items'       => ${{crudName}}->toArray(),
+        ] );
+    }
+}

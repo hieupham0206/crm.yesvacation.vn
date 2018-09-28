@@ -1,0 +1,21 @@
+{
+    "/js/bootstrap.js": "/js/bootstrap.js",
+    "/default/css/app.css": "/default/css/app.css",
+    "/css/login.css": "/css/login.css",
+    "/js/app.js": "/js/app.js",
+    "/js/home.js": "/js/home.js",
+    "/js/department/events/index.js": "/js/department/events/index.js",
+    "/js/department/events/form.js": "/js/department/events/form.js",
+    "/js/auth/otp.js": "/js/auth/otp.js",
+    "/js/admin/users/index.js": "/js/admin/users/index.js",
+    "/js/admin/users/form.js": "/js/admin/users/form.js",
+    "/js/admin/translation_managers/index.js": "/js/admin/translation_managers/index.js",
+    "/js/admin/system_logs/index.js": "/js/admin/system_logs/index.js",
+    "/js/admin/roles/index.js": "/js/admin/roles/index.js",
+    "/js/admin/roles/form.js": "/js/admin/roles/form.js",
+    "/js/admin/permissions/index.js": "/js/admin/permissions/index.js",
+    "/js/admin/permissions/form.js": "/js/admin/permissions/form.js",
+    "/js/admin/activity_logs/index.js": "/js/admin/activity_logs/index.js",
+    "/default/js/merged.js": "/default/js/merged.js",
+    "/default/css/merged.css": "/default/css/merged.css"
+}

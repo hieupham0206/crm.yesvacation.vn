@@ -1,0 +1,31 @@
+@import "../../../variables";
+
+.m-portlet {
+  .index-header {
+    height: 2.7rem;
+    padding: 0 1.5rem;
+  }
+  .m-portlet__body {
+    padding: .8rem 1.6rem;
+    color: $text-color;
+    font-weight: 400;
+    .portlet-search {
+      margin-bottom: 1rem;
+    }
+
+    .portlet-toggle-link {
+      text-decoration: none;
+      .m-portlet__head {
+        height: 2.7rem;
+      }
+    }
+  }
+  .m-portlet__foot {
+    background-color: var(--light);
+  }
+  .m-portlet__head .m-portlet__head-caption .m-portlet__head-title .m-portlet__head-text {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  margin-bottom: 1rem;
+}

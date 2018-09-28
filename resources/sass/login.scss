@@ -1,0 +1,69 @@
+// Variables
+@import "variables";
+
+.m-portlet {
+  box-shadow: 1px 4px 20px 0 rgba(150, 150, 150, 1);
+  margin: 60px 0;
+}
+
+body {
+  &.m-content--skin-light2 {
+    background-color: white;
+  }
+}
+
+.m-footer {
+  height: 50px;
+  min-height: 50px;
+  background: #ffffff;
+  .m-footer__copyright a {
+    color: $cloudteam-brand-color;
+  }
+}
+
+.m-login.m-login--2 {
+  .m-login__wrapper .m-login__container {
+    .m-login__form {
+      margin: 1.5rem auto;
+      .m-form__group .form-control {
+        border-radius: .25rem;
+        padding: 1rem 1rem;
+        margin-top: 0.5rem;
+      }
+      .m-login__form-sub {
+        margin: 10px auto;
+      }
+      .m-login__logo {
+        margin: 0 auto 2rem auto;
+      }
+      .m-login__head .m-login__title {
+        color: $text-color;
+      }
+      .help-block {
+        color: red;
+      }
+      .form-control {
+        color: $text-color;
+      }
+    }
+  }
+  input {
+    font-family: Montserrat, sans-serif;
+  }
+
+  &.m-login-2--skin-2 .m-login__container {
+    .m-login__form .m-login__form-sub .m-link:hover::after {
+      border-bottom: 1px solid $company-color;
+      opacity: 0.3;
+      filter: alpha(opacity=30);
+    }
+    .m-login__form .m-login__form-sub .m-link, .m-login__form .m-login__form-sub .m-checkbox {
+      color: $text-color;
+    }
+  }
+
+  .m-login__logo img {
+    max-width: 220px;
+    height: auto;
+  }
+}

@@ -1,0 +1,22 @@
+@import "components/layout";
+
+@import "components/table";
+
+@import "components/topbar";
+
+@import "components/portlet";
+
+@import "components/form";
+
+@import "components/button";
+
+@import "components/modal";
+
+@import "components/menu";
+
+:root {
+  --brand: #{$company-color}
+}
+
+/** PLUGINS **/
+//@import "../../plugins/highcharts";

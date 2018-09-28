@@ -1,0 +1,5 @@
+<div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('%1$s') ? 'has-danger' : ''}}">
+    <label for="txt_%1$s">{{ %2$s }}</label>
+    %3$s
+    {!! $errors->first('%1$s', '<div class="form-control-feedback">:message</div>') !!}
+</div>

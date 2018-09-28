@@ -1,0 +1,2 @@
+<input class="form-control" name="%%itemName%%" type="%%fieldType%%" id="txt_%%itemName%%" value="{{ $%%crudNameSingular%%->%%itemName%% ?? old('%%itemName%%')}}" required placeholder="{{ __('Enter value') }}" autocomplete="off">
+<span class="m-form__help"></span>

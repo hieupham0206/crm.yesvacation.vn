@@ -1,0 +1,8 @@
+.btn {
+  &.btn-warning {
+    color: #fff !important;
+    &:hover:not(:disabled), &:hover, &:focus {
+      color: #fff !important;
+    }
+  }
+}

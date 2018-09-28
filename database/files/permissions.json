@@ -1,0 +1,44 @@
+{
+  "admin": {
+    "modules": {
+      "user": {
+        "actions": [
+          "view",
+          "create",
+          "update",
+          "delete"
+        ]
+      },
+      "role": {
+        "actions": [
+          "view",
+          "create",
+          "update",
+          "delete"
+        ]
+      },
+      "permission": {
+        "actions": [
+          "view",
+          "update"
+        ],
+        "hide": "true"
+      },
+      "log": {
+        "actions": [
+          "view"
+        ]
+      },
+      "event": {
+        "actions": [
+          "view",
+          "create",
+          "update",
+          "delete"
+        ],
+        "hide": "true"
+      }
+    },
+    "icon": "flaticon-cogwheel"
+  }
+}
