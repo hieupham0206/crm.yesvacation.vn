@@ -180,7 +180,7 @@ class User extends Authenticatable
 
     public function getStateTextAttribute()
     {
-        return $this->contextBadge($this->state_name, $this->state ? 'success' : 'danger');
+        return $this->contextBadge($this->state_name, $this->state == 1 ? 'success' : 'danger');
     }
 
     /**

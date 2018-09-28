@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name')->nullable();
             $table->string('email')->unique();
             $table->string('phone', 12)->nullable();
-            $table->smallInteger('state')->default(1)->comment('0: Chưa kích hoạt; 1: Đã kích hoạt');
+            $table->smallInteger('state')->default(1)->comment('-1: Chưa kích hoạt; 1: Đã kích hoạt');
 
             $table->unsignedInteger('actor_id')->nullable();
             $table->string('actor_type')->nullable();
