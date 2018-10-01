@@ -205,7 +205,7 @@ class CrudMakeCommand extends Command
 
         $jsonKey = lcfirst($namespace);
         if ( ! isset($menus[$jsonKey])) {
-            $menus[$jsonKey] = [
+            $menus[$jsonKey]['modules'] = [
                 $table => [
                     'icon'   => '',
                     'parent' => ''
@@ -217,9 +217,14 @@ class CrudMakeCommand extends Command
         }
 
         if ( ! \in_array($table, $menus[$jsonKey], true)) {
-            $menus[$jsonKey][$table] = [
-                'icon'   => '',
-                'parent' => ''
+            $menus[$jsonKey] = [
+                'modules' => [
+                    $table => [
+                        'icon'   => '',
+                        'parent' => ''
+                    ],
+                ],
+                'icon'    => ''
             ];
         }
 

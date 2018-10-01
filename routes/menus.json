@@ -1,39 +1,33 @@
 {
-    "admin": {
-        "users": {
-            "icon": "fa fa-users",
-            "parent": "system"
-        },
-        "activity_logs": {
-            "icon": "fa fa-file",
-            "parent": "system"
-        },
-        "roles": {
-            "icon": "fa fa-cogs",
-            "parent": "system"
-        },
-        "system_logs": {
-            "icon": "fa fa-file-o",
-            "parent": "system",
-            "hide": true
-        },
-        "permissions": {
-            "icon": "fa fa-cogs",
-            "parent": "system",
-            "hide": true
-        },
-        "translation_managers": {
-            "icon": "fa fa-globe",
-            "parent": "system"
-        }
+  "admin": {
+    "modules": {
+      "users": {
+        "icon": "fa fa-users",
+        "parent": "system"
+      },
+      "activity_logs": {
+        "icon": "fa fa-file",
+        "parent": "system"
+      },
+      "roles": {
+        "icon": "fa fa-cogs",
+        "parent": "system"
+      },
+      "system_logs": {
+        "icon": "fa fa-file-o",
+        "parent": "system",
+        "hide": true
+      },
+      "permissions": {
+        "icon": "fa fa-cogs",
+        "parent": "system",
+        "hide": true
+      },
+      "translation_managers": {
+        "icon": "fa fa-globe",
+        "parent": "system"
+      }
     },
-    "department": {
-        "events": []
-    },
-    "business": {
-        "brands": {
-            "icon": "",
-            "parent": ""
-        }
-    }
+    "icon": "flaticon-cogwheel"
+  }
 }

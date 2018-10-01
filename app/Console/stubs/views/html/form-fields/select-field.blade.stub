@@ -1,6 +1,4 @@
 <select name="%%itemName%%" class="form-control" id="select_%%itemName%%" %%required%%>
-    @if(!empty($%%crudNameSingular%%) && $%%crudNameSingular%%->%%itemName%% !== null)
-        <option value="{{ $%%crudNameSingular%%->%%itemName%% }}" selected>{{ $%%crudNameSingular%%->%%options%%->name }}</option>
-    @endif
+    %%options%%
 </select>
 <span class="m-form__help"></span>

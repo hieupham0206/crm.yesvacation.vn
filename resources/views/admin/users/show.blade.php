@@ -33,7 +33,7 @@ $breadcrumbs = ['breadcrumb' => 'users.show', 'model' => $user];
                         </tr>
                         <tr>
                             <th> {{ $user->label('created_at') }} </th>
-                            <td> {{ $user->created_at }} </td>
+                            <td> {{ $user->created_at->format('d-m-Y H:i:s') }} </td>
                         </tr>
                         <tr>
                             <th> {{ $user->label('use_otp') }} </th>

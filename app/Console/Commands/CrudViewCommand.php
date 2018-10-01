@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpIllegalStringOffsetInspection */
+<?php /** @noinspection ALL */
+
+/** @noinspection PhpIllegalStringOffsetInspection */
 
 namespace App\Console\Commands;
 
@@ -8,7 +10,7 @@ use Illuminate\Console\Command;
 /**
  * Class CrudViewCommand
  *
- * php artisan crud:view brands --fields=name#string;select#options=store --view-path=Business --validations=name#required
+ * php artisan crud:view brands --fields=name#string;type#select#options=1_New**2_NotNew --view-path=Business --validations=name#required
  *
  * @package App\Console\Commands
  */
@@ -312,6 +314,7 @@ class CrudViewCommand extends Command
 
         if ($fields) {
             $idx = 0;
+
             foreach ($fieldsArray as $item) {
                 $itemArray = explode('#', $item);
 
@@ -321,10 +324,28 @@ class CrudViewCommand extends Command
                 $this->formFields[$idx]['options']  = '';
 
                 if ($this->formFields[$idx]['type'] == 'select' && isset($itemArray[2])) {
+                    //options=1_value1**2_value2
                     $options = trim($itemArray[2]);
                     $options = str_replace('options=', '', $options);
 
-                    $this->formFields[$idx]['options'] = $options;
+                    if (\strpos($options, '**', true) !== false) {
+                        $options      = explode('**', $options);
+                        $optionValues = '<option></option>';
+                        foreach ($options as $option) {
+                            $values = explode('_', $option);
+
+                            [$value, $valueText] = $values;
+                            $valueText    = ucwords(camel2words($valueText));
+                            $optionValues .= "<option value='" . $value . "'>$valueText</option>\n";
+                        }
+                    } else {
+                        $foreignKeyText = $this->crudNameSingular . '_id';
+                        $optionValues   = '@if($' . $this->crudNameSingular . '->exists)' . "\n";
+                        $optionValues   .= '<option value="{{ $' . $foreignKeyText . ' }}" selected>{{ $' . $this->crudNameSingular . '->' . $options . '->name }}</option>' . "\n";
+                        $optionValues   .= '@endif' . "\n";
+                    }
+
+                    $this->formFields[$idx]['options'] = $optionValues;
                 }
 
                 $idx++;
@@ -344,8 +365,8 @@ class CrudViewCommand extends Command
             $this->formHeadingHtml         .= '<th>' . $label . '</th>';
             $this->formSearchHtml          .= '<div class="col-12 col-md-3 m-form__group-sub">
                                                     <div class="form-group">
-                                                        <label for="txt_'.$field.'">'.$label.'</label>
-                                                        <input class="form-control" name="'.$field.'" id="txt_'.$field.'">
+                                                        <label for="txt_' . $field . '">' . $label . '</label>
+                                                        <input class="form-control" name="' . $field . '" id="txt_' . $field . '">
                                                     </div>
                                                </div>' . "\n";
             $this->formBodyHtmlForShowView .= '<tr>

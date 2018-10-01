@@ -16,48 +16,45 @@ namespace App\Entities\Core;
  */
 class Menu
 {
-    private static $modules;
-
     /**
      * @return array|mixed
      * @throws \Exception
      */
     public static function generate()
     {
-        $admins = self::getMenu('admin');
-//        $departments = self::getMenu('department');
+        $menuModules = getMenuConfig();
+        $menus       = [];
+        foreach ($menuModules as $moduleKey => $menuModule) {
+            if (isset($menuModule['modules'])) {
+                $modules = self::getMenu($menuModule['modules']);
 
-        $menus = [
-            [
-                'name'        => __('Admin'),
-                'icon'        => 'flaticon-cogwheel',
-                'menus'       => $admins,
-                'activeClass' => self::setActiveClass($admins)
-            ],
-//            [
-//                'name'        => __('Department'),
-//                'icon'        => 'flaticon-calendar-3',
-//                'menus'       => $departments,
-//                'activeClass' => self::setActiveClass($departments)
-//            ]
-        ];
+                $menus[] = [
+                    'name'        => __(ucfirst($moduleKey)),
+                    'icon'        => $menuModule['icon'],
+                    'menus'       => $modules,
+                    'activeClass' => self::getMenuActiveClass($modules)
+                ];
+            } else {
+                $menus[] = [
+                    'name'        => __(ucfirst($moduleKey)),
+                    'icon'        => $menuModule['icon'],
+                    'activeClass' => self::getMenuItemActiveClass($moduleKey),
+                    'route'       => route($menuModule['route'])
+                ];
+            }
+        }
 
         return $menus;
     }
 
     /**
-     * @param $module
+     * @param $menuModules
      *
      * @return array
      * @throws \ReflectionException
      */
-    private static function getMenu($module): array
+    private static function getMenu($menuModules): array
     {
-        if ( ! self::$modules) {
-            self::$modules = getMenuConfig();
-        }
-        $menuModules = self::$modules[$module];
-
         return self::buildMenu($menuModules);
     }
 
@@ -70,7 +67,6 @@ class Menu
     private static function buildMenu($menuModules): array
     {
         $datas = [];
-
         foreach ($menuModules as $menuModule => $maps) {
             $singularModuleName = lcfirst(studly_case(str_singular($menuModule)));
             $module             = $singularModuleName;
@@ -83,7 +79,7 @@ class Menu
                 $datas = self::buildSubMenu($maps ?? [], $menuModule, $singularModuleName, $datas);
             }
         }
-        $datas['activeClass'] = self::setActiveClass($datas);
+        $datas['activeClass'] = self::getMenuActiveClass($datas);
 
         return $datas;
     }
@@ -93,9 +89,22 @@ class Menu
      *
      * @return string
      */
-    public static function setActiveClass($arrays): string
+    public static function getMenuActiveClass($arrays): string
     {
         return \in_array('m-menu__item--active', collect($arrays)->flatten()->toArray(), true) ? 'm-menu__item--active' : '';
+    }
+
+    /**
+     * @param $menuModule
+     *
+     * @return string
+     */
+    private static function getMenuItemActiveClass($menuModule): string
+    {
+        $currentRouteNames = explode('.', \Route::currentRouteName());
+        $currentRouteName  = $currentRouteNames[0];
+
+        return $currentRouteName === $menuModule ? 'm-menu__item--active' : '';
     }
 
     /**
@@ -129,15 +138,13 @@ class Menu
      */
     private static function buildSubMenu($menuMap, $menuModule, $singularModuleName, $datas): array
     {
-        $currentRouteNames = explode('.', \Route::currentRouteName());
-        $currentRouteName  = $currentRouteNames[0];
-        $className         = studly_case($singularModuleName);
-        $labelName         = self::getMenuLabel($menuModule, $className);
+        $className = studly_case($singularModuleName);
+        $labelName = self::getMenuLabel($menuModule, $className);
 
         $props = [
             'name'        => $labelName,
             'route'       => \Route::has("{$menuModule}.index") ? route("{$menuModule}.index") : 'javascript:void(0)',
-            'activeClass' => $currentRouteName === $menuModule ? 'm-menu__item--active' : '',
+            'activeClass' => self::getMenuItemActiveClass($menuModule),
             'icon'        => ''
         ];
 

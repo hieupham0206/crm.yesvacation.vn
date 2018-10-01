@@ -63,11 +63,12 @@ class CrudTableCommand extends GeneratorCommand
         $tableValue  = $tableSort = '';
         $fields      = $this->option('fields');
         $fieldsArray = explode(';', $fields);
-        foreach ($fieldsArray as $key => $item) {
-            $tableValue .= '$' . $crudNameSingular . '->' . $item . ',' . "\n";
+        foreach ($fieldsArray as $key => $fieldOptions) {
+            $items = explode('#', $fieldOptions);
+            $tableValue .= '$' . $crudNameSingular . '->' . $items[0] . ',' . "\n";
 
             $keyPlus1  = ++$key;
-            $tableSort .= "case '{$keyPlus1}': " . '$column = ' . "'$crudName.{$item}'; break;";
+            $tableSort .= "case '{$keyPlus1}': " . '$column = ' . "'$crudName.{$items[0]}'; break;";
         }
 
         return $this

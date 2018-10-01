@@ -60,11 +60,6 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
      */
     public $filters = [];
 
-    public function getCreatedAtAttribute($value)
-    {
-        return $value ? $value->format('d-m-Y H:i:s') : $value;
-    }
-
     /**
      * @inheritdoc
      */

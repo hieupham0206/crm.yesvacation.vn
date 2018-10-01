@@ -1,7 +1,7 @@
 <!--suppress ALL -->
 <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
     @foreach ($menus as $menu)
-        @if ($menu['menus'] && count($menu['menus']) > 1)
+        @if (isset($menu['menus']) && count($menu['menus']) > 1)
             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ $menu['activeClass'] }}" aria-haspopup="true" m-menu-submenu-toggle="click">
                 <a href="#" class="m-menu__link m-menu__toggle">
                     <i class="m-menu__link-icon {{ $menu['icon'] }}"></i>
@@ -19,7 +19,7 @@
                                 @if (! is_array($subMenus))
                                     @continue
                                 @endif
-                                <li class="m-menu__item m-menu__item--submenu {{ \App\Entities\Core\Menu::setActiveClass($subMenus) }}" m-menu-submenu-toggle="hover" m-menu-link-redirect="1" aria-haspopup="true">
+                                <li class="m-menu__item m-menu__item--submenu {{ \App\Entities\Core\Menu::getMenuActiveClass($subMenus) }}" m-menu-submenu-toggle="hover" m-menu-link-redirect="1" aria-haspopup="true">
                                     <a href="javascript:;" class="m-menu__link m-menu__toggle">
                                         <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                             <span></span>
@@ -71,6 +71,17 @@
                         @endforeach
                     </ul>
                 </div>
+            </li>
+        @else
+            <li class="m-menu__item {{ $menu['activeClass'] }}" aria-haspopup="true">
+                <a href="{{ $menu['route'] }}" class="m-menu__link">
+                    @if ($menu['icon'])
+                        <i class="m-menu__link-icon {{ $menu['icon'] }}"></i>
+                    @endif
+                    <span class="m-menu__link-text">
+                        {{ $menu['name'] }}
+                    </span>
+                </a>
             </li>
         @endif
     @endforeach
