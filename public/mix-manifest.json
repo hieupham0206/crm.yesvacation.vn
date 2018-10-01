@@ -1,6 +1,6 @@
 {
     "/js/bootstrap.js": "/js/bootstrap.js",
-    "/default/css/app.css": "/default/css/app.css",
+    "/horizontal_menu/css/app.css": "/horizontal_menu/css/app.css",
     "/css/login.css": "/css/login.css",
     "/js/app.js": "/js/app.js",
     "/js/home.js": "/js/home.js",
@@ -16,6 +16,6 @@
     "/js/admin/permissions/index.js": "/js/admin/permissions/index.js",
     "/js/admin/permissions/form.js": "/js/admin/permissions/form.js",
     "/js/admin/activity_logs/index.js": "/js/admin/activity_logs/index.js",
-    "/default/js/merged.js": "/default/js/merged.js",
-    "/default/css/merged.css": "/default/css/merged.css"
+    "/horizontal_menu/js/merged.js": "/horizontal_menu/js/merged.js",
+    "/horizontal_menu/css/merged.css": "/horizontal_menu/css/merged.css"
 }

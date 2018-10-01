@@ -34,7 +34,7 @@
                     <div class="m-stack m-stack--ver m-stack--general">
                         <div class="m-stack__item m-stack__item--middle m-brand__logo">
                             <a href="{{ route('home') }}" class="m-brand__logo-wrapper">
-                                <img alt="" src="{{ asset('images/logo.png') }}" style="max-width: 140px; height: auto"/>
+                                <img alt="" src="{{ asset('images/logo.png') }}"/>
                             </a>
                         </div>
                         <div class="m-stack__item m-stack__item--middle m-brand__tools">

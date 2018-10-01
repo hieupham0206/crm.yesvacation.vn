@@ -15,14 +15,23 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('username')->unique();
-            $table->string('name')->nullable();
+            $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone', 12)->nullable();
-            $table->smallInteger('state')->default(1)->comment('-1: Chưa kích hoạt; 1: Đã kích hoạt');
+            $table->tinyInteger('state')->default(1)->comment('-1: Chưa kích hoạt; 1: Đã kích hoạt');
 
-            $table->unsignedInteger('actor_id')->nullable();
-            $table->string('actor_type')->nullable();
-            $table->index(['actor_id', 'actor_type']);
+            $table->tinyInteger('gender')->default(1)->comment('1: Nam; 2: Nữ');
+            $table->string('phone', 12)->nullable();
+            $table->double('basic_salary')->default(0);
+            $table->tinyInteger('position')->default(1);
+
+            $table->date('birthday')->nullable();
+            $table->date('first_day_work')->nullable();
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+
+//            $table->unsignedInteger('actor_id')->nullable();
+//            $table->string('actor_type')->nullable();
+//            $table->index(['actor_id', 'actor_type']);
 
             $table->tinyInteger('use_otp')->default(1)->comment('1: có sử dụng; -1: Không sử dụng');
             $table->string('otp', 6)->nullable();
