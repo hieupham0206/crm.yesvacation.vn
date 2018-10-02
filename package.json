@@ -10,7 +10,7 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "clean-cache": "php artisan config:clear && php artisan cache:clear && php artisan route:clear && php artisan view:clear && php artisan clear-compiled",
     "server": "php artisan serve",
-    "dump": "composer dump-autoload --classmap-authoritative",
+    "dump": "composer dump-autoload",
     "mfs": "php artisan migrate:fresh --seed",
     "lint": "eslint resources/assets/js/"
   },

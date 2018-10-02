@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->string('username')->unique();
             $table->string('name');
             $table->string('email')->unique();
-            $table->tinyInteger('state')->default(1)->comment('-1: Chưa kích hoạt; 1: Đã kích hoạt');
+            $table->tinyInteger('state')->default(\App\Enums\UserState::ACTIVE)->comment('-1: Chưa kích hoạt; 1: Đã kích hoạt');
 
             $table->tinyInteger('gender')->default(1)->comment('1: Nam; 2: Nữ');
             $table->string('phone', 12)->nullable();
@@ -33,7 +33,7 @@ class CreateUsersTable extends Migration
 //            $table->string('actor_type')->nullable();
 //            $table->index(['actor_id', 'actor_type']);
 
-            $table->tinyInteger('use_otp')->default(1)->comment('1: có sử dụng; -1: Không sử dụng');
+            $table->tinyInteger('use_otp')->default(\App\Enums\Confirmation::NO)->comment('-1: Không sử dụng; 1: có sử dụng');
             $table->string('otp', 6)->nullable();
             $table->timestamp('otp_expired_at')->nullable()->comment('OTP hết hạn trong 5 phút');
 

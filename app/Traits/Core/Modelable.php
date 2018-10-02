@@ -10,6 +10,11 @@ namespace App\Traits\Core;
 
 trait Modelable
 {
+    public function getConfirmationsAttribute()
+    {
+        return \App\Enums\Confirmation::toSelectArray();
+    }
+
     public function getCreatedAtAttribute($value)
     {
         return \Carbon\Carbon::parse($value)->format('d-m-Y H:i:s');

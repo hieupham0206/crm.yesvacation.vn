@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Confirmation;
+use App\Enums\UserState;
 use App\Traits\{Core\Labelable, Core\Linkable, Core\Modelable, Core\Queryable, Core\Searchable};
 use Illuminate\{Database\Eloquent\SoftDeletes, Foundation\Auth\User as Authenticatable, Notifications\Notifiable};
 use Spatie\{Activitylog\Traits\LogsActivity, Permission\Traits\HasRoles};
@@ -11,18 +13,13 @@ use Spatie\{Activitylog\Traits\LogsActivity, Permission\Traits\HasRoles};
  *
  * @property int $id
  * @property string $username
- * @property string $name
+ * @property string|null $name
  * @property string $email
- * @property int $state -1: Chưa kích hoạt; 1: Đã kích hoạt
- * @property int $gender 1: Nam; 2: Nữ
  * @property string|null $phone
- * @property float $basic_salary
- * @property string|null $birthday
- * @property string|null $first_day_work
- * @property string|null $address
- * @property string|null $note
- * @property int $position
- * @property int $use_otp 1: có sử dụng; -1: Không sử dụng
+ * @property int $state                  -1: Chưa kích hoạt; 1: Đã kích hoạt
+ * @property int|null $actor_id
+ * @property string|null $actor_type
+ * @property int $use_otp                1: có sử dụng; -1: Không sử dụng
  * @property string|null $otp
  * @property string|null $otp_expired_at OTP hết hạn trong 5 phút
  * @property string $password
@@ -49,23 +46,18 @@ use Spatie\{Activitylog\Traits\LogsActivity, Permission\Traits\HasRoles};
  * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User role($roles)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User search($term)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereBasicSalary($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereBirthday($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereActorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereActorType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereFirstDayWork($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereLastLogin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereNote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereOtp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereOtpExpiredAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePosition($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereState($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
@@ -79,16 +71,25 @@ class User extends Authenticatable
 {
     use Notifiable, LogsActivity, HasRoles, Searchable, Labelable, Queryable, SoftDeletes, Linkable, Modelable;
 
-    protected static $logAttributes = ['username', 'employee_id'];
-
-    protected static $ignoreChangedAttributes = ['last_login', 'remember_token', 'updated_at'];
-
     public static $logName = 'User';
-
+    protected static $logAttributes = ['username', 'employee_id'];
+    protected static $ignoreChangedAttributes = ['last_login', 'remember_token', 'updated_at'];
     protected static $logOnlyDirty = true;
-
     protected static $logFillable = true;
-
+    public $route = 'users';
+    public $action = '';
+    public $displayAttribute = 'username';
+    public $labels = [
+        'use_otp' => 'Sử dụng OTP',
+        'name'    => 'Tên người dùng'
+    ];
+    public $filters = [
+        'username' => 'like',
+        'name'     => 'like',
+        'phone'    => 'like',
+        'email'    => 'like',
+        'state'    => '='
+    ];
     protected $fillable = [
         'username',
         'name',
@@ -102,34 +103,18 @@ class User extends Authenticatable
         'actor_id',
         'actor_type'
     ];
-
     protected $hidden = [
         'password',
         'remember_token',
     ];
-
     protected $dates = [
         'last_login'
     ];
 
-    public $route = 'users';
-
-    public $action = '';
-
-    public $displayAttribute = 'username';
-
-    public $labels = [
-        'use_otp' => 'Sử dụng OTP',
-        'name'    => 'Tên người dùng'
-    ];
-
-    public $filters = [
-        'username' => 'like',
-        'name'     => 'like',
-        'phone'    => 'like',
-        'email'    => 'like',
-        'state'    => '='
-    ];
+    public function actor()
+    {
+        return $this->morphTo();
+    }
 
     protected static function boot()
     {
@@ -151,18 +136,36 @@ class User extends Authenticatable
         });
     }
 
-    public function actor()
+    public function getIsUseOtpAttribute()
     {
-        return $this->morphTo();
+        return Confirmation::getDescription($this->state);
+    }
+
+    /**
+     * @param $username
+     *
+     * @return string
+     */
+    public static function getPhone($username)
+    {
+        $user = self::query()->where('username', $username)->where('use_otp', 1)->first();
+
+        return $user->phone ?? '';
     }
 
     public function getStateNameAttribute()
     {
-        if ($this->state == 1) {
-            return __('Active');
-        }
+        return UserState::getDescription($this->state);
+    }
 
-        return __('Inactive');
+    public function getStateTextAttribute()
+    {
+        return $this->contextBadge($this->state_name, $this->state === 1 ? 'success' : 'danger');
+    }
+
+    public function getStatesAttribute()
+    {
+        return \App\Enums\UserState::toSelectArray();
     }
 
     /**
@@ -183,16 +186,6 @@ class User extends Authenticatable
         return $this->hasRole('Admin');
     }
 
-    public function getIsUseOtpAttribute()
-    {
-        return $this->use_otp == 1 ? __('Yes') : __('No');
-    }
-
-    public function getStateTextAttribute()
-    {
-        return $this->contextBadge($this->state_name, $this->state == 1 ? 'success' : 'danger');
-    }
-
     /**
      * @param $username
      *
@@ -201,17 +194,5 @@ class User extends Authenticatable
     public static function isUseOtp($username)
     {
         return self::query()->where('username', $username)->where('use_otp', 1)->exists();
-    }
-
-    /**
-     * @param $username
-     *
-     * @return string
-     */
-    public static function getPhone($username)
-    {
-        $user = self::query()->where('username', $username)->where('use_otp', 1)->first();
-
-        return $user->phone ?? '';
     }
 }

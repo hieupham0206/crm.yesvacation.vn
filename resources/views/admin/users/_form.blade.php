@@ -24,7 +24,8 @@
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('password') ? 'has-danger' : ''}}">
                 <label for="select_role">{{ $user->label('Password') }}</label>
-                <input type="password" id="txt_password" name="password" class="form-control m-input" placeholder="{{ __('Enter value') }}" data-value="{{ $user ? $user->password : '' }}" data-msg-pwCheck="{{ __('validation.custom.password.regex') }}">
+                <input type="password" id="txt_password" name="password" class="form-control m-input" placeholder="{{ __('Enter value') }}" data-value="{{ $user ? $user->password : '' }}"
+                       data-msg-pwCheck="{{ __('validation.custom.password.regex') }}">
                 <span class="m-form__help"></span>
                 {!! $errors->first('password', '<div class="form-control-feedback">:message</div>') !!}
             </div>
@@ -57,8 +58,9 @@
                 <label for="select_state">{{ $user->label('State') }}</label>
                 <select name="state" class="form-control select" id="select_state">
                     <option></option>
-                    <option value="0" {{ $user && $user->state == 0 ? ' selected' : '' }}>@lang('Inactive')</option>
-                    <option value="1" {{ ! isset($user) || $user->state == 1 ? ' selected' : '' }}>@lang('Active')</option>
+                    @foreach ($user->states as $key => $state)
+                        <option value="{{ $key }}" {{ $user->state == $key ? ' selected' : '' }}>{{ $state }}</option>
+                    @endforeach
                 </select>
                 <span class="m-form__help"></span>
                 {!! $errors->first('state', '<div class="form-control-feedback">:message</div>') !!}
@@ -67,8 +69,9 @@
                 <label for="select_use_otp">{{ $user->label('use_otp') }}</label>
                 <select name="use_otp" class="form-control select" id="select_use_otp">
                     <option></option>
-                    <option value="1" {{ $user->username == '' || $user->use_otp == 1 ? ' selected' : '' }}>@lang('Yes')</option>
-                    <option value="0" {{ $user->username && $user->use_otp == 0 ? ' selected' : '' }}>@lang('No')</option>
+                    @foreach ($user->confirmations as $key => $confirmation)
+                        <option value="{{ $key }}" {{ $user->use_otp == $key ? ' selected' : '' }}>{{ $confirmation }}</option>
+                    @endforeach
                 </select>
                 <span class="m-form__help"></span>
                 {!! $errors->first('use_otp', '<div class="form-control-feedback">:message</div>') !!}
