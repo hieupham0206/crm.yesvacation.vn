@@ -17,10 +17,10 @@ class CreateEventDatasTable extends Migration
 
             $table->unsignedInteger('lead_id');
 
-            $table->timestamp('appointment_date');
+            $table->timestamp('appointment_datetime')->nullable();
 
-            $table->timestamp('time_in');
-            $table->timestamp('time_out');
+            $table->timestamp('time_in')->nullable();
+            $table->timestamp('time_out')->nullable();
 
             $table->tinyInteger('show_up')->comment('-1: Không; 1: Có');
             $table->tinyInteger('deal')->comment('-1: Không; 1: Có');

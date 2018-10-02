@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\{Core\Labelable, Core\Linkable, Core\Queryable, Core\Searchable};
+use App\Traits\{Core\Labelable, Core\Linkable, Core\Modelable, Core\Queryable, Core\Searchable};
 use Illuminate\{Database\Eloquent\SoftDeletes, Foundation\Auth\User as Authenticatable, Notifications\Notifiable};
 use Spatie\{Activitylog\Traits\LogsActivity, Permission\Traits\HasRoles};
 
@@ -11,12 +11,17 @@ use Spatie\{Activitylog\Traits\LogsActivity, Permission\Traits\HasRoles};
  *
  * @property int $id
  * @property string $username
- * @property string|null $name
+ * @property string $name
  * @property string $email
+ * @property int $state -1: Chưa kích hoạt; 1: Đã kích hoạt
+ * @property int $gender 1: Nam; 2: Nữ
  * @property string|null $phone
- * @property int $state 0: Chưa kích hoạt; 1: Đã kích hoạt
- * @property int|null $actor_id
- * @property string|null $actor_type
+ * @property float $basic_salary
+ * @property string|null $birthday
+ * @property string|null $first_day_work
+ * @property string|null $address
+ * @property string|null $note
+ * @property int $position
  * @property int $use_otp 1: có sử dụng; -1: Không sử dụng
  * @property string|null $otp
  * @property string|null $otp_expired_at OTP hết hạn trong 5 phút
@@ -33,7 +38,7 @@ use Spatie\{Activitylog\Traits\LogsActivity, Permission\Traits\HasRoles};
  * @property-read mixed $state_text
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User andFilterWhere($conditions)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User dateBetween($dates, $column = 'created_at', $format = 'd-m-Y', $boolean = 'and', $not = false)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User filters($filterDatas, $boolean = 'and', $filterConfigs = null)
@@ -44,18 +49,23 @@ use Spatie\{Activitylog\Traits\LogsActivity, Permission\Traits\HasRoles};
  * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User role($roles)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User search($term)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereActorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereActorType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereBasicSalary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereBirthday($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereFirstDayWork($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereLastLogin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereNote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereOtp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereOtpExpiredAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePosition($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereState($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
@@ -67,7 +77,7 @@ use Spatie\{Activitylog\Traits\LogsActivity, Permission\Traits\HasRoles};
  */
 class User extends Authenticatable
 {
-    use Notifiable, LogsActivity, HasRoles, Searchable, Labelable, Queryable, SoftDeletes, Linkable;
+    use Notifiable, LogsActivity, HasRoles, Searchable, Labelable, Queryable, SoftDeletes, Linkable, Modelable;
 
     protected static $logAttributes = ['username', 'employee_id'];
 
@@ -203,20 +213,5 @@ class User extends Authenticatable
         $user = self::query()->where('username', $username)->where('use_otp', 1)->first();
 
         return $user->phone ?? '';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getDescriptionForEvent(string $eventName): string
-    {
-        $user     = auth()->user();
-        $username = $user ? $user->username : 'admin';
-
-        if ($this->action) {
-            $eventName = $this->action;
-        }
-
-        return sprintf('%s %s%s %s', __(ucfirst(static::$logName)), $this->username, __(" has been {$eventName} by "), $username);
     }
 }

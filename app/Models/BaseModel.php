@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Core\Labelable;
 use App\Traits\Core\Linkable;
+use App\Traits\Core\Modelable;
 use App\Traits\Core\Queryable;
 use App\Traits\Core\Responsible;
 
@@ -12,7 +13,6 @@ use App\Traits\Core\Responsible;
  *
  * @property-read \App\Models\ActivityLog $createdBy
  * @property-read \App\Models\ActivityLog $deletedBy
- * @property-read mixed $created_at
  * @property-read \App\Models\ActivityLog $updatedBy
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BaseModel andFilterWhere($conditions)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BaseModel dateBetween($dates, $column = 'created_at', $format = 'd-m-Y', $boolean = 'and', $not = false)
@@ -22,7 +22,7 @@ use App\Traits\Core\Responsible;
  */
 class BaseModel extends \Illuminate\Database\Eloquent\Model
 {
-    use Responsible, Labelable, Queryable, Linkable;
+    use Responsible, Labelable, Queryable, Linkable, Modelable;
 
     /**
      * Tên custom action dùng để lưu log hoạt động
@@ -59,29 +59,4 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
      * @var array
      */
     public $filters = [];
-
-    /**
-     * @inheritdoc
-     */
-    public function getDescriptionEvent(string $eventName): string
-    {
-        $modelValName = '';
-        if ( ! empty($this->{'name'})) {
-            $modelValName = $this->{'name'};
-        } elseif ( ! empty($this->{'code'})) {
-            $modelValName = $this->{'code'};
-        } elseif ( ! empty($this->{'title'})) {
-            $modelValName = $this->{'title'};
-        }
-
-        if ($this->action) {
-            $eventName = $this->action;
-        }
-
-        /** @var User $user */
-        $user     = auth()->user();
-        $username = $user ? $user->username : 'admin';
-
-        return sprintf('%s %s%s %s. %s', __(ucfirst(static::$logName)), $modelValName, __(" has been {$eventName} by "), $username, $this->message);
-    }
 }

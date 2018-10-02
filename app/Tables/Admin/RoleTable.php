@@ -74,7 +74,7 @@ class RoleTable extends DataTable
      */
     public function getModels()
     {
-        $roles = Role::query()->whereKeyNot(1);
+        $roles = Role::query()->hideAdmin();
 
         $this->totalRecords = $this->totalFilteredRecords = $roles->count();
 

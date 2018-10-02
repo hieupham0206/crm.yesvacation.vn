@@ -8,7 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 /**
  * Class CrudAllCommand
  *
- * php artisan crud:make --crud=brands --namespace=Business --fields=name#string --validations=name#required --permissions=view,create,update,delete
+ * php artisan crud:make --crud=brands --namespace=Business --fields=name#string;type#select#options=1_New**2_NotNew --validations=name#required --permissions=view,create,update,delete
  *
  * @package App\Console\Commands
  */
@@ -99,6 +99,8 @@ class CrudMakeCommand extends Command
         $this->makeSeederAndFactory($model);
 
         $this->makeIdeHelper($model);
+
+        $this->runPermissionSeeder();
     }
 
     /**
@@ -344,6 +346,13 @@ class CrudMakeCommand extends Command
             'model' => ["App\\Models\\{$model}"],
             '-W'    => true,
             '-R'    => true
+        ]);
+    }
+
+    private function runPermissionSeeder(): void
+    {
+        $this->call('db:seed', [
+            '--class' => \PermissionSeeder::class
         ]);
     }
 }

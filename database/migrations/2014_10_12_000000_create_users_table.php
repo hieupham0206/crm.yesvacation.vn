@@ -22,13 +22,13 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('gender')->default(1)->comment('1: Nam; 2: Nữ');
             $table->string('phone', 12)->nullable();
             $table->double('basic_salary')->default(0);
-            $table->tinyInteger('position')->default(1);
 
             $table->date('birthday')->nullable();
             $table->date('first_day_work')->nullable();
             $table->string('address')->nullable();
-            $table->string('city')->nullable();
+            $table->text('note')->nullable();
 
+            $table->tinyInteger('position')->default(1);
 //            $table->unsignedInteger('actor_id')->nullable();
 //            $table->string('actor_type')->nullable();
 //            $table->index(['actor_id', 'actor_type']);

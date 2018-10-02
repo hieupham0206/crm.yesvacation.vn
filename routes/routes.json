@@ -4,7 +4,6 @@
         "activity_logs",
         "roles",
         "system_logs",
-        "permissions",
         "translation_managers"
     ],
     "department": [

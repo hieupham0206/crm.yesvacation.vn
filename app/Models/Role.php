@@ -8,7 +8,7 @@
 
 namespace App\Models;
 
-use App\Traits\{Core\Labelable, Core\Queryable, Core\Searchable};
+use App\Traits\{Core\Labelable, Core\Modelable, Core\Queryable, Core\Searchable};
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\{Activitylog\Traits\LogsActivity, Permission\Models\Role as Eloquent};
 
@@ -35,7 +35,7 @@ use Spatie\{Activitylog\Traits\LogsActivity, Permission\Models\Role as Eloquent}
  */
 class Role extends Eloquent
 {
-    use LogsActivity, Searchable, Labelable, Queryable;
+    use LogsActivity, Searchable, Labelable, Queryable, Modelable;
 
     public static $logName = 'Role';
 
@@ -51,13 +51,11 @@ class Role extends Eloquent
         'name'
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
+    protected $guard_name = 'web';
 
-        static::addGlobalScope('hideadmin', function (Builder $builder) {
-            $builder->where('name', '!=', 'Admin');
-        });
+    public function scopeHideAdmin(Builder $query)
+    {
+        $query->whereKeyNot(1);
     }
 
     public static function groupRole()
@@ -107,25 +105,5 @@ class Role extends Eloquent
         }
 
         return $datas;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getDescriptionForEvent(string $eventName): string
-    {
-        $modelValName = '';
-        if ( ! empty($this->{'name'})) {
-            $modelValName = $this->{'name'};
-        } elseif ( ! empty($this->{'code'})) {
-            $modelValName = $this->{'code'};
-        } elseif ( ! empty($this->{'title'})) {
-            $modelValName = $this->{'title'};
-        }
-
-        $user     = auth()->user();
-        $username = $user ? $user->username : 'admin';
-
-        return sprintf('%s %s%s %s', __(ucfirst(static::$logName)), $modelValName, __(" has been {$eventName} by "), $username);
     }
 }

@@ -26,6 +26,12 @@ class EditTableRelation extends Migration
         Schema::table('event_datas', function (Blueprint $table) {
             $table->foreign('lead_id')->references('id')->on('leads');
         });
+        //Add khóa ngoại bảng event_data_details
+        Schema::table('event_data_details', function (Blueprint $table) {
+//            $table->foreign('lead_id')->references('id')->on('leads');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('event_data_id')->references('id')->on('event_datas');
+        });
         //Add khóa ngoại bảng final_salaries
         Schema::table('final_salaries', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
@@ -34,6 +40,16 @@ class EditTableRelation extends Migration
         Schema::table('department_details', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('department_id')->references('id')->on('departments');
+        });
+        //Add khóa ngoại bảng history_calls
+        Schema::table('history_calls', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('lead_id')->references('id')->on('leads');
+            $table->foreign('member_id')->references('id')->on('members');
+        });
+        //Add khóa ngoại bảng bonus
+        Schema::table('bonus', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

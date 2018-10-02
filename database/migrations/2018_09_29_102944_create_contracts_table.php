@@ -20,12 +20,16 @@ class CreateContractsTable extends Migration
 
             $table->double('amount')->default(0);
             $table->double('net_amount')->default(0);
+
             $table->timestamp('paid_first_date')->nullable();
             $table->double('paid_first')->default(0);
             $table->timestamp('paid_last_date')->nullable();
             $table->double('paid_last')->default(0);
 
-            $table->tinyInteger('state')->default(1)->comment('-1: Not yest; 1: Done');
+            $table->string('payment_method')->nullable();
+            $table->string('bank_name')->nullable();
+
+            $table->tinyInteger('state')->default(-1)->comment('-1: Not yet; 1: Done');
 
             $table->timestamps();
         });

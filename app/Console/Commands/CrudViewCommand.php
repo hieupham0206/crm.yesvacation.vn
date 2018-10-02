@@ -325,22 +325,21 @@ class CrudViewCommand extends Command
 
                 if ($this->formFields[$idx]['type'] == 'select' && isset($itemArray[2])) {
                     //options=1_value1**2_value2
-                    $options = trim($itemArray[2]);
-                    $options = str_replace('options=', '', $options);
-
+                    $options      = trim($itemArray[2]);
+                    $options      = str_replace('options=', '', $options);
+                    $optionValues = "<option></option>\n";
                     if (\strpos($options, '**', true) !== false) {
-                        $options      = explode('**', $options);
-                        $optionValues = '<option></option>';
+                        $options = explode('**', $options);
                         foreach ($options as $option) {
                             $values = explode('_', $option);
 
                             [$value, $valueText] = $values;
-                            $valueText    = ucwords(camel2words($valueText));
+                            $valueText    = __(ucwords(camel2words($valueText)));
                             $optionValues .= "<option value='" . $value . "'>$valueText</option>\n";
                         }
                     } else {
-                        $foreignKeyText = $this->crudNameSingular . '_id';
-                        $optionValues   = '@if($' . $this->crudNameSingular . '->exists)' . "\n";
+                        $foreignKeyText = $this->crudNameSingular . "->$options" . '_id';
+                        $optionValues   .= '@if($' . $this->crudNameSingular . '->exists)' . "\n";
                         $optionValues   .= '<option value="{{ $' . $foreignKeyText . ' }}" selected>{{ $' . $this->crudNameSingular . '->' . $options . '->name }}</option>' . "\n";
                         $optionValues   .= '@endif' . "\n";
                     }
@@ -477,13 +476,13 @@ class CrudViewCommand extends Command
      * @return string
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    protected function wrapField($item, $field)
+    protected function wrapField($item, $field, $prefix = 'txt_')
     {
         $formGroup = File::get($this->viewDirectoryPath . 'form-fields/wrap-field.blade.stub');
 
         $labelText = sprintf("$%s->label('%s')", $this->crudNameSingular, $item['name']);
 
-        return sprintf($formGroup, $item['name'], $labelText, $field);
+        return sprintf($formGroup, $item['name'], $prefix, $labelText, $field);
     }
 
     /**
@@ -624,7 +623,8 @@ class CrudViewCommand extends Command
 
         return $this->wrapField(
             $item,
-            $markup
+            $markup,
+            'textarea_'
         );
     }
 
@@ -647,7 +647,8 @@ class CrudViewCommand extends Command
 
         return $this->wrapField(
             $item,
-            $markup
+            $markup,
+            'select_'
         );
     }
 }

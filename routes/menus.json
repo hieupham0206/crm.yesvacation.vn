@@ -18,11 +18,6 @@
         "parent": "system",
         "hide": true
       },
-      "permissions": {
-        "icon": "fa fa-cogs",
-        "parent": "system",
-        "hide": true
-      },
       "translation_managers": {
         "icon": "fa fa-globe",
         "parent": "system"

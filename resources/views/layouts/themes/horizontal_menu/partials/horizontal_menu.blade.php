@@ -72,7 +72,7 @@
                     </ul>
                 </div>
             </li>
-        @else
+        @elseif(isset($menu['route']))
             <li class="m-menu__item {{ $menu['activeClass'] }}" aria-haspopup="true">
                 <a href="{{ $menu['route'] }}" class="m-menu__link">
                     @if ($menu['icon'])
