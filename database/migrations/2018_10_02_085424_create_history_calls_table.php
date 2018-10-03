@@ -23,6 +23,7 @@ class CreateHistoryCallsTable extends Migration
             $table->string('phone')->nullable();
 
             $table->smallInteger('call_times');
+            $table->tinyInteger('type')->comment('1: auto; 2: callback; 3:history');
             //todo: 4 field chưa rõ Status_LEAD, Comment_LEAD, Date, Time
 
             $table->timestamps();
