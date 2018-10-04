@@ -8,20 +8,19 @@
         </div>
         <div class="col-12 col-md-3 m-form__group-sub">
             <div class="form-group">
-                <label for="txt_title">{{ $lead->label('title') }}</label>
-                <input class="form-control" name="title" id="txt_title">
-            </div>
-        </div>
-        <div class="col-12 col-md-3 m-form__group-sub">
-            <div class="form-group">
                 <label for="txt_email">{{ $lead->label('email') }}</label>
                 <input class="form-control" name="email" id="txt_email">
             </div>
         </div>
         <div class="col-12 col-md-3 m-form__group-sub">
             <div class="form-group">
-                <label for="txt_gender">{{ $lead->label('gender') }}</label>
-                <input class="form-control" name="gender" id="txt_gender">
+                <label for="select_gender">{{ $lead->label('gender') }}</label>
+                <select name="gender" class="form-control select" id="select_gender">
+                    <option></option>
+                    @foreach ($lead->genders as $key => $gender)
+                        <option value="{{ $key }}">{{ $gender }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         <div class="col-12 col-md-3 m-form__group-sub">
@@ -44,8 +43,13 @@
         </div>
         <div class="col-12 col-md-3 m-form__group-sub">
             <div class="form-group">
-                <label for="txt_state">{{ $lead->label('state') }}</label>
-                <input class="form-control" name="state" id="txt_state">
+                <label for="select_state">{{ $lead->label('state') }}</label>
+                <select name="state" class="form-control select" id="select_state">
+                    <option></option>
+                    @foreach ($lead->states as $key => $state)
+                        <option value="{{ $key }}">{{ $state }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         <div class="col-12 col-md-3 m-form__group-sub mt-6">

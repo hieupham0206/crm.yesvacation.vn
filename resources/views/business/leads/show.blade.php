@@ -1,8 +1,6 @@
 @php /** @var \App\Models\Lead $lead */
 $breadcrumbs = ['breadcrumb' => 'leads.show', 'model' => $lead];
-@endphp
-
-@extends("$layout.app")
+@endphp@extends("$layout.app")
 
 @push('scripts')
 
@@ -18,33 +16,41 @@ $breadcrumbs = ['breadcrumb' => 'leads.show', 'model' => $lead];
                     <table class="table table-bordered">
                         <tbody>
                         <tr>
-                                                <th> {{ $lead->label('name') }} </th>
-                                                <td> {{ $lead->name }} </td>
-                                              </tr><tr>
-                                                <th> {{ $lead->label('title') }} </th>
-                                                <td> {{ $lead->title }} </td>
-                                              </tr><tr>
-                                                <th> {{ $lead->label('email') }} </th>
-                                                <td> {{ $lead->email }} </td>
-                                              </tr><tr>
-                                                <th> {{ $lead->label('gender') }} </th>
-                                                <td> {{ $lead->gender }} </td>
-                                              </tr><tr>
-                                                <th> {{ $lead->label('birthday') }} </th>
-                                                <td> {{ $lead->birthday }} </td>
-                                              </tr><tr>
-                                                <th> {{ $lead->label('address') }} </th>
-                                                <td> {{ $lead->address }} </td>
-                                              </tr><tr>
-                                                <th> {{ $lead->label('phone') }} </th>
-                                                <td> {{ $lead->phone }} </td>
-                                              </tr><tr>
-                                                <th> {{ $lead->label('state') }} </th>
-                                                <td> {{ $lead->state }} </td>
-                                              </tr><tr>
-                                                <th> {{ $lead->label('comment') }} </th>
-                                                <td> {{ $lead->comment }} </td>
-                                              </tr>
+                            <th> {{ $lead->label('name') }} </th>
+                            <td> {{ $lead->name }} </td>
+                        </tr>
+                        <tr>
+                            <th> {{ $lead->label('title') }} </th>
+                            <td> {{ $lead->title }} </td>
+                        </tr>
+                        <tr>
+                            <th> {{ $lead->label('email') }} </th>
+                            <td> {{ $lead->email }} </td>
+                        </tr>
+                        <tr>
+                            <th> {{ $lead->label('gender') }} </th>
+                            <td> {{ $lead->gender_text }} </td>
+                        </tr>
+                        <tr>
+                            <th> {{ $lead->label('birthday') }} </th>
+                            <td> {{ $lead->birthday }} </td>
+                        </tr>
+                        <tr>
+                            <th> {{ $lead->label('address') }} </th>
+                            <td> {{ $lead->address }} </td>
+                        </tr>
+                        <tr>
+                            <th> {{ $lead->label('phone') }} </th>
+                            <td> {{ $lead->phone }} </td>
+                        </tr>
+                        <tr>
+                            <th> {{ $lead->label('state') }} </th>
+                            <td> {{ $lead->state_text }} </td>
+                        </tr>
+                        <tr>
+                            <th> {{ $lead->label('comment') }} </th>
+                            <td> {{ $lead->comment }} </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>

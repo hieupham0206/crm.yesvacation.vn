@@ -85,11 +85,11 @@ class LeadTable extends DataTable
                 $lead->name,
                 $lead->title,
                 $lead->email,
-                $lead->gender,
+                $lead->gender_text,
                 $lead->birthday->format('d-m-Y'),
                 $lead->address,
                 $lead->phone,
-                $lead->state,
+                $lead->state_text,
 
                 '<a href="' . route('leads.show', $lead, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('View') . '">
 					<i class="fa fa-eye"></i>
