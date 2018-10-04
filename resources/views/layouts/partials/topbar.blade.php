@@ -93,21 +93,21 @@
                                             Section
                                         </span>
                                     </li>
-                                    <li class="m-nav__item">
-                                        <a href="{{ route('users.edit', $currentUser) }}" class="m-nav__link">
-                                            <i class="m-nav__link-icon flaticon-profile-1"></i>
-                                            <span class="m-nav__link-title">
-                                                <span class="m-nav__link-wrap">
-                                                    <span class="m-nav__link-text">
-                                                        @lang('My profile')
-                                                    </span>
-                                                </span>
-                                            </span>
-                                        </a>
-                                    </li>
+                                    {{--<li class="m-nav__item">--}}
+                                        {{--<a href="{{ route('users.edit', $currentUser) }}" class="m-nav__link">--}}
+                                            {{--<i class="m-nav__link-icon flaticon-profile-1"></i>--}}
+                                            {{--<span class="m-nav__link-title">--}}
+                                                {{--<span class="m-nav__link-wrap">--}}
+                                                    {{--<span class="m-nav__link-text">--}}
+                                                        {{--@lang('My profile')--}}
+                                                    {{--</span>--}}
+                                                {{--</span>--}}
+                                            {{--</span>--}}
+                                        {{--</a>--}}
+                                    {{--</li>--}}
                                     <li class="m-nav__item">
                                         <a href="javascript:void(0)" data-url="{{ route('users.form_change_password') }}" class="m-nav__link" id="link_form_change_password">
-                                            <i class="m-nav__link-icon flaticon-lock"></i>
+                                            <i class="m-nav__link-icon fa fa-key"></i>
                                             <span class="m-nav__link-title">
                                                 <span class="m-nav__link-wrap">
                                                     <span class="m-nav__link-text">

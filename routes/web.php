@@ -38,6 +38,5 @@ foreach ($routeArr as $key => $routes) {
         }
     });
 }
-
 //ROUTE CHI TIẾT
 Route::namespace('Admin')->prefix('admin')->group(base_path('routes/modules/admin.php'));

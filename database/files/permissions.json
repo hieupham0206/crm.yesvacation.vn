@@ -1,44 +1,56 @@
 {
-  "admin": {
-    "modules": {
-      "user": {
-        "actions": [
-          "view",
-          "create",
-          "update",
-          "delete"
-        ]
-      },
-      "role": {
-        "actions": [
-          "view",
-          "create",
-          "update",
-          "delete"
-        ]
-      },
-      "permission": {
-        "actions": [
-          "view",
-          "update"
-        ],
-        "hide": "true"
-      },
-      "log": {
-        "actions": [
-          "view"
-        ]
-      },
-      "event": {
-        "actions": [
-          "view",
-          "create",
-          "update",
-          "delete"
-        ],
-        "hide": "true"
-      }
+    "admin": {
+        "modules": {
+            "user": {
+                "actions": [
+                    "view",
+                    "create",
+                    "update",
+                    "delete"
+                ]
+            },
+            "role": {
+                "actions": [
+                    "view",
+                    "create",
+                    "update",
+                    "delete"
+                ]
+            },
+            "permission": {
+                "actions": [
+                    "view",
+                    "update"
+                ],
+                "hide": "true"
+            },
+            "log": {
+                "actions": [
+                    "view"
+                ]
+            },
+            "event": {
+                "actions": [
+                    "view",
+                    "create",
+                    "update",
+                    "delete"
+                ],
+                "hide": "true"
+            }
+        },
+        "icon": "flaticon-cogwheel"
     },
-    "icon": "flaticon-cogwheel"
-  }
+    "business": {
+        "modules": {
+            "lead": {
+                "actions": [
+                    "view",
+                    "create",
+                    "update",
+                    "delete"
+                ]
+            }
+        }
+    }
 }

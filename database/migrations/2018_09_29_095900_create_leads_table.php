@@ -17,14 +17,14 @@ class CreateLeadsTable extends Migration
 
             $table->string('title')->nullable();
             $table->string('name');
+            $table->string('email')->nullable();
             $table->tinyInteger('gender')->default(1)->comment('1: Nam; 2: Nữ');
+            $table->date('birthday')->nullable();
+            $table->string('address')->nullable();
+            $table->unsignedInteger('province_id')->comment('Tỉnh thành phố')->nullable();
             $table->string('phone', 12)->nullable();
 
-            $table->date('birthday');
-            $table->string('address')->nullable();
-            $table->string('city')->nullable();
-
-            $table->smallInteger('state')->default(1)->comment('1: New Customer; 2: DeadNumber; 3: WrongNumber; 4: OrderCity; 5: NoAnswer; 6: NoInterested; 7: CallLater; 8: Appointment');
+            $table->smallInteger('state')->default(1)->comment('1: New Customer; 2: DeadNumber; 3: WrongNumber; 4: OtherCity; 5: NoAnswer; 6: NoInterested; 7: CallLater; 8: Appointment');
             $table->text('comment')->nullable();
 
             $table->timestamps();
