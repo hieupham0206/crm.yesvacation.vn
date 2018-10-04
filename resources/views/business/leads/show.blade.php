@@ -27,10 +27,10 @@ $breadcrumbs = ['breadcrumb' => 'leads.show', 'model' => $lead];
                             <th> {{ $lead->label('email') }} </th>
                             <td> {{ $lead->email }} </td>
                         </tr>
-                        <tr>
-                            <th> {{ $lead->label('gender') }} </th>
-                            <td> {{ $lead->gender_text }} </td>
-                        </tr>
+                        {{--<tr>--}}
+                            {{--<th> {{ $lead->label('gender') }} </th>--}}
+                            {{--<td> {{ $lead->gender_text }} </td>--}}
+                        {{--</tr>--}}
                         <tr>
                             <th> {{ $lead->label('birthday') }} </th>
                             <td> {{ $lead->birthday }} </td>

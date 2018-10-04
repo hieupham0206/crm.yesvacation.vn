@@ -12,12 +12,12 @@ use App\Enums\LeadState;
  * @property string|null $title
  * @property string $name
  * @property string|null $email
- * @property int $gender 1: Nam; 2: Nữ
+ * @property int $gender           1: Nam; 2: Nữ
  * @property \Illuminate\Support\Carbon|null $birthday
  * @property string|null $address
  * @property int|null $province_id Tỉnh thành phố
  * @property string|null $phone
- * @property int $state 1: New Customer; 2: DeadNumber; 3: WrongNumber; 4: OtherCity; 5: NoAnswer; 6: NoInterested; 7: CallLater; 8: Appointment
+ * @property int $state            1: New Customer; 2: DeadNumber; 3: WrongNumber; 4: OtherCity; 5: NoAnswer; 6: NoInterested; 7: CallLater; 8: Appointment
  * @property string|null $comment
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -115,5 +115,10 @@ class Lead extends \App\Models\Base\Lead
     public function getStateTextAttribute()
     {
         return LeadState::getDescription($this->state);
+    }
+
+    public static function isPhoneUnique($phone)
+    {
+        return self::wherePhone($phone)->doesntExist();
     }
 }

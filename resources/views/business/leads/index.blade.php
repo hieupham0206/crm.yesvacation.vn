@@ -11,7 +11,15 @@ $breadcrumbs = ['breadcrumb' => 'leads.index'];
 @section('content')
     <div class="m-content">
         <div class="m-portlet">
-            @include('layouts.partials.index_header', ['modelName' => $lead->classLabel(true), 'model' => 'lead', 'createUrl' => route('leads.create')])
+            @include('layouts.partials.index_header', ['modelName' => $lead->classLabel(true), 'model' => 'lead', 'createUrl' => route('leads.create'), 'buttons' => [
+                [
+                    'route' => route('leads.form_import'),
+                    'text'  => __('Import'),
+                    'icon'  => 'fa fa-upload',
+                    'btnClass' => 'btn-brand btn-form-import d-none d-sm-block',
+                    'canDo' => can('create-lead'),
+                ],
+            ]])
             <div class="m-portlet__body">
                 @include('layouts.partials.search', ['form' => view('business.leads._search')->with('lead', $lead)])
                 <table class="table table-borderless table-hover nowrap" id="table_leads" width="100%">
@@ -21,7 +29,7 @@ $breadcrumbs = ['breadcrumb' => 'leads.index'];
                         <th>{{ $lead->label('name') }}</th>
                         <th>{{ $lead->label('title') }}</th>
                         <th>{{ $lead->label('email') }}</th>
-                        <th>{{ $lead->label('gender') }}</th>
+                        {{--<th>{{ $lead->label('gender') }}</th>--}}
                         <th>{{ $lead->label('birthday') }}</th>
                         <th>{{ $lead->label('address') }}</th>
                         <th>{{ $lead->label('phone') }}</th>

@@ -85,7 +85,7 @@ class LeadTable extends DataTable
                 $lead->name,
                 $lead->title,
                 $lead->email,
-                $lead->gender_text,
+//                $lead->gender_text,
                 $lead->birthday->format('d-m-Y'),
                 $lead->address,
                 $lead->phone,

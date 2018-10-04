@@ -24,25 +24,25 @@
                 <span class="m-form__help"></span>
                 {!! $errors->first('email', '<div class="form-control-feedback">:message</div>') !!}
             </div>
-            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('gender') ? 'has-danger' : ''}}">
-                <label for="select_gender">{{ $lead->label('gender') }}</label>
-                <select name="gender" class="form-control select" id="select_gender">
-                    <option></option>
-                    @foreach ($lead->genders as $key => $gender)
-                        <option value="{{ $key }}" {{ $lead->gender == $key ? ' selected' : '' }}>{{ $gender }}</option>
-                    @endforeach
-                </select>
-                <span class="m-form__help"></span>
-                {!! $errors->first('gender', '<div class="form-control-feedback">:message</div>') !!}
-            </div>
-        </div>
-        <div class="form-group m-form__group row">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('birthday') ? 'has-danger' : ''}}">
                 <label for="txt_birthday">{{ $lead->label('birthday') }}</label>
                 <input class="form-control text-datepicker" name="birthday" type="text" id="txt_birthday" value="{{ $lead->birthday ?? old('birthday')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">
                 <span class="m-form__help"></span>
                 {!! $errors->first('birthday', '<div class="form-control-feedback">:message</div>') !!}
             </div>
+            {{--<div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('gender') ? 'has-danger' : ''}}">--}}
+                {{--<label for="select_gender">{{ $lead->label('gender') }}</label>--}}
+                {{--<select name="gender" class="form-control select" id="select_gender">--}}
+                    {{--<option></option>--}}
+                    {{--@foreach ($lead->genders as $key => $gender)--}}
+                        {{--<option value="{{ $key }}" {{ $lead->gender == $key ? ' selected' : '' }}>{{ $gender }}</option>--}}
+                    {{--@endforeach--}}
+                {{--</select>--}}
+                {{--<span class="m-form__help"></span>--}}
+                {{--{!! $errors->first('gender', '<div class="form-control-feedback">:message</div>') !!}--}}
+            {{--</div>--}}
+        </div>
+        <div class="form-group m-form__group row">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('address') ? 'has-danger' : ''}}">
                 <label for="txt_address">{{ $lead->label('address') }}</label>
                 <input class="form-control" name="address" type="text" id="txt_address" value="{{ $lead->address ?? old('address')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">
