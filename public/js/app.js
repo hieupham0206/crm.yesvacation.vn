@@ -13583,7 +13583,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			setTimeout(function () {
 				_this2.show = false;
-			}, 5000);
+			}, 10000);
 		},
 		hide: function hide() {
 			this.show = false;

@@ -19,7 +19,6 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->tinyInteger('state')->default(\App\Enums\UserState::ACTIVE)->comment('-1: Chưa kích hoạt; 1: Đã kích hoạt');
 
-            $table->tinyInteger('gender')->default(1)->comment('1: Nam; 2: Nữ');
             $table->string('phone', 12)->nullable();
             $table->double('basic_salary')->default(0);
 
@@ -28,7 +27,6 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->text('note')->nullable();
 
-            $table->tinyInteger('position')->default(1);
 //            $table->unsignedInteger('actor_id')->nullable();
 //            $table->string('actor_type')->nullable();
 //            $table->index(['actor_id', 'actor_type']);

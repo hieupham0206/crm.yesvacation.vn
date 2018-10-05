@@ -59,7 +59,7 @@
 			autohide() {
 				setTimeout(() => {
 					this.show = false
-				}, 5000)
+				}, 10000)
 			},
 			hide() {
 				this.show = false

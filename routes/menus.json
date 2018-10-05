@@ -24,5 +24,9 @@
       }
     },
     "icon": "flaticon-cogwheel"
+  },
+  "leads": {
+    "icon": "fa fa-user",
+    "route": "leads.index"
   }
 }

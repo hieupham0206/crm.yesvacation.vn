@@ -8,6 +8,8 @@ try {
 
 	//todo: chuyển bootbox qua theme vendor khi release v5
 	window.bootbox = require('../../plugins/bootbox/bootbox')
+
+	require('../../plugins/fileinput/bootstrap-fileinput')
 } catch (e) {
 	console.log(e)
 }

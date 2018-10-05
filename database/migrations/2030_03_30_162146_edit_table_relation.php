@@ -12,6 +12,10 @@ class EditTableRelation extends Migration
      */
     public function up()
     {
+        //Add khóa ngoại bảng leads
+        Schema::table('leads', function (Blueprint $table) {
+            $table->foreign('province_id')->references('id')->on('provinces');
+        });
         //Add khóa ngoại bảng contracts
         Schema::table('contracts', function (Blueprint $table) {
             $table->foreign('member_id')->references('id')->on('members');
