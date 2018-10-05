@@ -1,37 +1,32 @@
 {
-    "admin": {
-        "modules": {
-            "users": {
-                "icon": "fa fa-users",
-                "parent": "system"
-            },
-            "activity_logs": {
-                "icon": "fa fa-file",
-                "parent": "system"
-            },
-            "roles": {
-                "icon": "fa fa-cogs",
-                "parent": "system"
-            },
-            "system_logs": {
-                "icon": "fa fa-file-o",
-                "parent": "system",
-                "hide": true
-            },
-            "translation_managers": {
-                "icon": "fa fa-globe",
-                "parent": "system"
-            }
-        },
-        "icon": "flaticon-cogwheel"
+  "admin": {
+    "modules": {
+      "users": {
+        "icon": "fa fa-users",
+        "parent": "system"
+      },
+      "activity_logs": {
+        "icon": "fa fa-file",
+        "parent": "system"
+      },
+      "roles": {
+        "icon": "fa fa-cogs",
+        "parent": "system"
+      },
+      "system_logs": {
+        "icon": "fa fa-file-o",
+        "parent": "system",
+        "hide": true
+      },
+      "translation_managers": {
+        "icon": "fa fa-globe",
+        "parent": "system"
+      }
     },
-    "business": {
-        "modules": {
-            "leads": {
-                "icon": "",
-                "parent": ""
-            }
-        },
-        "icon": ""
-    }
+    "icon": "flaticon-cogwheel"
+  },
+  "leads": {
+    "icon": "fa fa-user",
+    "route": "leads.index"
+  }
 }

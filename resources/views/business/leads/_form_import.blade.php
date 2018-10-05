@@ -1,4 +1,4 @@
-<form id="import_customers_form" class="m-form m-form--state" method="post" action="{{ route('customers.import') }}" enctype="multipart/form-data">
+<form id="import_leads_form" class="m-form m-form--state" method="post" action="{{ route('leads.import') }}" enctype="multipart/form-data">
     <div class="modal-header">
         <h5 class="modal-title">@lang('Import')</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -49,7 +49,7 @@
                                     <input type="file" name="file_import" accept=".xlsx, .xls">
                                 </span>
                                 <button class="btn btn-brand fileinput-exists">{{ __('Import') }}</button>
-                                <a href="#" class="btn btn-brand fileinput-exists" data-dismiss="fileinput">@lang('Delete')</a>
+                                <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">@lang('Delete')</a>
                             </div>
                         </div>
                     </div>
@@ -58,14 +58,14 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a href="{{ asset('files/sample_customer.xlsx') }}" download>
+        <a href="{{ asset('files/Lead_Data.xlsx') }}" download>
             <button type="button" class="btn btn-brand m-btn--custom m-btn--icon" id="download_file_sample">
                 <span><i class="fa fa-download"></i>
                     <span>@lang('Download file sample')</span>
                 </span>
             </button>
         </a>
-        <button type="button" class="btn btn-brand m-btn--custom m-btn--icon" data-dismiss="modal">
+        <button type="button" class="btn btn-secondary m-btn--custom m-btn--icon" data-dismiss="modal">
             <span>
                 <i class="fa fa-ban"></i>
                 <span>@lang('Close')</span>

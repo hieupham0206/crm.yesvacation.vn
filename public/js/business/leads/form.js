@@ -80,6 +80,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 $(function () {
     $('#leads_form').validate({
+        rules: {
+            email: {
+                email: function email() {
+                    return $('#txt_email').val() !== '';
+                }
+            }
+        },
         submitHandler: $(this).data('confirm') ? function (form, e) {
             window.blockPage();
             e.preventDefault();

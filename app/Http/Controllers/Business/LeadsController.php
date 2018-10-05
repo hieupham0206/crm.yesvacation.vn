@@ -7,8 +7,11 @@ use App\Models\Lead;
 use App\Models\Province;
 use App\Tables\Business\LeadTable;
 use App\Tables\TableFacade;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class LeadsController extends Controller
 {
@@ -184,7 +187,7 @@ class LeadsController extends Controller
      */
     public function formImport()
     {
-        return view('sale.leads._form_import', ['customer' => new Lead(), 'user' => auth()->user()]);
+        return view('business.leads._form_import', ['customer' => new Lead(), 'user' => auth()->user()]);
     }
 
     /**
@@ -216,6 +219,7 @@ class LeadsController extends Controller
             $totalSuccess = 0;
             $datas        = $dataFails = [];
 //            $provinces    = Province::get();
+            $currentPhones = [];
 
             foreach ($sheetData as $rowIndex => $value) {
                 $message = '';
@@ -246,7 +250,7 @@ class LeadsController extends Controller
 
                 $isPhoneUnique = Lead::isPhoneUnique($phone);
 
-                if ( ! $isPhoneUnique) {
+                if ( ! $isPhoneUnique || \in_array($phone, $currentPhones, true)) {
                     $totalFail++;
                     $message     = 'Lead đã tồn tại.';
                     $dataFails[] = [
@@ -259,7 +263,9 @@ class LeadsController extends Controller
                 try {
 
                     $customerAttributes = array_merge(compact('name', 'phone', 'email', 'title', 'address'), [
-                        'created_at' => now()->toDateTimeString(),
+                        'created_at'  => now()->toDateTimeString(),
+                        'birthday'    => null,
+                        'province_id' => null
                     ]);
                     if ($birthday) {
                         $birthday                       = Carbon::parse(trim($birthday))->toDateString();
@@ -271,7 +277,8 @@ class LeadsController extends Controller
                             $customerAttributes['province_id'] = $province->id;
                         }
                     }
-                    $datas[] = $customerAttributes;
+                    $datas[]         = $customerAttributes;
+                    $currentPhones[] = $phone;
 
                     $totalSuccess++;
                 } catch (\Exception $e) {
@@ -303,7 +310,7 @@ class LeadsController extends Controller
 
             $textFail = $totalFail;
             if ($totalFail > 0) {
-                $textFail = ' <a href="' . asset("storage/leads/{$fileFailName}") . '" class=" m-link m--font-danger" title="' . __('Download error file') . '">' . $totalFail . '</a>';
+                $textFail = ' <a download href="' . asset("storage/leads/{$fileFailName}") . '" class=" m-link m--font-danger" title="' . __('Download error file') . '">' . $totalFail . '</a>';
             }
 
             return response()->json([

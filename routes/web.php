@@ -40,3 +40,4 @@ foreach ($routeArr as $key => $routes) {
 }
 //ROUTE CHI TIẾT
 Route::namespace('Admin')->prefix('admin')->group(base_path('routes/modules/admin.php'));
+Route::namespace('Business')->prefix('business')->group(base_path('routes/modules/business.php'));

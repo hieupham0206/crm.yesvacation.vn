@@ -12,17 +12,17 @@
                 <span class="m-form__help"></span>
                 {!! $errors->first('name', '<div class="form-control-feedback">:message</div>') !!}
             </div>
-            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('title') ? 'has-danger' : ''}}">
-                <label for="txt_title">{{ $lead->label('title') }}</label>
-                <input class="form-control" name="title" type="text" id="txt_title" value="{{ $lead->title ?? old('title')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">
-                <span class="m-form__help"></span>
-                {!! $errors->first('title', '<div class="form-control-feedback">:message</div>') !!}
-            </div>
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('email') ? 'has-danger' : ''}}">
                 <label for="txt_email">{{ $lead->label('email') }}</label>
                 <input class="form-control" name="email" type="email" id="txt_email" value="{{ $lead->email ?? old('email')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">
                 <span class="m-form__help"></span>
                 {!! $errors->first('email', '<div class="form-control-feedback">:message</div>') !!}
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('title') ? 'has-danger' : ''}}">
+                <label for="txt_title">{{ $lead->label('title') }}</label>
+                <input class="form-control" name="title" type="text" id="txt_title" value="{{ $lead->title ?? old('title')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">
+                <span class="m-form__help"></span>
+                {!! $errors->first('title', '<div class="form-control-feedback">:message</div>') !!}
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('birthday') ? 'has-danger' : ''}}">
                 <label for="txt_birthday">{{ $lead->label('birthday') }}</label>
@@ -57,10 +57,10 @@
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('state') ? 'has-danger' : ''}}">
                 <label for="select_state">{{ $lead->label('state') }}</label>
-                <select name="state" class="form-control select" id="select_state">
+                <select name="state" class="form-control select" id="select_state" required>
                     <option></option>
                     @foreach ($lead->states as $key => $state)
-                        <option value="{{ $key }}" {{ $lead->state == $key ? ' selected' : '' }}>{{ $state }}</option>
+                        <option value="{{ $key }}" {{ $lead->state == $key || (! $lead->exists && $key === 1) ? ' selected' : '' }}>{{ $state }}</option>
                     @endforeach
                 </select>
                 <span class="m-form__help"></span>

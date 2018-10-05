@@ -92,12 +92,25 @@ $(function () {
 		lengthChange: true
 	});
 	$app.on('click', '.btn-delete', function () {
+		tableLead.actionDelete({ btnDelete: $(this) });
+	});
+	$app.on('click', '.btn-form-import', function () {
 		var url = $(this).data('url');
 
 		$('#modal_md').showModal({ url: url, params: {}, method: 'get' });
 	});
-	$app.on('click', '.btn-form-import', function () {
-		tableLead.actionDelete({ btnDelete: $(this) });
+	$('body').on('submit', '#import_leads_form', function (e) {
+		e.preventDefault();
+
+		mApp.block('.modal');
+		var url = $(this).prop('action');
+		var formData = new FormData($(this)[0]);
+
+		$(this).submitForm({ url: url, formData: formData, method: 'post' }).then(function () {
+			mApp.unblock('.modal');
+			tableLead.reload();
+			$('#modal_md').modal('hide');
+		});
 	});
 	$('#leads_search_form').on('submit', function () {
 		tableLead.reload();
@@ -122,6 +135,10 @@ $(function () {
 		if (ids.length > 0) {
 			tableLead.actionDelete({ btnDelete: $(this), params: { ids: ids } });
 		}
+	});
+
+	$('#modal_md').on('shown.modal.bs', function () {
+		$('.fileinput').fileinput();
 	});
 });
 
