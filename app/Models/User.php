@@ -97,11 +97,15 @@ class User extends Authenticatable
         'email',
         'password',
         'state',
-        'use_otp',
-        'otp',
-        'otp_expired_at',
+//        'use_otp',
+//        'otp',
+//        'otp_expired_at',
         'actor_id',
-        'actor_type'
+        'birthday',
+        'first_day_work',
+        'address',
+        'note',
+        'basic_salary',
     ];
     protected $hidden = [
         'password',

@@ -60,76 +60,64 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 74);
+/******/ 	return __webpack_require__(__webpack_require__.s = 78);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 74:
+/***/ 78:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(75);
+module.exports = __webpack_require__(79);
 
 
 /***/ }),
 
-/***/ 75:
+/***/ 79:
 /***/ (function(module, exports) {
 
 $(function () {
-	var $body = $('body');
-	var tableUrl = $('#table_translation_managers').data('url');
+    var $app = $('#app');
+    var tableDepartment = $('#table_departments').DataTable({
+        'serverSide': true,
+        'paging': true,
+        'ajax': $.fn.dataTable.pipeline({
+            url: route('departments.table'),
+            data: function data(q) {
+                q.filters = JSON.stringify($('#departments_search_form').serializeArray());
+            }
+        }),
+        conditionalPaging: true,
+        info: true,
+        lengthChange: true
+    });
+    $app.on('click', '.btn-delete', function () {
+        tableDepartment.actionDelete({ btnDelete: $(this) });
+    });
+    $('#departments_search_form').on('submit', function () {
+        tableDepartment.reload();
+        return false;
+    });
+    $('#btn_reset_filter').on('click', function () {
+        $('#departments_search_form').resetForm();
+        tableDepartment.reload();
+    });
 
-	var tableTranslateManager = $('#table_translation_managers').DataTable({
-		'serverSide': true,
-		'paging': true,
-		'ajax': $.fn.dataTable.pipeline({
-			url: tableUrl,
-			data: function data(q) {
-				q.filters = JSON.stringify($('#translation_managers_search_form').serializeArray());
-			}
-		}),
-		conditionalPaging: true,
-		info: true,
-		searching: false,
-		lengthChange: true,
-		responsive: true,
-		'columnDefs': [{
-			'targets': [-1],
-			'searchable': false,
-			'orderable': false,
-			'visible': true,
-			'width': '10%'
-		}]
-	});
+    //Export tools
+    $('#btn_export_excel').on('click', function () {
+        tableDepartment.exportExcel();
+    });
+    $('#btn_export_pdf').on('click', function () {
+        tableDepartment.exportPdf();
+    });
+    //Quick actions
+    $('#link_delete_selected_rows').on('click', function () {
+        var ids = $(".m-checkbox--single > input[type='checkbox']:checked").getValues();
 
-	$body.on('submit', '#translation_managers_search_form', function () {
-		tableTranslateManager.reload();
-		return false;
-	});
-	$body.on('click', '#btn_reset_filter', function () {
-		$('#translation_managers_search_form').resetForm();
-		tableTranslateManager.reload();
-	});
-	$body.on('click', '.btn-edit-translation', function () {
-		var key = $(this).parent().prev().prev().text();
-		var translatedText = $(this).parent().prev().text();
-		var url = $(this).data('url');
-
-		$('#modal_lg').showModal({ url: url, params: { key: key, translatedText: translatedText } });
-	});
-	$body.on('submit', '#form_edit_translation', function (e) {
-		mApp.block($(this)[0]);
-		var formData = new FormData($(this)[0]);
-		var url = $(this).prop('action');
-
-		$('#form_edit_translation').submitForm({ url: url, formData: formData }).then(function () {
-			mApp.unblock();
-			$('#modal_lg').modal('hide');
-			tableTranslateManager.reload();
-		});
-		e.preventDefault();
-	});
+        if (ids.length > 0) {
+            tableDepartment.actionDelete({ btnDelete: $(this), params: { ids: ids } });
+        }
+    });
 });
 
 /***/ })

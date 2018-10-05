@@ -37,6 +37,14 @@
                     "delete"
                 ],
                 "hide": "true"
+            },
+            "department": {
+                "actions": [
+                    "view",
+                    "create",
+                    "update",
+                    "delete"
+                ]
             }
         },
         "icon": "flaticon-cogwheel"
