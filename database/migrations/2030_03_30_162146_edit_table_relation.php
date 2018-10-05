@@ -40,8 +40,8 @@ class EditTableRelation extends Migration
         Schema::table('final_salaries', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
         });
-        //Add khóa ngoại bảng department_details
-        Schema::table('department_details', function (Blueprint $table) {
+        //Add khóa ngoại bảng user_department
+        Schema::table('user_department', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('department_id')->references('id')->on('departments');
         });

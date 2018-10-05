@@ -21,6 +21,11 @@
       "translation_managers": {
         "icon": "fa fa-globe",
         "parent": "system"
+      },
+      "departments": {
+        "icon": "",
+        "parent": "",
+        "hide": true
       }
     },
     "icon": "flaticon-cogwheel"

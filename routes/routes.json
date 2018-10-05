@@ -4,7 +4,8 @@
         "activity_logs",
         "roles",
         "system_logs",
-        "translation_managers"
+        "translation_managers",
+        "departments"
     ],
     "department": [
         "events"

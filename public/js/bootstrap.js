@@ -71,7 +71,7 @@
 
 
 var bind = __webpack_require__(6);
-var isBuffer = __webpack_require__(19);
+var isBuffer = __webpack_require__(20);
 
 /*global toString:true*/
 
@@ -10779,7 +10779,7 @@ return jQuery;
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(21);
+var normalizeHeaderName = __webpack_require__(22);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -13632,12 +13632,12 @@ module.exports = function bind(fn, thisArg) {
 
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(22);
-var buildURL = __webpack_require__(24);
-var parseHeaders = __webpack_require__(25);
-var isURLSameOrigin = __webpack_require__(26);
+var settle = __webpack_require__(23);
+var buildURL = __webpack_require__(25);
+var parseHeaders = __webpack_require__(26);
+var isURLSameOrigin = __webpack_require__(27);
 var createError = __webpack_require__(8);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(27);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(28);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -13734,7 +13734,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(28);
+      var cookies = __webpack_require__(29);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -13818,7 +13818,7 @@ module.exports = function xhrAdapter(config) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(23);
+var enhanceError = __webpack_require__(24);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -13879,8 +13879,8 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-__webpack_require__(37);
-module.exports = __webpack_require__(39);
+__webpack_require__(38);
+module.exports = __webpack_require__(40);
 
 
 /***/ }),
@@ -13898,13 +13898,13 @@ try {
 	//todo: chuyển bootbox qua theme vendor khi release v5
 	window.bootbox = __webpack_require__(14);
 
-	__webpack_require__(87);
+	__webpack_require__(15);
 } catch (e) {
 	console.log(e);
 }
 
-window._ = __webpack_require__(15);
-window.axios = __webpack_require__(17);
+window._ = __webpack_require__(16);
+window.axios = __webpack_require__(18);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -13915,7 +13915,7 @@ if (token) {
 } else {
 	console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
-__webpack_require__(36);
+__webpack_require__(37);
 
 /***/ }),
 /* 13 */
@@ -18912,6 +18912,197 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 /* 15 */
+/***/ (function(module, exports) {
+
+/* ===========================================================
+ * Bootstrap: fileinput.js v3.1.3
+ * http://jasny.github.com/bootstrap/javascript/#fileinput
+ * ===========================================================
+ * Copyright 2012-2014 Arnold Daniels
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ========================================================== */
+
++function ($) {
+	'use strict';
+
+	var isIE = window.navigator.appName == 'Microsoft Internet Explorer';
+
+	// FILEUPLOAD PUBLIC CLASS DEFINITION
+	// =================================
+
+	var Fileinput = function Fileinput(element, options) {
+		this.$element = $(element);
+
+		this.$input = this.$element.find(':file');
+		if (this.$input.length === 0) return;
+
+		this.name = this.$input.attr('name') || options.name;
+
+		this.$hidden = this.$element.find('input[type=hidden][name="' + this.name + '"]');
+		if (this.$hidden.length === 0) {
+			this.$hidden = $('<input type="hidden">').insertBefore(this.$input);
+		}
+
+		this.$preview = this.$element.find('.fileinput-preview');
+		var height = this.$preview.css('height');
+		if (this.$preview.css('display') !== 'inline' && height !== '0px' && height !== 'none') {
+			this.$preview.css('line-height', height);
+		}
+
+		this.original = {
+			exists: this.$element.hasClass('fileinput-exists'),
+			preview: this.$preview.html(),
+			hiddenVal: this.$hidden.val()
+		};
+
+		this.listen();
+	};
+
+	Fileinput.prototype.listen = function () {
+		this.$input.on('change.bs.fileinput', $.proxy(this.change, this));
+		$(this.$input[0].form).on('reset.bs.fileinput', $.proxy(this.reset, this));
+
+		this.$element.find('[data-trigger="fileinput"]').on('click.bs.fileinput', $.proxy(this.trigger, this));
+		this.$element.find('[data-dismiss="fileinput"]').on('click.bs.fileinput', $.proxy(this.clear, this));
+	}, Fileinput.prototype.change = function (e) {
+		var files = e.target.files === undefined ? e.target && e.target.value ? [{ name: e.target.value.replace(/^.+\\/, '') }] : [] : e.target.files;
+
+		e.stopPropagation();
+
+		if (files.length === 0) {
+			this.clear();
+			return;
+		}
+
+		this.$hidden.val('');
+		this.$hidden.attr('name', '');
+		this.$input.attr('name', this.name);
+
+		var file = files[0];
+
+		if (this.$preview.length > 0 && (typeof file.type !== 'undefined' ? file.type.match(/^image\/(gif|png|jpeg)$/) : file.name.match(/\.(gif|png|jpe?g)$/i)) && typeof FileReader !== 'undefined') {
+			var reader = new FileReader();
+			var preview = this.$preview;
+			var element = this.$element;
+
+			reader.onload = function (re) {
+				var $img = $('<img>');
+				$img[0].src = re.target.result;
+				files[0].result = re.target.result;
+
+				element.find('.fileinput-filename').text(file.name);
+
+				// if parent has max-height, using `(max-)height: 100%` on child doesn't take padding and border into account
+				if (preview.css('max-height') != 'none') $img.css('max-height', parseInt(preview.css('max-height'), 10) - parseInt(preview.css('padding-top'), 10) - parseInt(preview.css('padding-bottom'), 10) - parseInt(preview.css('border-top'), 10) - parseInt(preview.css('border-bottom'), 10));
+
+				preview.html($img);
+				element.addClass('fileinput-exists').removeClass('fileinput-new');
+
+				element.trigger('change.bs.fileinput', files);
+			};
+
+			reader.readAsDataURL(file);
+		} else {
+			this.$element.find('.fileinput-filename').text(file.name);
+			this.$preview.text(file.name);
+
+			this.$element.addClass('fileinput-exists').removeClass('fileinput-new');
+
+			this.$element.trigger('change.bs.fileinput');
+		}
+	}, Fileinput.prototype.clear = function (e) {
+		if (e) e.preventDefault();
+
+		this.$hidden.val('');
+		this.$hidden.attr('name', this.name);
+		this.$input.attr('name', '');
+
+		//ie8+ doesn't support changing the value of input with type=file so clone instead
+		if (isIE) {
+			var inputClone = this.$input.clone(true);
+			this.$input.after(inputClone);
+			this.$input.remove();
+			this.$input = inputClone;
+		} else {
+			this.$input.val('');
+		}
+
+		this.$preview.html('');
+		this.$element.find('.fileinput-filename').text('');
+		this.$element.addClass('fileinput-new').removeClass('fileinput-exists');
+
+		if (e !== undefined) {
+			this.$input.trigger('change');
+			this.$element.trigger('clear.bs.fileinput');
+		}
+	}, Fileinput.prototype.reset = function () {
+		this.clear();
+
+		this.$hidden.val(this.original.hiddenVal);
+		this.$preview.html(this.original.preview);
+		this.$element.find('.fileinput-filename').text('');
+
+		if (this.original.exists) this.$element.addClass('fileinput-exists').removeClass('fileinput-new');else this.$element.addClass('fileinput-new').removeClass('fileinput-exists');
+
+		this.$element.trigger('reset.bs.fileinput');
+	}, Fileinput.prototype.trigger = function (e) {
+		this.$input.trigger('click');
+		e.preventDefault();
+	};
+
+	// FILEUPLOAD PLUGIN DEFINITION
+	// ===========================
+
+	var old = $.fn.fileinput;
+
+	$.fn.fileinput = function (options) {
+		return this.each(function () {
+			var $this = $(this),
+			    data = $this.data('bs.fileinput');
+			if (!data) $this.data('bs.fileinput', data = new Fileinput(this, options));
+			if (typeof options == 'string') data[options]();
+		});
+	};
+
+	$.fn.fileinput.Constructor = Fileinput;
+
+	// FILEINPUT NO CONFLICT
+	// ====================
+
+	$.fn.fileinput.noConflict = function () {
+		$.fn.fileinput = old;
+		return this;
+	};
+
+	// FILEUPLOAD DATA-API
+	// ==================
+
+	$(document).on('click.fileinput.data-api', '[data-provides="fileinput"]', function (e) {
+		var $this = $(this);
+		if ($this.data('bs.fileinput')) return;
+		$this.fileinput($this.data());
+
+		var $target = $(e.target).closest('[data-dismiss="fileinput"],[data-trigger="fileinput"]');
+		if ($target.length > 0) {
+			e.preventDefault();
+			$target.trigger('click.bs.fileinput');
+		}
+	});
+}(window.jQuery);
+
+/***/ }),
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -36023,10 +36214,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(16)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(17)(module)))
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -36054,13 +36245,13 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(18);
+module.exports = __webpack_require__(19);
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36068,7 +36259,7 @@ module.exports = __webpack_require__(18);
 
 var utils = __webpack_require__(0);
 var bind = __webpack_require__(6);
-var Axios = __webpack_require__(20);
+var Axios = __webpack_require__(21);
 var defaults = __webpack_require__(3);
 
 /**
@@ -36103,14 +36294,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(10);
-axios.CancelToken = __webpack_require__(34);
+axios.CancelToken = __webpack_require__(35);
 axios.isCancel = __webpack_require__(9);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(35);
+axios.spread = __webpack_require__(36);
 
 module.exports = axios;
 
@@ -36119,7 +36310,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 /*!
@@ -36146,7 +36337,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36154,8 +36345,8 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(3);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(29);
-var dispatchRequest = __webpack_require__(30);
+var InterceptorManager = __webpack_require__(30);
+var dispatchRequest = __webpack_require__(31);
 
 /**
  * Create a new instance of Axios
@@ -36232,7 +36423,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36251,7 +36442,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36284,7 +36475,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36312,7 +36503,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36385,7 +36576,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36445,7 +36636,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36520,7 +36711,7 @@ module.exports = (
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36563,7 +36754,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36623,7 +36814,7 @@ module.exports = (
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36682,18 +36873,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(31);
+var transformData = __webpack_require__(32);
 var isCancel = __webpack_require__(9);
 var defaults = __webpack_require__(3);
-var isAbsoluteURL = __webpack_require__(32);
-var combineURLs = __webpack_require__(33);
+var isAbsoluteURL = __webpack_require__(33);
+var combineURLs = __webpack_require__(34);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -36775,7 +36966,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36802,7 +36993,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36823,7 +37014,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36844,7 +37035,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36908,7 +37099,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36942,7 +37133,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports) {
 
 var styles = {
@@ -36977,255 +37168,17 @@ console.log('%c' + contents.title3, styles.title);
 console.log(contents.content3);
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 38 */,
-/* 39 */
+/* 39 */,
+/* 40 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 40 */,
-/* 41 */,
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */,
-/* 72 */,
-/* 73 */,
-/* 74 */,
-/* 75 */,
-/* 76 */,
-/* 77 */,
-/* 78 */,
-/* 79 */,
-/* 80 */,
-/* 81 */,
-/* 82 */,
-/* 83 */,
-/* 84 */,
-/* 85 */,
-/* 86 */,
-/* 87 */
-/***/ (function(module, exports) {
-
-/* ===========================================================
- * Bootstrap: fileinput.js v3.1.3
- * http://jasny.github.com/bootstrap/javascript/#fileinput
- * ===========================================================
- * Copyright 2012-2014 Arnold Daniels
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================== */
-
-+function ($) {
-	'use strict';
-
-	var isIE = window.navigator.appName == 'Microsoft Internet Explorer';
-
-	// FILEUPLOAD PUBLIC CLASS DEFINITION
-	// =================================
-
-	var Fileinput = function Fileinput(element, options) {
-		this.$element = $(element);
-
-		this.$input = this.$element.find(':file');
-		if (this.$input.length === 0) return;
-
-		this.name = this.$input.attr('name') || options.name;
-
-		this.$hidden = this.$element.find('input[type=hidden][name="' + this.name + '"]');
-		if (this.$hidden.length === 0) {
-			this.$hidden = $('<input type="hidden">').insertBefore(this.$input);
-		}
-
-		this.$preview = this.$element.find('.fileinput-preview');
-		var height = this.$preview.css('height');
-		if (this.$preview.css('display') !== 'inline' && height !== '0px' && height !== 'none') {
-			this.$preview.css('line-height', height);
-		}
-
-		this.original = {
-			exists: this.$element.hasClass('fileinput-exists'),
-			preview: this.$preview.html(),
-			hiddenVal: this.$hidden.val()
-		};
-
-		this.listen();
-	};
-
-	Fileinput.prototype.listen = function () {
-		this.$input.on('change.bs.fileinput', $.proxy(this.change, this));
-		$(this.$input[0].form).on('reset.bs.fileinput', $.proxy(this.reset, this));
-
-		this.$element.find('[data-trigger="fileinput"]').on('click.bs.fileinput', $.proxy(this.trigger, this));
-		this.$element.find('[data-dismiss="fileinput"]').on('click.bs.fileinput', $.proxy(this.clear, this));
-	}, Fileinput.prototype.change = function (e) {
-		var files = e.target.files === undefined ? e.target && e.target.value ? [{ name: e.target.value.replace(/^.+\\/, '') }] : [] : e.target.files;
-
-		e.stopPropagation();
-
-		if (files.length === 0) {
-			this.clear();
-			return;
-		}
-
-		this.$hidden.val('');
-		this.$hidden.attr('name', '');
-		this.$input.attr('name', this.name);
-
-		var file = files[0];
-
-		if (this.$preview.length > 0 && (typeof file.type !== 'undefined' ? file.type.match(/^image\/(gif|png|jpeg)$/) : file.name.match(/\.(gif|png|jpe?g)$/i)) && typeof FileReader !== 'undefined') {
-			var reader = new FileReader();
-			var preview = this.$preview;
-			var element = this.$element;
-
-			reader.onload = function (re) {
-				var $img = $('<img>');
-				$img[0].src = re.target.result;
-				files[0].result = re.target.result;
-
-				element.find('.fileinput-filename').text(file.name);
-
-				// if parent has max-height, using `(max-)height: 100%` on child doesn't take padding and border into account
-				if (preview.css('max-height') != 'none') $img.css('max-height', parseInt(preview.css('max-height'), 10) - parseInt(preview.css('padding-top'), 10) - parseInt(preview.css('padding-bottom'), 10) - parseInt(preview.css('border-top'), 10) - parseInt(preview.css('border-bottom'), 10));
-
-				preview.html($img);
-				element.addClass('fileinput-exists').removeClass('fileinput-new');
-
-				element.trigger('change.bs.fileinput', files);
-			};
-
-			reader.readAsDataURL(file);
-		} else {
-			this.$element.find('.fileinput-filename').text(file.name);
-			this.$preview.text(file.name);
-
-			this.$element.addClass('fileinput-exists').removeClass('fileinput-new');
-
-			this.$element.trigger('change.bs.fileinput');
-		}
-	}, Fileinput.prototype.clear = function (e) {
-		if (e) e.preventDefault();
-
-		this.$hidden.val('');
-		this.$hidden.attr('name', this.name);
-		this.$input.attr('name', '');
-
-		//ie8+ doesn't support changing the value of input with type=file so clone instead
-		if (isIE) {
-			var inputClone = this.$input.clone(true);
-			this.$input.after(inputClone);
-			this.$input.remove();
-			this.$input = inputClone;
-		} else {
-			this.$input.val('');
-		}
-
-		this.$preview.html('');
-		this.$element.find('.fileinput-filename').text('');
-		this.$element.addClass('fileinput-new').removeClass('fileinput-exists');
-
-		if (e !== undefined) {
-			this.$input.trigger('change');
-			this.$element.trigger('clear.bs.fileinput');
-		}
-	}, Fileinput.prototype.reset = function () {
-		this.clear();
-
-		this.$hidden.val(this.original.hiddenVal);
-		this.$preview.html(this.original.preview);
-		this.$element.find('.fileinput-filename').text('');
-
-		if (this.original.exists) this.$element.addClass('fileinput-exists').removeClass('fileinput-new');else this.$element.addClass('fileinput-new').removeClass('fileinput-exists');
-
-		this.$element.trigger('reset.bs.fileinput');
-	}, Fileinput.prototype.trigger = function (e) {
-		this.$input.trigger('click');
-		e.preventDefault();
-	};
-
-	// FILEUPLOAD PLUGIN DEFINITION
-	// ===========================
-
-	var old = $.fn.fileinput;
-
-	$.fn.fileinput = function (options) {
-		return this.each(function () {
-			var $this = $(this),
-			    data = $this.data('bs.fileinput');
-			if (!data) $this.data('bs.fileinput', data = new Fileinput(this, options));
-			if (typeof options == 'string') data[options]();
-		});
-	};
-
-	$.fn.fileinput.Constructor = Fileinput;
-
-	// FILEINPUT NO CONFLICT
-	// ====================
-
-	$.fn.fileinput.noConflict = function () {
-		$.fn.fileinput = old;
-		return this;
-	};
-
-	// FILEUPLOAD DATA-API
-	// ==================
-
-	$(document).on('click.fileinput.data-api', '[data-provides="fileinput"]', function (e) {
-		var $this = $(this);
-		if ($this.data('bs.fileinput')) return;
-		$this.fileinput($this.data());
-
-		var $target = $(e.target).closest('[data-dismiss="fileinput"],[data-trigger="fileinput"]');
-		if ($target.length > 0) {
-			e.preventDefault();
-			$target.trigger('click.bs.fileinput');
-		}
-	});
-}(window.jQuery);
 
 /***/ })
 /******/ ]);
