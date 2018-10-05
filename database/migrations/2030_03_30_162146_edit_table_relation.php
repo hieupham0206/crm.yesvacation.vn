@@ -45,6 +45,10 @@ class EditTableRelation extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('department_id')->references('id')->on('departments');
         });
+        //Add khóa ngoại bảng departments
+        Schema::table('departments', function (Blueprint $table) {
+            $table->foreign('province_id')->references('id')->on('provinces');
+        });
         //Add khóa ngoại bảng history_calls
         Schema::table('history_calls', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');

@@ -43,6 +43,12 @@
                 <span class="m-form__help"></span>
                 {!! $errors->first('name', '<div class="form-control-feedback">:message</div>') !!}
             </div>
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('basic_salary') ? 'has-danger' : ''}}">
+                <label for="txt_basic_salary">{{ $user->label('basic_salary') }}</label>
+                <input type="text" name="basic_salary" id="txt_basic_salary" class="form-control m-input" placeholder="{{ __('Enter value') }}" value="{{ $user->basic_salary ?? old('basic_salary') }}" autocomplete="off">
+                <span class="m-form__help"></span>
+                {!! $errors->first('basic_salary', '<div class="form-control-feedback">:message</div>') !!}
+            </div>
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('role_id') ? 'has-danger' : ''}}">
                 <label for="select_role">{{ $user->label('Role') }}</label>
                 <select name="role_id" id="select_role" class="form-control select2-ajax" data-url="{{ route('roles.list') }}">
@@ -65,16 +71,50 @@
                 <span class="m-form__help"></span>
                 {!! $errors->first('state', '<div class="form-control-feedback">:message</div>') !!}
             </div>
-            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('use_otp') ? 'has-danger' : ''}}">
-                <label for="select_use_otp">{{ $user->label('use_otp') }}</label>
-                <select name="use_otp" class="form-control select" id="select_use_otp">
-                    <option></option>
-                    @foreach ($user->confirmations as $key => $confirmation)
-                        <option value="{{ $key }}" {{ $user->use_otp == $key ? ' selected' : '' }}>{{ $confirmation }}</option>
-                    @endforeach
-                </select>
+            {{--<div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('use_otp') ? 'has-danger' : ''}}">--}}
+                {{--<label for="select_use_otp">{{ $user->label('use_otp') }}</label>--}}
+                {{--<select name="use_otp" class="form-control select" id="select_use_otp">--}}
+                    {{--<option></option>--}}
+                    {{--@foreach ($user->confirmations as $key => $confirmation)--}}
+                        {{--<option value="{{ $key }}" {{ $user->use_otp == $key ? ' selected' : '' }}>{{ $confirmation }}</option>--}}
+                    {{--@endforeach--}}
+                {{--</select>--}}
+                {{--<span class="m-form__help"></span>--}}
+                {{--{!! $errors->first('use_otp', '<div class="form-control-feedback">:message</div>') !!}--}}
+            {{--</div>--}}
+        </div>
+        <div class="form-group m-form__group row">
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('phone') ? 'has-danger' : ''}}">
+                <label for="txt_phone">{{ $user->label('phone') }}</label>
+                <input type="text" name="phone" id="txt_phone" class="form-control m-input" placeholder="{{ __('Enter value') }}" value="{{ $user->phone ?? old('phone') }}" autocomplete="off">
                 <span class="m-form__help"></span>
-                {!! $errors->first('use_otp', '<div class="form-control-feedback">:message</div>') !!}
+                {!! $errors->first('phone', '<div class="form-control-feedback">:message</div>') !!}
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('birthday') ? 'has-danger' : ''}}">
+                <label for="txt_birthday">{{ $user->label('birthday') }}</label>
+                <input type="text" name="birthday" id="txt_birthday" class="form-control m-input text-datepicker" placeholder="{{ __('Enter value') }}" value="{{ $user->birthday ?? old('birthday') }}" autocomplete="off">
+                <span class="m-form__help"></span>
+                {!! $errors->first('birthday', '<div class="form-control-feedback">:message</div>') !!}
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('first_day_work') ? 'has-danger' : ''}}">
+                <label for="txt_first_day_work">{{ $user->label('first_day_work') }}</label>
+                <input type="text" name="first_day_work" id="txt_first_day_work" class="form-control m-input text-datepicker" placeholder="{{ __('Enter value') }}" value="{{ $user->first_day_work ?? old('first_day_work') }}" autocomplete="off">
+                <span class="m-form__help"></span>
+                {!! $errors->first('first_day_work', '<div class="form-control-feedback">:message</div>') !!}
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('address') ? 'has-danger' : ''}}">
+                <label for="txt_address">{{ $user->label('address') }}</label>
+                <input type="text" name="address" id="txt_address" class="form-control m-input" placeholder="{{ __('Enter value') }}" value="{{ $user->address ?? old('address') }}" autocomplete="off">
+                <span class="m-form__help"></span>
+                {!! $errors->first('address', '<div class="form-control-feedback">:message</div>') !!}
+            </div>
+        </div>
+        <div class="form-group m-form__group row">
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('note') ? 'has-danger' : ''}}">
+                <label for="txt_note">{{ $user->label('note') }}</label>
+                <textarea name="note" id="txt_note" class="form-control m-input" placeholder="{{ __('Enter value') }}" rows="4" autocomplete="off">{{ $user->note ?? old('note') }}</textarea>
+                <span class="m-form__help"></span>
+                {!! $errors->first('note', '<div class="form-control-feedback">:message</div>') !!}
             </div>
         </div>
         <div class="form-group m-form__group row">
