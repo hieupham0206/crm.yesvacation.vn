@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lead;
+
 class HomeController extends Controller
 {
     /**
@@ -11,7 +13,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $lead = new Lead();
+        return view('tele_marketer_console',compact('lead'));
     }
 
     public function lang()

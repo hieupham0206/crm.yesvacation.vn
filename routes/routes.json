@@ -5,6 +5,7 @@
         "roles",
         "system_logs",
         "translation_managers",
+        "history_calls",
         "departments"
     ],
     "department": [
