@@ -13,13 +13,16 @@ use Spatie\{Activitylog\Traits\LogsActivity, Permission\Traits\HasRoles};
  *
  * @property int $id
  * @property string $username
- * @property string|null $name
+ * @property string $name
  * @property string $email
+ * @property int $state -1: Chưa kích hoạt; 1: Đã kích hoạt
  * @property string|null $phone
- * @property int $state                  -1: Chưa kích hoạt; 1: Đã kích hoạt
- * @property int|null $actor_id
- * @property string|null $actor_type
- * @property int $use_otp                1: có sử dụng; -1: Không sử dụng
+ * @property float $basic_salary
+ * @property string|null $birthday
+ * @property string|null $first_day_work
+ * @property string|null $address
+ * @property string|null $note
+ * @property int $use_otp -1: Không sử dụng; 1: có sử dụng
  * @property string|null $otp
  * @property string|null $otp_expired_at OTP hết hạn trong 5 phút
  * @property string $password
@@ -30,9 +33,11 @@ use Spatie\{Activitylog\Traits\LogsActivity, Permission\Traits\HasRoles};
  * @property string|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Activity[] $activity
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $actor
+ * @property-read mixed $confirmations
  * @property-read mixed $is_use_otp
  * @property-read mixed $state_name
  * @property-read mixed $state_text
+ * @property-read mixed $states
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
@@ -46,14 +51,17 @@ use Spatie\{Activitylog\Traits\LogsActivity, Permission\Traits\HasRoles};
  * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User role($roles)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User search($term)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereActorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereActorType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereBasicSalary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereBirthday($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereFirstDayWork($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereLastLogin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereNote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereOtp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereOtpExpiredAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
@@ -198,5 +206,37 @@ class User extends Authenticatable
     public static function isUseOtp($username)
     {
         return self::query()->where('username', $username)->where('use_otp', 1)->exists();
+    }
+
+    public function bonuses()
+    {
+        return $this->hasMany(\App\Models\Bonus::class);
+    }
+
+    public function contract_details()
+    {
+        return $this->hasMany(\App\Models\ContractDetail::class);
+    }
+
+    public function event_data_details()
+    {
+        return $this->hasMany(\App\Models\EventDataDetail::class);
+    }
+
+    public function final_salaries()
+    {
+        return $this->hasMany(\App\Models\FinalSalary::class);
+    }
+
+    public function history_calls()
+    {
+        return $this->hasMany(\App\Models\HistoryCall::class);
+    }
+
+    public function departments()
+    {
+        return $this->belongsToMany(\App\Models\Department::class, 'user_department')
+                    ->withPivot('id', 'type')
+                    ->withTimestamps();
     }
 }

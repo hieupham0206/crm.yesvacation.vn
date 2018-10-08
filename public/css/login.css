@@ -53,7 +53,7 @@ body.m-content--skin-light2 {
 }
 
 .m-login.m-login--2.m-login-2--skin-2 .m-login__container .m-login__form .m-login__form-sub .m-link:hover::after {
-  border-bottom: 1px solid #0393B0;
+  border-bottom: 1px solid #2be6ca;
   opacity: 0.3;
   filter: alpha(opacity=30);
 }

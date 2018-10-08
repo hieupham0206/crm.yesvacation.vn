@@ -69,6 +69,11 @@ class EditTableRelation extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('lead_id')->references('id')->on('leads');
         });
+        //Add khóa ngoại bảng time_breaks
+        Schema::table('time_breaks', function (Blueprint $table) {
+            $table->foreign('reason_break_id')->references('id')->on('reason_breaks');
+            $table->foreign('user_id')->references('id')->on('users');
+        });
     }
 
     /**

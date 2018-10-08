@@ -13,31 +13,6 @@
                 <strong></strong>
             </div>
             <div class="form-group row">
-                {{--@if ($user->isAdmin() || $user->isCrmExpert() || $user->isIt())--}}
-                    {{--<div class="col-12 col-md-6 m-form__group-sub">--}}
-                        {{--<div class="form-group">--}}
-                            {{--<label for="select_modal_store_id">{{ $customer->label('store') }}</label>--}}
-                            {{--<select name="store_id" class="form-control select2-ajax" id="select_modal_store_id" data-url="{{ route('stores.list') }}" required>--}}
-                                {{--<option></option>--}}
-                                {{--@if ($user->isCrmExpert())--}}
-                                    {{--@php--}}
-                                        {{--$employeeStore = $user->employee_first_store--}}
-                                    {{--@endphp--}}
-
-                                    {{--@if ($employeeStore)--}}
-                                        {{--<option value="{{ $employeeStore->id }}" selected>{{ $employeeStore->name }}</option>--}}
-                                    {{--@endif--}}
-                                {{--@endif--}}
-                            {{--</select>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                    {{--<div class="col-12 col-md-6 m-form__group-sub">--}}
-                        {{--<label for="select_modal_employee_id">{{ $customer->label('employee') }}</label>--}}
-                        {{--<select name="employee_id" class="form-control" id="select_modal_employee_id" data-url="{{ route('employees.list') }}" required>--}}
-                            {{--<option></option>--}}
-                        {{--</select>--}}
-                    {{--</div>--}}
-                {{--@endif--}}
                 <div class="col-lg-12">
                     <div class="fileinput fileinput-new">
                         <div class="input-group">

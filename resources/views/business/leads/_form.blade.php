@@ -19,8 +19,14 @@
                 {!! $errors->first('email', '<div class="form-control-feedback">:message</div>') !!}
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('title') ? 'has-danger' : ''}}">
-                <label for="txt_title">{{ $lead->label('title') }}</label>
-                <input class="form-control" name="title" type="text" id="txt_title" value="{{ $lead->title ?? old('title')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">
+                <label for="select_title">{{ $lead->label('title') }}</label>
+                {{--<input class="form-control" name="title" type="text" id="txt_title" value="{{ $lead->title ?? old('title')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">--}}
+                <select name="state" class="form-control select" id="select_title" required>
+                    <option></option>
+                    @foreach ($lead->titles as $key => $title)
+                        <option value="{{ $key }}" {{ $lead->title == $title || (! $lead->exists && $key === 1) ? ' selected' : '' }}>{{ $title }}</option>
+                    @endforeach
+                </select>
                 <span class="m-form__help"></span>
                 {!! $errors->first('title', '<div class="form-control-feedback">:message</div>') !!}
             </div>

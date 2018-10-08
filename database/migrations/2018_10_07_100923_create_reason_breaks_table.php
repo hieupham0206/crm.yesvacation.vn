@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCallbacksTable extends Migration
+class CreateReasonBreaksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateCallbacksTable extends Migration
      */
     public function up()
     {
-        Schema::create('callbacks', function (Blueprint $table) {
+        Schema::create('reason_breaks', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->unsignedInteger('user_id');
-            $table->unsignedInteger('lead_id');
-//            $table->unique(['user_id', 'lead_id']);
-            $table->tinyInteger('state')->default(\App\Enums\Confirmation::NO)->comment('1: Done; -1: Not Yet');
+            $table->string('name');
+            $table->integer('time_alert')->default(0);
 
             $table->timestamps();
         });
@@ -32,6 +30,6 @@ class CreateCallbacksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('callbacks');
+        Schema::dropIfExists('reason_breaks');
     }
 }

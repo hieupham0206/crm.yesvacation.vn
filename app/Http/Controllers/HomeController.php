@@ -13,8 +13,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $lead = new Lead();
-        return view('tele_marketer_console',compact('lead'));
+        $lead = Lead::where('is_locked', -1)
+                    ->getAvailable()
+                    ->first();
+
+//        $lead->update(['is_locked' => 1]);
+        $lead = $lead ?? new Lead();
+
+        return view('tele_marketer_console', compact('lead'));
     }
 
     public function lang()

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class DepartmentSeeder extends Seeder
+class AppointmentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +11,6 @@ class DepartmentSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\Models\Department::class, 5)->create();
+        factory(\App\Models\Appointment::class, 20)->create();
     }
 }

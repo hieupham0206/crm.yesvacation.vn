@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAppointmentsTable extends Migration
+class CreateTimeBreaksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateAppointmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('appointments', function (Blueprint $table) {
+        Schema::create('time_breaks', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->unsignedInteger('reason_break_id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('lead_id');
-//            $table->unique(['user_id', 'lead_id']);
-            $table->tinyInteger('state')->default(\App\Enums\Confirmation::NO)->comment('1: Confirm; -1: Not');
-            $table->tinyInteger('type')->default(1)->comment('1: Email; 2: SMS ; 3: Both');
+            $table->timestamp('start_break')->nullable();
+            $table->timestamp('end_break')->nullable();
+            $table->string('another_reason')->nullable();
 
             $table->timestamps();
         });
@@ -33,6 +33,6 @@ class CreateAppointmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('appointments');
+        Schema::dropIfExists('time_breaks');
     }
 }

@@ -61,8 +61,8 @@ class AppointmentTable extends DataTable
             }
 
             $dataArray[] = [
-                '<label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand"><input type="checkbox" value="' . $appointment->id . '"><span></span></label>',
-                $appointment->name,
+//                '<label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand"><input type="checkbox" value="' . $appointment->id . '"><span></span></label>',
+                "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
                 $appointment->lead->title,
                 $appointment->created_at,
 

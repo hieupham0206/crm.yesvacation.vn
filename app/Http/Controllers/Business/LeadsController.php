@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
+use App\Models\Callback;
 use App\Models\Lead;
 use App\Models\Province;
+use App\Models\TimeBreak;
 use App\Tables\Business\LeadTable;
 use App\Tables\TableFacade;
 use Carbon\Carbon;
@@ -65,6 +68,12 @@ class LeadsController extends Controller
         $requestData = $request->all();
         Lead::create($requestData);
 
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => __('Data created successfully')
+            ]);
+        }
+
         return redirect(route('leads.index'))->with('message', __('Data created successfully'));
     }
 
@@ -107,6 +116,12 @@ class LeadsController extends Controller
         ]);
         $requestData = $request->all();
         $lead->update($requestData);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => __('Data edited successfully')
+            ]);
+        }
 
         return redirect(route('leads.index'))->with('message', __('Data edited successfully'));
     }
@@ -163,15 +178,25 @@ class LeadsController extends Controller
     public function leads()
     {
         $query      = request()->get('query', '');
+        $leadId     = request()->get('leadId', '');
+        $isNew      = request()->get('isNew', '');
         $page       = request()->get('page', 1);
         $excludeIds = request()->get('excludeIds', []);
         $offset     = ($page - 1) * 10;
-        $leads      = Lead::query()->select(['id', 'name']);
+        $leads      = Lead::query();
 
-        $leads->filterWhere([
+        $leads->andFilterWhere([
             ['name', 'like', $query],
-            ['id', '!=', $excludeIds]
+            ['id', '!=', $excludeIds],
         ]);
+
+        if ($isNew) {
+            $leads->getAvailable();
+        }
+
+        if ($leadId) {
+            $leads->whereKey($leadId);
+        }
 
         $totalCount = $leads->count();
         $leads      = $leads->offset($offset)->limit(10)->get();
@@ -187,7 +212,7 @@ class LeadsController extends Controller
      */
     public function formImport()
     {
-        return view('business.leads._form_import', ['customer' => new Lead(), 'user' => auth()->user()]);
+        return view('business.leads._form_import');
     }
 
     /**
@@ -321,5 +346,58 @@ class LeadsController extends Controller
         return response()->json([
             'message' => __('File not found')
         ], 500);
+    }
+
+    /**
+     * @param Lead $lead
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function formChangeState(Lead $lead)
+    {
+        return view('business.leads._form_change_state', ['lead' => $lead]);
+    }
+
+    /**
+     * @param Lead $lead
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changeState(Lead $lead, Request $request)
+    {
+        $newState = $request->state;
+        $comment  = $request->comment;
+
+        if ($newState) {
+            $lead->update([
+                'state'   => $newState,
+                'comment' => $comment
+            ]);
+
+            //state = 8: lưu vào bảng appointment
+            if ($newState == 8) {
+                Appointment::create([
+                    'lead_id' => $lead->id,
+                    'user_id' => auth()->id()
+                ]);
+            }
+
+            //state = 7: lưu vào bảng callback
+            if ($newState == 7) {
+                Callback::create([
+                    'lead_id' => $lead->id,
+                    'user_id' => auth()->id()
+                ]);
+            }
+
+            return response()->json([
+                'message' => __('Data edited successfully')
+            ]);
+        }
+
+        return response()->json([
+            'message' => __('Data edited unsuccessfully')
+        ]);
     }
 }

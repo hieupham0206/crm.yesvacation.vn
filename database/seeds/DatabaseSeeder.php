@@ -13,16 +13,21 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ProvinceSeeder::class,
+            LeadSeeder::class,
 
             RoleSeeder::class,
             PermissionSeeder::class,
             UserSeeder::class,
+
+            ReasonBreakSeeder::class
         ]);
 
         if (App::environment() === 'local') {
             // Chạy seeder ở môi trường local
             $this->call([
-//                QuickSearchSeeder::class
+                HistoryCallSeeder::class,
+                AppointmentSeeder::class,
+                CallbackSeeder::class,
             ]);
         }
     }

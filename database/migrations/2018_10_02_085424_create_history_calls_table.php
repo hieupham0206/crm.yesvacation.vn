@@ -17,7 +17,7 @@ class CreateHistoryCallsTable extends Migration
 
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('lead_id');
-            $table->unsignedInteger('member_id');
+            $table->unsignedInteger('member_id')->nullable();
 
             $table->string('name');
             $table->string('phone')->nullable();

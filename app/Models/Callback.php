@@ -17,7 +17,9 @@ class Callback extends \App\Models\Base\Callback
 
     public $labels = [];
 
-    public $filters = [];
+    public $filters = [
+        'user_id' => '='
+    ];
 
     /**
      * Route của model dùng cho Linkable trait

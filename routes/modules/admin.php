@@ -4,6 +4,10 @@ Route::post('/users/change-state/{user}', 'UsersController@changeState')->name('
 Route::get('/users/form/change-password/', 'UsersController@formChangePassword')->name('users.form_change_password');
 Route::post('/users/change-password/{user}', 'UsersController@changePassword')->name('users.change_password');
 
+Route::get('/users/break/form/', 'UsersController@formBreak')->name('users.form_break');
+Route::post('/users/break/', 'UsersController@break')->name('users.break');
+Route::post('/users/break/resume', 'UsersController@resume')->name('users.resume');
+
 Route::post('/system_logs/view/detail', 'SystemLogsController@viewDetail')->name('system_logs.view_detail');
 Route::post('/system_logs/table', 'SystemLogsController@table')->name('system_logs.table');
 Route::get('/system_logs/index', 'SystemLogsController@index')->name('system_logs.index');

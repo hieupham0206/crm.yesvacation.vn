@@ -155,7 +155,7 @@ class DepartmentsController extends Controller
         $offset = ( $page - 1 ) * 10;
         $departments  = Department::query()->select( [ 'id', 'name' ] );
 
-        $departments->filterWhere( [
+        $departments->andFilterWhere( [
             [ 'name', 'like', $query ],
             ['id', '!=', $excludeIds]
         ]);

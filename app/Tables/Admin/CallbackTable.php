@@ -5,7 +5,7 @@ namespace App\Tables\Admin;
 use App\Models\Callback;
 use App\Tables\DataTable;
 
-class CallBackTable extends DataTable
+class CallbackTable extends DataTable
 {
     public function getColumn(): string
     {
@@ -13,16 +13,16 @@ class CallBackTable extends DataTable
 
         switch ($column) {
             case '1':
-                $column = 'call_backs.name';
+                $column = 'callbacks.name';
                 break;
             case '2':
-                $column = 'call_backs.title';
+                $column = 'callbacks.title';
                 break;
             case '3':
-                $column = 'call_backs.created_at';
+                $column = 'callbacks.created_at';
                 break;
             default:
-                $column = 'call_backs.id';
+                $column = 'callbacks.id';
                 break;
         }
 
@@ -48,25 +48,25 @@ class CallBackTable extends DataTable
             $btnEdit = $btnDelete = '';
 
             if ($canUpdateCallback) {
-                $btnEdit = ' <a href="' . route('call_backs.edit', $callBack, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Edit') . '">
+                $btnEdit = ' <a href="' . route('callbacks.edit', $callBack, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Edit') . '">
 					<i class="fa fa-edit"></i>
 				</a>';
             }
 
             if ($canDeleteCallback) {
                 $btnDelete = ' <button type="button" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $callBack->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
-                data-url="' . route('call_backs.destroy', $callBack, false) . '" title="' . __('Delete') . '">
+                data-url="' . route('callbacks.destroy', $callBack, false) . '" title="' . __('Delete') . '">
                     <i class="fa fa-trash"></i>
                 </button>';
             }
 
             $dataArray[] = [
-                '<label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand"><input type="checkbox" value="' . $callBack->id . '"><span></span></label>',
-                $callBack->name,
+//                '<label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand"><input type="checkbox" value="' . $callBack->id . '"><span></span></label>',
+                "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$callBack->lead_id}'>{$callBack->lead->name}</a>",
                 $callBack->lead->title,
                 $callBack->created_at,
 
-                '<a href="' . route('call_backs.show', $callBack, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('View') . '">
+                '<a href="' . route('callbacks.show', $callBack, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('View') . '">
 					<i class="fa fa-eye"></i>
 				</a>' . $btnEdit . $btnDelete
             ];

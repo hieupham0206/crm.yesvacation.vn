@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-class Appointment extends \App\Models\Base\Appointment
+class ReasonBreak extends \App\Models\Base\ReasonBreak
 {
 	protected $fillable = [
-		'user_id',
-		'lead_id',
-		'state',
-		'type'
+		'name',
+		'time_alert'
 	];
-	public static $logName = 'Appointment';
+	public static $logName = 'ReasonBreak';
 
     protected static $logOnlyDirty = true;
 
@@ -18,9 +16,7 @@ class Appointment extends \App\Models\Base\Appointment
 
     public $labels = [];
 
-    public $filters = [
-        'user_id' => '='
-    ];
+    public $filters = [];
 
     /**
      * Route của model dùng cho Linkable trait

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
+use App\Models\ReasonBreak;
 use App\Models\Role;
+use App\Models\TimeBreak;
 use App\Models\User;
 use App\Tables\Admin\UserTable;
 use App\Tables\TableFacade;
@@ -398,5 +400,60 @@ class UsersController extends Controller
         return response()->json([
             'message' => __('Current password is not correct')
         ], 500);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function formBreak()
+    {
+        $reasonBreaks = ReasonBreak::get();
+        $user         = auth()->user();
+
+        return view('admin.users._form_break', compact('reasonBreaks', 'user'));
+    }
+
+    public function break(Request $request)
+    {
+        $reasonBreakId     = $request->reason_break_id;
+        $anotherReasonText = $request->get('reason', '');
+
+        $breakDatas = [
+            'start_break'     => now()->toDateTimeString(),
+            'reason_break_id' => $reasonBreakId,
+            'user_id'         => auth()->id()
+        ];
+        if ($anotherReasonText) {
+            $breakDatas['another_reason'] = $anotherReasonText;
+        }
+
+        TimeBreak::create($breakDatas);
+
+        return response()->json([
+            'message' => __('Data edited successfully')
+        ]);
+    }
+
+    public function resume()
+    {
+        $timebreak = TimeBreak::query()->where('user_id', auth()->id())
+                              ->whereNotNull('start_break')
+                              ->whereNull('end_break')
+                              ->latest()
+                              ->first();
+
+        if ($timebreak) {
+            $timebreak->update([
+                'end_break' => now()->toDateTimeString()
+            ]);
+
+            return response()->json([
+                'message' => __('Data edited successfully')
+            ]);
+        }
+
+        return response()->json([
+            'message' => __('Data edited unsuccessfully')
+        ]);
     }
 }
