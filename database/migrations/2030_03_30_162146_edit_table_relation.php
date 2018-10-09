@@ -59,6 +59,21 @@ class EditTableRelation extends Migration
         Schema::table('bonus', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
         });
+        //Add khóa ngoại bảng appointments
+        Schema::table('appointments', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('lead_id')->references('id')->on('leads');
+        });
+        //Add khóa ngoại bảng callbacks
+        Schema::table('callbacks', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('lead_id')->references('id')->on('leads');
+        });
+        //Add khóa ngoại bảng time_breaks
+        Schema::table('time_breaks', function (Blueprint $table) {
+            $table->foreign('reason_break_id')->references('id')->on('reason_breaks');
+            $table->foreign('user_id')->references('id')->on('users');
+        });
     }
 
     /**

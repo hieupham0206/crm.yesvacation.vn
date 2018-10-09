@@ -17,14 +17,13 @@ class CreateHistoryCallsTable extends Migration
 
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('lead_id');
-            $table->unsignedInteger('member_id');
+            $table->unsignedInteger('member_id')->nullable();
 
             $table->string('name');
             $table->string('phone')->nullable();
 
-            $table->smallInteger('call_times');
-            $table->tinyInteger('type')->comment('1: auto; 2: callback; 3:history');
-            //todo: 4 field chưa rõ Status_LEAD, Comment_LEAD, Date, Time
+            $table->mediumInteger('time_of_call')->comment('Thoi gian gọi, tính bằng giây');
+            $table->tinyInteger('type')->comment('1: Manual; 2: HistoryCall; 3:CallBackCall; 4: AppointmentCall');
 
             $table->timestamps();
         });

@@ -56,6 +56,12 @@ class DummyClass extends Controller
         $requestData = $request->all();
         {{modelName}}::create($requestData);
 
+        if ($request->wantsJson()) {
+            return $this->asJson([
+                'message' => __('Data created successfully')
+            ]);
+        }
+
         return redirect(route('{{routeName}}.index'))->with('message', __( 'Data created successfully' ));
     }
 
@@ -93,6 +99,12 @@ class DummyClass extends Controller
         {{validationRules}}
         $requestData = $request->all();
         ${{crudNameSingular}}->update($requestData);
+
+        if ($request->wantsJson()) {
+            return $this->asJson([
+                'message' => __('Data edited successfully')
+            ]);
+        }
 
         return redirect(route('{{routeName}}.index'))->with('message', __( 'Data edited successfully' ));
     }
@@ -151,13 +163,13 @@ class DummyClass extends Controller
         $offset = ( $page - 1 ) * 10;
         ${{crudName}}  = {{modelName}}::query()->select( [ 'id', 'name' ] );
 
-        ${{crudName}}->filterWhere( [
+        ${{crudName}}->andFilterWhere( [
             [ 'name', 'like', $query ],
             ['id', '!=', $excludeIds]
         ]);
 
         $totalCount = ${{crudName}}->count();
-        ${{crudName}}      = ${{crudName}}->offset($offset)->limit(10)->get();
+        ${{crudName}} = ${{crudName}}->offset($offset)->limit(10)->get();
 
         return response()->json( [
             'total_count' => $totalCount,

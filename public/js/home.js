@@ -60,133 +60,180 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 60);
+/******/ 	return __webpack_require__(__webpack_require__.s = 59);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 60:
+/***/ 59:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(61);
+module.exports = __webpack_require__(60);
 
 
 /***/ }),
 
-/***/ 61:
+/***/ 60:
 /***/ (function(module, exports) {
 
 $(function () {
-	Highcharts.chart('highcharts_month', {
-		chart: {
-			type: ''
-		},
-		title: {
-			text: 'Doanh Thu Hàng Ngày'
-		},
-		subtitle: {
-			text: 'Source:  Cloudteam.com'
-		},
-		xAxis: {
-			categories: ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
-			crosshair: true
-		},
-		yAxis: {
-			min: 0,
-			title: {
-				text: 'Số tiền (VNĐ)'
+	var userId = $('#txt_user_id').val();
+	var leadId = $('#txt_lead_id').val();
+
+	var tableHistoryCall = $('#table_history_calls').DataTable({
+		'serverSide': true,
+		'paging': true,
+		'ajax': $.fn.dataTable.pipeline({
+			url: route('history_calls.table'),
+			data: function data(q) {
+				q.filters = JSON.stringify([{ 'name': 'user_id', 'value': userId }]);
 			}
-		},
-		tooltip: {
-			headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-			pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' + '<td style="padding:0"><b>{point.y:.1f} VNĐ</b></td></tr>',
-			footerFormat: '</table>',
-			shared: true,
-			useHTML: true
-		},
-		plotOptions: {
-			column: {
-				pointPadding: 0.2,
-				borderWidth: 0
+		}),
+		conditionalPaging: true,
+		'columnDefs': []
+		// info: true,
+		// lengthChange: true,
+	});
+	var tableCustomerHistory = $('#table_customer_history').DataTable({
+		'serverSide': true,
+		'paging': true,
+		'ajax': $.fn.dataTable.pipeline({
+			url: route('history_calls.table'),
+			data: function data(q) {
+				q.filters = JSON.stringify([{ 'name': 'lead_id', 'value': leadId }]);
 			}
-		},
-		series: [{
-			name: 'VNMB 10',
-			data: [29.4, 68.2, 76.5, 120.7, 54.6, 67.5, 76.4]
-		}, {
-			name: 'VNMB 20',
-			data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0]
-		}, {
-			name: 'VNMB 50',
-			data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6]
-		}, {
-			name: 'VNMB 100',
-			data: [63.6, 58.8, 90.6, 33.4, 16.0, 44.5, 95.0]
-		}, {
-			name: 'VNMB 200',
-			data: [54.6, 23.8, 18.5, 43.4, 77.0, 56.5, 49.0]
-		}, {
-			name: 'VNMB 500',
-			data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0]
-		}]
+		}),
+		conditionalPaging: true,
+		'columnDefs': []
+		// info: true,
+		// lengthChange: true,
+	});
+	var tableCallback = $('#table_callback').DataTable({
+		'serverSide': true,
+		'paging': true,
+		'ajax': $.fn.dataTable.pipeline({
+			url: route('callbacks.table'),
+			data: function data(q) {
+				q.filters = JSON.stringify([{ 'name': 'user_id', 'value': userId }]);
+			}
+		}),
+		conditionalPaging: true,
+		'columnDefs': []
+		// info: true,
+		// lengthChange: true,
+	});
+	var tableAppointment = $('#table_appointment').DataTable({
+		'serverSide': true,
+		'paging': true,
+		'ajax': $.fn.dataTable.pipeline({
+			url: route('appointments.table'),
+			data: function data(q) {
+				q.filters = JSON.stringify([{ 'name': 'user_id', 'value': userId }]);
+			}
+		}),
+		conditionalPaging: true,
+		'columnDefs': []
+		// info: true,
+		// lengthChange: true,
 	});
 
-	Highcharts.chart('highcharts_year', {
-		chart: {
-			type: 'column'
-		},
-		title: {
-			text: 'Doanh Số Trung Bình Năm: 2018'
-		},
-		xAxis: {
-			categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-			crosshair: true
-		},
-		yAxis: [{
-			min: 0,
-			title: {
-				text: 'Số lượng'
-			}
-		}, {
-			title: {
-				text: 'Doanh Thu (triệu)'
-			},
-			opposite: true
-		}],
-		legend: {
-			shadow: false
-		},
-		tooltip: {
-			shared: true
-		},
-		plotOptions: {
-			column: {
-				grouping: true,
-				shadow: false,
-				borderWidth: 0
-			}
-		},
-		series: [{
-			name: 'Số Lượng Sản Phẩm',
-			color: 'rgba(150,0,0,.9)',
-			data: [141, 370, 426, 593, 498, 345 /*, 540, 631, 473, 493, 374*/, 80],
-			tooltip: {
-				valuePrefix: ' '
-			},
-			pointPadding: 0.1,
-			pointPlacement: 0.0
-		}, {
-			name: 'Doanh Thu Sản Phẩm',
-			color: 'rgba(0,0,150,.9)',
-			data: [32.6, 81.8, 187.5, 198.8, 158.5, 128.3 /*, 208.5, 198.8, 211.5, 198.8, 78.5*/, 44.5],
-			tooltip: {
-				valueSuffix: ' VNĐ'
-			},
-			pointPadding: 0.1,
-			pointPlacement: 0.0,
-			yAxis: 1
-		}]
+	$('#leads_form').on('submit', function (e) {
+		e.preventDefault();
+		// let url = $('#btn_form_change_state').data('url')
+		//
+		// $('#modal_md').showModal({url: url, params: {}, method: 'get'})
+		fetchLead('', 1);
 	});
+
+	$('body').on('submit', '#change_state_leads_form', function (e) {
+		e.preventDefault();
+		mApp.block('#modal_md');
+
+		$(this).submitForm().then(function () {
+			$('#modal_md').modal('hide');
+			mApp.unblock('#modal_md');
+			fetchLead('', 1);
+		});
+	});
+
+	$('body').on('submit', '#break_form', function (e) {
+		e.preventDefault();
+		mApp.block('#modal_md');
+
+		$(this).submitForm().then(function () {
+			$('#modal_md').modal('hide');
+			mApp.unblock('#modal_md');
+		});
+	});
+
+	$('#modal_md').on('show.bs.modal', function () {
+		$('#select_state_modal').select2();
+		$('#select_reason_break').select2();
+	});
+
+	$('#btn_pause').on('click', function () {
+		var url = $(this).data('url');
+
+		$('#modal_md').showModal({ url: url, params: {}, method: 'get' });
+	});
+
+	$('#btn_resume').on('click', function () {
+		var url = $(this).data('url');
+
+		axios.post(url).then(function (result) {
+			var obj = result['data'];
+			if (obj.message) {
+				flash(obj.message);
+			}
+		}).catch(function (e) {
+			return console.log(e);
+		}).finally(function () {
+			unblock();
+		});
+	});
+
+	$('body').on('click', '.link-lead-name', function () {
+		var leadId = $(this).data('lead-id');
+		fetchLead(leadId, 0);
+	});
+
+	$('body').on('change', '#select_reason_break', function () {
+		if ($(this).val() === '5') {
+			$('#another_reason_section').show();
+		} else {
+			$('#textarea_reason').val('');
+			$('#another_reason_section').hide();
+		}
+	});
+
+	function fetchLead() {
+		var leadId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+		var isNew = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+		return axios.get(route('leads.list'), {
+			params: {
+				isNew: isNew,
+				leadId: leadId,
+				getLeadFromUser: true
+			}
+		}).then(function (result) {
+			var items = result.data.items;
+			var lead = items[0];
+
+			$('#txt_name').val(lead.name);
+			$('#txt_email').val(lead.email);
+			$('#txt_phone').val(lead.phone);
+			$('#txt_address').val(lead.address);
+			$('#textarea_comment').val(lead.comment);
+			$('#select_state').val(lead.state).trigger('change');
+
+			if (lead.title === 'Anh') {
+				$('#select_title').val(1).trigger('change');
+			} else {
+				$('#select_title').val(2).trigger('change');
+			}
+		});
+	}
 });
 
 /***/ })

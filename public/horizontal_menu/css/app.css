@@ -125,7 +125,7 @@ body {
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button .page-link {
-  color: #0393B0;
+  color: #2be6ca;
 }
 
 .dataTables_wrapper table.dataTable.dtr-inline.collapsed > tbody > tr[role=row] > td:first-child:before {
@@ -214,7 +214,7 @@ body {
 }
 
 .m-topbar .m-topbar__nav.m-nav .m-nav__item > .m-nav__link .m-nav__link-icon > i:before {
-  background: #0393B0;
+  background: #2be6ca;
   font-weight: bold;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -288,7 +288,7 @@ body {
 }
 
 input {
-  caret-color: #0393B0;
+  caret-color: #2be6ca;
 }
 
 .m-form .m-form__actions {
@@ -353,14 +353,14 @@ input {
 }
 
 .datepicker tbody tr > td.day.today {
-  background: #0393B0;
+  background: #2be6ca;
 }
 
 .datepicker tbody tr > td.day.selected,
 .datepicker tbody tr > td.day.selected:hover,
 .datepicker tbody tr > td.day.active,
 .datepicker tbody tr > td.day.active:hover {
-  background: #027a92;
+  background: #1ad9bc;
 }
 
 /* ----------- iPhone 5, 5S, 5C and 5SE ----------- */
@@ -581,7 +581,7 @@ input {
 }
 
 :root {
-  --brand: #0393B0;
+  --brand: #2be6ca;
 }
 
 /** PLUGINS **/

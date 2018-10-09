@@ -206,29 +206,30 @@ class CrudMakeCommand extends Command
         $menus    = getMenuConfig();
 
         $jsonKey = lcfirst($namespace);
-        if ( ! isset($menus[$jsonKey])) {
-            $menus[$jsonKey]['modules'] = [
-                $table => [
-                    'icon'   => '',
-                    'parent' => ''
-                ]
+
+        if (isset($menus[$jsonKey])) {
+            $menus[$jsonKey]['modules'][$table] = [
+                'icon'   => '',
+                'parent' => '',
+                'hide'   => false
             ];
+            $this->info('Update menu successfully');
+
             $this->writeJsonConfig($menus, $jsonFile);
 
             return true;
         }
 
-        if ( ! \in_array($table, $menus[$jsonKey], true)) {
-            $menus[$jsonKey] = [
-                'modules' => [
-                    $table => [
-                        'icon'   => '',
-                        'parent' => ''
-                    ],
+        $menus[$jsonKey] = [
+            'modules' => [
+                $table => [
+                    'icon'   => '',
+                    'parent' => '',
+                    'hide'   => false
                 ],
-                'icon'    => ''
-            ];
-        }
+            ],
+            'icon'    => ''
+        ];
 
         $this->info('Make menu successfully');
 

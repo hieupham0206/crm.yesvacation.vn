@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\Gender;
 use App\Enums\LeadState;
+use App\Enums\PersonTitle;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * App\Models\Lead
@@ -107,6 +109,11 @@ class Lead extends \App\Models\Base\Lead
         return LeadState::toSelectArray();
     }
 
+    public function getTitlesAttribute()
+    {
+        return PersonTitle::toSelectArray();
+    }
+
     public function getGenderTextAttribute()
     {
         return Gender::getDescription($this->gender);
@@ -120,5 +127,22 @@ class Lead extends \App\Models\Base\Lead
     public static function isPhoneUnique($phone)
     {
         return self::wherePhone($phone)->doesntExist();
+    }
+
+    public function scopeGetAvailable(Builder $query)
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        $provinceIdFromDept = $user->departments->pluck('province_id')->toArray();
+        $query->whereNotIn('state', [7, 8]);
+
+        if ($provinceIdFromDept) {
+            return $query->where(function (Builder $q) use ($provinceIdFromDept) {
+                $q->whereIn('province_id', $provinceIdFromDept)->orWhereNull('province_id');
+            });
+        }
+
+        return $query;
     }
 }
