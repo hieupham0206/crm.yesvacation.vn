@@ -13612,7 +13612,7 @@ var render = function() {
           }
         ],
         staticClass:
-          "m-alert m-alert--air m-alert--square alert alert-dismissible fade show",
+          "m-alert m-alert--air m-alert--square alert alert-dismissible fade show mt-2",
         class: "alert-" + _vm.level,
         attrs: { role: "alert" }
       },

@@ -1,6 +1,6 @@
 <template>
     <transition name="fade">
-        <div class="m-alert m-alert--air m-alert--square alert alert-dismissible fade show" :class="'alert-' + level" role="alert" v-show="show">
+        <div class="m-alert m-alert--air m-alert--square alert alert-dismissible fade show mt-2" :class="'alert-' + level" role="alert" v-show="show">
             <button type="button" class="close" aria-label="Close"></button>
             <strong v-html="body"></strong>
         </div>

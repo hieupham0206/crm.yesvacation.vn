@@ -86,7 +86,7 @@ $(function() {
 			$('#modal_md').modal('hide')
 			mApp.unblock('#modal_md')
 			$('#btn_pause').hide()
-			$('#btn_resume').hide()
+			$('#btn_resume').show()
 		})
 	})
 
@@ -103,6 +103,7 @@ $(function() {
 
 	$('#btn_resume').on('click', function() {
 		let url = $(this).data('url')
+		blockPage()
 
 		axios.post(url).then(result => {
 			let obj = result['data']
