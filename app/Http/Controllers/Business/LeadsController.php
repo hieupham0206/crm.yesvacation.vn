@@ -63,7 +63,7 @@ class LeadsController extends Controller
     {
         $this->validate($request, [
             'name'  => 'required',
-            'phone' => 'unique'
+            'phone' => 'unique:leads'
         ]);
         $requestData = $request->all();
         Lead::create($requestData);
@@ -113,7 +113,7 @@ class LeadsController extends Controller
     {
         $this->validate($request, [
             'name'  => 'required',
-            'phone' => 'unique'
+            'phone' => 'unique:leads'
         ]);
         $requestData = $request->all();
         $lead->update($requestData);
