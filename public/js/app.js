@@ -767,7 +767,7 @@ var cloudTeamCore = function ($, lang) {
 				allow: '.,/-'
 			});
 			//input có class number chỉ được nhập số
-			$('.numeric').numeric({
+			$('.numeric, .num').numeric({
 				allow: '.',
 				allowMinus: false
 			});
@@ -1508,7 +1508,7 @@ var cloudTeamCore = function ($, lang) {
 
 			blockPage();
 			if (method === 'post') {
-				axios.post(url, params).then(function (result) {
+				return axios.post(url, params).then(function (result) {
 					_this.find('.modal-content').html(result.data);
 					_this.modal({
 						backdrop: 'static'
@@ -1517,7 +1517,7 @@ var cloudTeamCore = function ($, lang) {
 					unblock();
 				});
 			} else {
-				axios.get(url, {
+				return axios.get(url, {
 					params: params
 				}).then(function (result) {
 					_this.find('.modal-content').html(result.data);
@@ -13612,7 +13612,7 @@ var render = function() {
           }
         ],
         staticClass:
-          "m-alert m-alert--air m-alert--square alert alert-dismissible fade show",
+          "m-alert m-alert--air m-alert--square alert alert-dismissible fade show mt-2",
         class: "alert-" + _vm.level,
         attrs: { role: "alert" }
       },

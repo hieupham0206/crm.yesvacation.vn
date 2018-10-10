@@ -141,7 +141,7 @@ let cloudTeamCore = (function($, lang) {
 				allow: '.,/-',
 			})
 			//input có class number chỉ được nhập số
-			$('.numeric').numeric({
+			$('.numeric, .num').numeric({
 				allow: '.',
 				allowMinus: false,
 			})
@@ -862,7 +862,7 @@ let cloudTeamCore = (function($, lang) {
 		$.fn.showModal = function({url, params = {}, method = 'post'}) {
 			blockPage()
 			if (method === 'post') {
-				axios.post(url, params).then(result => {
+				return axios.post(url, params).then(result => {
 					this.find('.modal-content').html(result.data)
 					this.modal({
 						backdrop: 'static',
@@ -871,7 +871,7 @@ let cloudTeamCore = (function($, lang) {
 					unblock()
 				})
 			} else {
-				axios.get(url, {
+				return axios.get(url, {
 					params: params,
 				}).then(result => {
 					this.find('.modal-content').html(result.data)

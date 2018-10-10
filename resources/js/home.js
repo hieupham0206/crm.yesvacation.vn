@@ -85,6 +85,8 @@ $(function() {
 		$(this).submitForm().then(() => {
 			$('#modal_md').modal('hide')
 			mApp.unblock('#modal_md')
+			$('#btn_pause').hide()
+			$('#btn_resume').show()
 		})
 	})
 
@@ -101,12 +103,15 @@ $(function() {
 
 	$('#btn_resume').on('click', function() {
 		let url = $(this).data('url')
+		blockPage()
 
 		axios.post(url).then(result => {
 			let obj = result['data']
 			if (obj.message) {
 				flash(obj.message)
 			}
+			$(this).hide()
+			$('#btn_pause').show()
 		}).catch(e => console.log(e)).finally(() => {
 			unblock()
 		})

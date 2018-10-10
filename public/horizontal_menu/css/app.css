@@ -307,7 +307,7 @@ input {
 }
 
 .m-form.m-form--group-seperator-dashed .m-form__group {
-  padding: 1rem 0;
+  padding: .5rem 0;
 }
 
 .form-control[readonly],
@@ -319,7 +319,7 @@ input {
 
 .numeric,
 .number {
-  text-align: right !important;
+  text-align: right;
 }
 
 @media (min-width: 1025px) {

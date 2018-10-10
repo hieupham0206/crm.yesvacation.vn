@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Gender;
 use App\Enums\LeadState;
 use App\Enums\PersonTitle;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -127,6 +128,13 @@ class Lead extends \App\Models\Base\Lead
     public static function isPhoneUnique($phone)
     {
         return self::wherePhone($phone)->doesntExist();
+    }
+
+    public function setBirthdayAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['birthday'] = $value instanceof DateTime ? $value->format('Y-m-d') : Carbon::createFromFormat('d-m-Y', $value)->toDateString();
+        }
     }
 
     public function scopeGetAvailable(Builder $query)

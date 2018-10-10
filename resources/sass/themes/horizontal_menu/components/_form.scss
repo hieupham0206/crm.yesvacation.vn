@@ -17,7 +17,7 @@ input {
     font-weight: 500;
   }
   &.m-form--group-seperator-dashed .m-form__group {
-    padding: 1rem 0;
+    padding: .5rem 0;
   }
 }
 
@@ -28,7 +28,7 @@ input {
 }
 
 .numeric, .number {
-  text-align: right !important;
+  text-align: right;
 }
 
 @media (min-width: 1025px) {

@@ -163,6 +163,8 @@ $(function () {
 		$(this).submitForm().then(function () {
 			$('#modal_md').modal('hide');
 			mApp.unblock('#modal_md');
+			$('#btn_pause').hide();
+			$('#btn_resume').show();
 		});
 	});
 
@@ -178,13 +180,18 @@ $(function () {
 	});
 
 	$('#btn_resume').on('click', function () {
+		var _this = this;
+
 		var url = $(this).data('url');
+		blockPage();
 
 		axios.post(url).then(function (result) {
 			var obj = result['data'];
 			if (obj.message) {
 				flash(obj.message);
 			}
+			$(_this).hide();
+			$('#btn_pause').show();
 		}).catch(function (e) {
 			return console.log(e);
 		}).finally(function () {
