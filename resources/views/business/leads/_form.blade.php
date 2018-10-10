@@ -21,10 +21,10 @@
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('title') ? 'has-danger' : ''}}">
                 <label for="select_title">{{ $lead->label('title') }}</label>
                 {{--<input class="form-control" name="title" type="text" id="txt_title" value="{{ $lead->title ?? old('title')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">--}}
-                <select name="state" class="form-control select" id="select_title" required>
+                <select name="title" class="form-control select" id="select_title">
                     <option></option>
                     @foreach ($lead->titles as $key => $title)
-                        <option value="{{ $key }}" {{ $lead->title == $title || (! $lead->exists && $key === 1) ? ' selected' : '' }}>{{ $title }}</option>
+                        <option value="{{ $title }}" {{ $lead->title == $title || (! $lead->exists && $key === 1) ? ' selected' : '' }}>{{ $title }}</option>
                     @endforeach
                 </select>
                 <span class="m-form__help"></span>
@@ -32,7 +32,7 @@
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('birthday') ? 'has-danger' : ''}}">
                 <label for="txt_birthday">{{ $lead->label('birthday') }}</label>
-                <input class="form-control text-datepicker" name="birthday" type="text" id="txt_birthday" value="{{ $lead->birthday ?? old('birthday')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">
+                <input class="form-control text-datepicker" name="birthday" type="text" id="txt_birthday" value="{{ optional($lead->birthday)->format('d-m-Y') ?? old('birthday')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">
                 <span class="m-form__help"></span>
                 {!! $errors->first('birthday', '<div class="form-control-feedback">:message</div>') !!}
             </div>
@@ -57,7 +57,7 @@
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('phone') ? 'has-danger' : ''}}">
                 <label for="txt_phone">{{ $lead->label('phone') }}</label>
-                <input class="form-control" name="phone" type="text" id="txt_phone" value="{{ $lead->phone ?? old('phone')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">
+                <input class="form-control num text-left" name="phone" type="text" id="txt_phone" value="{{ $lead->phone ?? old('phone')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">
                 <span class="m-form__help"></span>
                 {!! $errors->first('phone', '<div class="form-control-feedback">:message</div>') !!}
             </div>

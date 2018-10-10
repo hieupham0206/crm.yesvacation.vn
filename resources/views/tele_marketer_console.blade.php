@@ -22,7 +22,7 @@
                             <button class="btn btn-brand m-btn m-btn--icon m-btn--custom mr-2" id="btn_pause" data-url="{{ route('users.form_break') }}">
                                 <span><i class="fa fa-pause"></i><span>@lang('Pause')</span></span>
                             </button>
-                            <button class="btn btn-brand m-btn m-btn--icon m-btn--custom" id="btn_resume" data-url="{{ route('users.resume') }}">
+                            <button class="btn btn-brand m-btn m-btn--icon m-btn--custom" id="btn_resume" data-url="{{ route('users.resume') }}" style="display: none">
                                 <span><i class="fa fa-play"></i><span>@lang('Resume')</span></span>
                             </button>
                         </div>
@@ -52,7 +52,7 @@
                                     <div class="col-sm-12 col-md-6 m-form__group-sub {{ $errors->has('title') ? 'has-danger' : ''}}">
                                         <label for="select_title">{{ $lead->label('title') }}</label>
                                         {{--<input class="form-control" name="title" type="text" id="txt_title" value="{{ $lead->title ?? old('title')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">--}}
-                                        <select name="title" class="form-control select" id="select_title" required>
+                                        <select name="title" class="form-control select" id="select_title">
                                             <option></option>
                                             @foreach ($lead->titles as $key => $title)
                                                 <option value="{{ $key }}" {{ $lead->title == $title || (! $lead->exists && $key === 1) ? ' selected' : '' }}>{{ $title }}</option>
@@ -78,7 +78,7 @@
                                     </div>
                                     <div class="col-sm-12 col-md-6 m-form__group-sub {{ $errors->has('phone') ? 'has-danger' : ''}}">
                                         <label for="txt_phone">{{ $lead->label('phone') }}</label>
-                                        <input class="form-control" name="phone" type="text" id="txt_phone" value="{{ $lead->phone ?? old('phone')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">
+                                        <input class="form-control num text-left" name="phone" type="text" id="txt_phone" value="{{ $lead->phone ?? old('phone')}}" placeholder="{{ __('Enter value') }}" autocomplete="off">
                                         <span class="m-form__help"></span>
                                         {!! $errors->first('phone', '<div class="form-control-feedback">:message</div>') !!}
                                     </div>

@@ -85,6 +85,8 @@ $(function() {
 		$(this).submitForm().then(() => {
 			$('#modal_md').modal('hide')
 			mApp.unblock('#modal_md')
+			$('#btn_pause').hide()
+			$('#btn_resume').hide()
 		})
 	})
 
@@ -107,6 +109,8 @@ $(function() {
 			if (obj.message) {
 				flash(obj.message)
 			}
+			$(this).hide()
+			$('#btn_pause').show()
 		}).catch(e => console.log(e)).finally(() => {
 			unblock()
 		})
