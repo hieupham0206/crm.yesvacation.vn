@@ -7,7 +7,6 @@ use App\Models\Appointment;
 use App\Models\Callback;
 use App\Models\Lead;
 use App\Models\Province;
-use App\Models\TimeBreak;
 use App\Tables\Business\LeadTable;
 use App\Tables\TableFacade;
 use Carbon\Carbon;
@@ -63,7 +62,8 @@ class LeadsController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required'
+            'name'  => 'required',
+            'phone' => 'unique'
         ]);
         $requestData = $request->all();
         Lead::create($requestData);
@@ -112,7 +112,8 @@ class LeadsController extends Controller
     public function update(Request $request, Lead $lead)
     {
         $this->validate($request, [
-            'name' => 'required'
+            'name'  => 'required',
+            'phone' => 'unique'
         ]);
         $requestData = $request->all();
         $lead->update($requestData);

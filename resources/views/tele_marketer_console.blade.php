@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-xl-4 col-lg-12">
                 <!--Begin::Portlet-->
-                <div class="m-portlet  m-portlet--full-height ">
+                <div class="m-portlet m-portlet--full-height ">
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
@@ -27,13 +27,13 @@
                             </button>
                         </div>
                     </div>
-                    <div class="m-portlet__body">
-                        <form id="leads_form" class="m-form m-form--label-align-right m-form--group-seperator-dashed m-form--state" method="post" action="{{ route('leads.update', $lead) }}">
-                            @csrf
-                            @isset($method)
-                                @method('put')
-                            @endisset
-                            <div class="m-portlet__body">
+                    <form id="leads_form" class="m-form m-form--label-align-right m-form--group-seperator-dashed m-form--state" method="post" action="{{ route('leads.update', $lead) }}">
+                        <div class="m-portlet__body">
+                            <div class="m-scrollable m-scroller ps ps--active-y" data-scrollable="true" data-height="300" data-scrollbar-shown="true">
+                                @csrf
+                                @isset($method)
+                                    @method('put')
+                                @endisset
                                 <div class="form-group m-form__group row">
                                     <div class="col-sm-12 col-md-6 m-form__group-sub {{ $errors->has('name') ? 'has-danger' : ''}}">
                                         <label for="txt_name">{{ $lead->label('name') }}</label>
@@ -102,15 +102,26 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="m-portlet__foot m-portlet__foot--fit m-portlet__foot-no-border" style="background: none">
-                                <div class="m-form__actions m-form__actions--center">
+                        </div>
+                        <div class="m-portlet__foot m-portlet__foot-no-border" style="background: none; padding: 2.2rem 2.2rem;">
+                            <div class="row align-items-center">
+                                <div class="col-lg-12">
                                     <button class="btn btn-brand m-btn m-btn--icon m-btn--custom" id="btn_form_change_state" data-url="{{ route('leads.form_change_state', $lead) }}">
                                         <span><i class="fa fa-save"></i><span>@lang('New Customer')</span></span>
                                     </button>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                        {{--<div class="m-portlet__foot m-portlet__foot-no-border" style="background: none">--}}
+                        {{--<div class="row align-items-center">--}}
+                        {{--<div class="col-lg-12">--}}
+                        {{--<button class="btn btn-brand m-btn m-btn--icon m-btn--custom" id="btn_form_change_state" data-url="{{ route('leads.form_change_state', $lead) }}">--}}
+                        {{--<span><i class="fa fa-save"></i><span>@lang('New Customer')</span></span>--}}
+                        {{--</button>--}}
+                        {{--</div>--}}
+                        {{--</div>--}}
+                        {{--</div>--}}
+                    </form>
                 </div>
                 <!--End::Portlet-->
             </div>
@@ -125,16 +136,18 @@
                         </div>
                     </div>
                     <div class="m-portlet__body">
-                        <table class="table table-borderless table-hover nowrap" id="table_history_calls" width="100%">
-                            <thead>
-                            <tr>
-                                <th>{{ $lead->label('name') }}</th>
-                                <th>{{ $lead->label('title') }}</th>
-                                <th>{{ $lead->label('created_at') }}</th>
-                            </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                        <div class="m-dropdown__scrollable m-scrollable" data-scrollable="true" data-height="300" data-mobile-height="200">
+                            <table class="table table-borderless table-hover nowrap" id="table_history_calls" width="100%">
+                                <thead>
+                                <tr>
+                                    <th>{{ $lead->label('name') }}</th>
+                                    <th>{{ $lead->label('title') }}</th>
+                                    <th>{{ $lead->label('created_at') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <!--End::Portlet-->
@@ -150,16 +163,18 @@
                         </div>
                     </div>
                     <div class="m-portlet__body">
-                        <table class="table table-borderless table-hover nowrap" id="table_callback" width="100%">
-                            <thead>
-                            <tr>
-                                <th>{{ $lead->label('name') }}</th>
-                                <th>{{ $lead->label('title') }}</th>
-                                <th>{{ $lead->label('created_at') }}</th>
-                            </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                        <div class="m-scrollable m-scroller ps ps--active-y" data-scrollable="true" data-height="300" data-scrollbar-shown="true">
+                            <table class="table table-borderless table-hover nowrap" id="table_callback" width="100%">
+                                <thead>
+                                <tr>
+                                    <th>{{ $lead->label('name') }}</th>
+                                    <th>{{ $lead->label('title') }}</th>
+                                    <th>{{ $lead->label('created_at') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <!--End::Portlet-->
@@ -177,16 +192,18 @@
                         </div>
                     </div>
                     <div class="m-portlet__body">
-                        <table class="table table-borderless table-hover nowrap" id="table_customer_history" width="100%">
-                            <thead>
-                            <tr>
-                                <th>{{ $lead->label('created_at') }}</th>
-                                <th>{{ $lead->label('state') }}</th>
-                                <th>{{ $lead->label('comment') }}</th>
-                            </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                        <div class="m-scrollable m-scroller ps ps--active-y" data-scrollable="true" data-height="300" data-scrollbar-shown="true">
+                            <table class="table table-borderless table-hover nowrap" id="table_customer_history" width="100%">
+                                <thead>
+                                <tr>
+                                    <th>{{ $lead->label('created_at') }}</th>
+                                    <th>{{ $lead->label('state') }}</th>
+                                    <th>{{ $lead->label('comment') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <!--End::Portlet-->
