@@ -23,9 +23,13 @@
   .m-portlet__foot {
     background-color: var(--light);
   }
-  .m-portlet__head .m-portlet__head-caption .m-portlet__head-title .m-portlet__head-text {
-    font-size: 1rem;
-    font-weight: bold;
+  .m-portlet__head {
+    //height: 4rem;
+    //padding: 0 2rem;
+    .m-portlet__head-caption .m-portlet__head-title .m-portlet__head-text {
+      font-size: 1rem;
+      font-weight: bold;
+    }
   }
   margin-bottom: 1rem;
 }

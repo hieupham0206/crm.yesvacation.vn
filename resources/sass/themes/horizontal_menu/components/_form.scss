@@ -25,6 +25,7 @@ input {
   border-color: $border-color;
   color: $text-color;
   font-family: Montserrat, sans-serif;
+  height: calc(2.6rem + 2px);
 }
 
 .numeric, .number {
@@ -47,8 +48,18 @@ input {
 }
 
 //PLUGIN
-.select2-container--default .select2-selection--multiple, .select2-container--default .select2-selection--single {
-  border-color: $border-color;
+.select2-container--default {
+  .select2-selection--single {
+    border-color: $border-color;
+    height: calc(2.6rem + 2px);
+    .select2-selection__rendered {
+      line-height: 1.1;
+    }
+  }
+  .select2-selection--multiple {
+    border-color: $border-color;
+    height: calc(2.6rem + 2px);
+  }
 }
 
 .input-group > .custom-file, .input-group > .custom-select, .input-group > .form-control {

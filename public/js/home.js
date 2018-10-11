@@ -139,10 +139,9 @@ $(function () {
 
 	$('#leads_form').on('submit', function (e) {
 		e.preventDefault();
-		// let url = $('#btn_form_change_state').data('url')
-		//
-		// $('#modal_md').showModal({url: url, params: {}, method: 'get'})
-		fetchLead('', 1);
+		var url = $('#btn_form_change_state').data('url');
+
+		$('#modal_md').showModal({ url: url, params: {}, method: 'get' });
 	});
 
 	$('body').on('submit', '#change_state_leads_form', function (e) {
