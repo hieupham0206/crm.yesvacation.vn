@@ -367,21 +367,36 @@ class LeadsController extends Controller
      */
     public function changeState(Lead $lead, Request $request)
     {
-        $newState = $request->state;
-        $comment  = $request->comment;
+        $newState    = $request->state;
+        $comment     = $request->comment;
+        $spouseName  = $request->spouse_name;
+        $spousePhone = $request->spouse_phone;
+        $email       = $request->email;
+        $date        = $request->date;
+        $time        = $request->time;
 
         if ($newState) {
             $lead->update([
                 'state'   => $newState,
-                'comment' => $comment
+                'comment' => $comment,
+                'email'   => $email
             ]);
 
             //state = 8: lưu vào bảng appointment
             if ($newState == 8) {
-                Appointment::create([
-                    'lead_id' => $lead->id,
-                    'user_id' => auth()->id()
-                ]);
+
+                $attributes = [
+                    'lead_id'      => $lead->id,
+                    'user_id'      => auth()->id(),
+                    'spouse_phone' => $spousePhone,
+                    'spouse_name'  => $spouseName,
+                ];
+
+                if ($date && $time) {
+                    $appointmentDatetime                = date('Y-m-d H:i:s', strtotime($date . $time));
+                    $attributes['appointment_datetime'] = $appointmentDatetime;
+                }
+                Appointment::create($attributes);
             }
 
             //state = 7: lưu vào bảng callback
@@ -391,6 +406,8 @@ class LeadsController extends Controller
                     'user_id' => auth()->id()
                 ]);
             }
+
+            //todo: gửi mail cho KH
 
             return response()->json([
                 'message' => __('Data edited successfully')

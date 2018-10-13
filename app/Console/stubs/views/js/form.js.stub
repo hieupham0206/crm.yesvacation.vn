@@ -1,17 +1,14 @@
 $(function() {
+	let isConfirm = $('#{{ modelName }}_form').data('confirm')
+
     $('#{{ modelName }}_form').validate({
-        submitHandler: $(this).data('confirm') ? function(form, e) {
+        submitHandler: isConfirm ? function(form, e) {
             window.blockPage()
             e.preventDefault()
 
-            let isConfirm = $(form).data('confirm')
             $(form).confirmation(result => {
                 if (result && (typeof result === 'object' && result.value)) {
-                    $(form).submitForm({
-                        data: {
-                            'isConfirm': isConfirm,
-                        },
-                    }).then(() => {
+                    $(form).submitForm().then(() => {
                         location.href = route('{{ modelName }}.index')
                     })
                 } else {

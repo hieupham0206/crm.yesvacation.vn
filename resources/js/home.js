@@ -155,4 +155,26 @@ $(function() {
 			}
 		})
 	}
+	let hours = 0, minutes = 0, seconds = 0
+	function clock() {// We create a new Date object and assign it to a variable called "time".
+		seconds++
+		if (seconds === 60) {
+			minutes++;
+			seconds = 0;
+
+			if (minutes === 60) {
+				minutes = 0;
+				hours++
+			}
+		}
+		console.log(harold(hours) + ':' + harold(minutes) + ':' + harold(seconds))
+		function harold(standIn) {
+			if (standIn < 10) {
+				standIn = '0' + standIn
+			}
+			return standIn
+		}
+	}
+
+	setInterval(clock, 1000)
 })
