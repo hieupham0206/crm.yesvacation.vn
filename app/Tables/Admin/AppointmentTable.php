@@ -2,6 +2,7 @@
 
 namespace App\Tables\Admin;
 
+use App\Enums\HistoryCallType;
 use App\Models\Appointment;
 use App\Tables\DataTable;
 
@@ -19,10 +20,10 @@ class AppointmentTable extends DataTable
                 $column = 'appointments.title';
                 break;
             case '3':
-                $column = 'appointments.created_at';
+                $column = 'appointments.appointment_datetime';
                 break;
             default:
-                $column = 'appointments.id';
+                $column = 'appointments.appointment_datetime';
                 break;
         }
 
@@ -45,7 +46,7 @@ class AppointmentTable extends DataTable
 
         /** @var Appointment[] $appointments */
         foreach ($appointments as $appointment) {
-            $btnEdit = $btnDelete = '';
+            $btnEdit = $btnDelete = $btnCall = '';
 
             if ($canUpdateAppointment) {
                 $btnEdit = ' <a href="' . route('appointments.edit', $appointment, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Edit') . '">
@@ -53,10 +54,17 @@ class AppointmentTable extends DataTable
 				</a>';
             }
 
+//            if ($canDeleteAppointment) {
+//                $btnDelete = ' <button type="button" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $appointment->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+//                data-url="' . route('appointments.destroy', $appointment, false) . '" title="' . __('Delete') . '">
+//                    <i class="fa fa-trash"></i>
+//                </button>';
+//            }
+
             if ($canDeleteAppointment) {
-                $btnDelete = ' <button type="button" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $appointment->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
-                data-url="' . route('appointments.destroy', $appointment, false) . '" title="' . __('Delete') . '">
-                    <i class="fa fa-trash"></i>
+                $btnCall = ' <button type="button" data-id="'. $appointment->id  . ' !!!" data-type-call="'.HistoryCallType::APPOINTMENT.'" 
+                class="btn btn-sm btn-appointment-call btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
+                    <i class="fa fa-phone"></i>
                 </button>';
             }
 
@@ -64,8 +72,9 @@ class AppointmentTable extends DataTable
                 "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
                 $appointment->lead->title,
                 optional($appointment->appointment_datetime)->format('d-m-Y H:i'),
+                $appointment->lead->comment,
 
-                $btnEdit . $btnDelete
+                $btnCall . $btnEdit . $btnDelete
             ];
         }
 

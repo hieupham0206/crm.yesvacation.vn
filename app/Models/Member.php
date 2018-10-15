@@ -2,16 +2,25 @@
 
 namespace App\Models;
 
-class Appointment extends \App\Models\Base\Appointment
+class Member extends \App\Models\Base\Member
 {
 	protected $fillable = [
-		'user_id',
-		'lead_id',
-		'state',
-		'type',
-        'appointment_datetime'
+		'title',
+		'name',
+		'gender',
+		'birthday',
+		'address',
+		'city',
+		'phone',
+		'email',
+		'spouce_name',
+		'spouce_phone',
+		'spouce_birthday',
+		'spouce_email',
+		'product_type',
+		'membership_type'
 	];
-	public static $logName = 'Appointment';
+	public static $logName = 'Member';
 
     protected static $logOnlyDirty = true;
 
@@ -19,9 +28,7 @@ class Appointment extends \App\Models\Base\Appointment
 
     public $labels = [];
 
-    public $filters = [
-        'user_id' => '='
-    ];
+    public $filters = [];
 
     /**
      * Route của model dùng cho Linkable trait

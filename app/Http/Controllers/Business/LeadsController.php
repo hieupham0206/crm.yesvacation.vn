@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Business;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Callback;
+use App\Models\HistoryCall;
 use App\Models\Lead;
 use App\Models\Province;
 use App\Tables\Business\LeadTable;
@@ -58,6 +59,7 @@ class LeadsController extends Controller
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
@@ -108,6 +110,7 @@ class LeadsController extends Controller
      * @param  Lead $lead
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, Lead $lead)
     {
@@ -222,6 +225,7 @@ class LeadsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function import(Request $request)
     {
@@ -367,19 +371,32 @@ class LeadsController extends Controller
      */
     public function changeState(Lead $lead, Request $request)
     {
-        $newState    = $request->state;
-        $comment     = $request->comment;
-        $spouseName  = $request->spouse_name;
-        $spousePhone = $request->spouse_phone;
-        $email       = $request->email;
-        $date        = $request->date;
-        $time        = $request->time;
+        $newState      = $request->state;
+        $comment       = $request->comment;
+        $spouseName    = $request->spouse_name;
+        $spousePhone   = $request->spouse_phone;
+        $email         = $request->email;
+        $date          = $request->date;
+        $time          = $request->time;
+        $startCallTime = $request->startCallTime;
 
         if ($newState) {
+            $userId = auth()->id();
+
             $lead->update([
                 'state'   => $newState,
                 'comment' => $comment,
                 'email'   => $email
+            ]);
+
+            //lưu bảng history_calls
+            HistoryCall::create([
+                'type'         => $request->get('typeCall', 1),
+                'lead_id'      => $lead->id,
+                'user_id'      => $userId,
+                'state'        => $lead->state,
+                'comment'      => $comment,
+                'time_of_call' => now()->diffInSeconds($startCallTime)
             ]);
 
             //state = 8: lưu vào bảng appointment
@@ -387,7 +404,7 @@ class LeadsController extends Controller
 
                 $attributes = [
                     'lead_id'      => $lead->id,
-                    'user_id'      => auth()->id(),
+                    'user_id'      => $userId,
                     'spouse_phone' => $spousePhone,
                     'spouse_name'  => $spouseName,
                 ];
@@ -403,11 +420,14 @@ class LeadsController extends Controller
             if ($newState == 7) {
                 Callback::create([
                     'lead_id' => $lead->id,
-                    'user_id' => auth()->id()
+                    'user_id' => $userId
                 ]);
             }
 
             //todo: gửi mail cho KH
+
+//            $message = (new AppointmentConfirmation())->onConnection('database')->onQueue('notification');
+//            \Mail::to($email)->queue($message);
 
             return response()->json([
                 'message' => __('Data edited successfully')

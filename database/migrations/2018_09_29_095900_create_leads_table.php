@@ -25,7 +25,7 @@ class CreateLeadsTable extends Migration
             $table->string('phone', 12)->nullable();
 
             $table->smallInteger('state')->default(\App\Enums\LeadState::NEW_CUSTOMER)->comment('1: New Customer; 2: DeadNumber; 3: WrongNumber; 4: OtherCity; 5: NoAnswer; 6: NoInterested; 7: CallLater; 8: Appointment, 9: Not Deal Yet; 10: Member');
-            $table->tinyInteger('is_locked')->default(-1)->comment('1: Khóa; -1: Không khóa');
+            $table->timestamp('call_date')->nullable()->comment('Thời gian cuộc gọi cuối cùng');
             $table->text('comment')->nullable();
 
             $table->timestamps();

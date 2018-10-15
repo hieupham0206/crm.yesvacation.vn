@@ -26,7 +26,7 @@
             <div class="form-group row">
                 <div class="col-sm-12 col-md-6 m-form__group-sub">
                     <label for="txt_date">{{ $lead->label('date') }}</label>
-                    <input class="form-control" name="date" id="txt_date"/>
+                    <input class="form-control" name="date" id="txt_date" autocomplete="off"/>
                 </div>
                 <div class="col-sm-12 col-md-6 m-form__group-sub">
                     <label for="select_time">{{ $lead->label('time') }}</label>
@@ -51,10 +51,6 @@
                 <div class="col-md-12 m-form__group-sub">
                     <label for="txt_appointment_email">{{ $lead->label('email') }}</label>
                     <input class="form-control" name="email" id="txt_appointment_email"/>
-                </div>
-                <div class="col-md-12 m-form__group-sub">
-                    <label for="txt_appointment_phone">{{ $lead->label('phone') }}</label>
-                    <input class="form-control" name="phone" id="txt_appointment_phone"/>
                 </div>
             </div>
             <div class="form-group row">

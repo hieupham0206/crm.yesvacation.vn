@@ -20,6 +20,7 @@ class CreateAppointmentsTable extends Migration
             $table->unsignedInteger('lead_id');
 //            $table->unique(['user_id', 'lead_id']);
 
+            $table->string('code', 10)->nullable();
             $table->string('spouse_name')->nullable();
             $table->string('spouse_phone')->nullable();
             $table->timestamp('appointment_datetime')->nullable();

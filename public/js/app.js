@@ -758,20 +758,19 @@ var cloudTeamCore = function ($, lang) {
 			$('.alphanum').alphanum({
 				allow: '-_,./%#@()*'
 			});
-
 			$('.email, .username').alphanum({
 				allow: '@.-_'
 			});
-
-			$('.address').alphanum({
-				allow: '.,/-'
-			});
-			//input có class number chỉ được nhập số
-			$('.numeric, .num').numeric({
+			$('.numeric').numeric({
 				allow: '.',
 				allowMinus: false
 			});
-			//input có class string chỉ được nhập chữ
+			$('.phone-number').alphanum({
+				allowMinus: false,
+				allowLatin: false,
+				allowOtherCharSets: false,
+				maxLength: 11
+			});
 			$('.string').alpha();
 		}
 	};
@@ -959,6 +958,31 @@ var cloudTeamCore = function ($, lang) {
 									json.data.splice(requestLength, json.data.length);
 								}
 								drawCallback(json);
+							},
+							'error': function error(jqXHR) {
+								var errorMsg = null;
+								var errorTitle = lang['Error'];
+								var status = jqXHR.status;
+								if (status === 419) {
+									errorMsg = lang['Login session has expired. Please log in again.'];
+								}
+								if (status === 500) {
+									errorMsg = lang['Whoops, something went wrong on our servers.'];
+								}
+
+								if (errorMsg) {
+									swal({
+										title: errorTitle,
+										text: errorMsg,
+										type: 'error',
+										confirmButtonClass: 'btn btn-brand m-btn--custom',
+										confirmButtonText: 'OK'
+									}).then(function () {
+										if (status === 419) {
+											location.reload();
+										}
+									});
+								}
 							}
 						});
 					} else {
@@ -1038,6 +1062,7 @@ var cloudTeamCore = function ($, lang) {
 			$.fn.dataTable.Api.register('actionEdit()', function () {
 				var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
 				    btnEdit = _ref2.btnEdit,
+				    redirectTo = _ref2.redirectTo,
 				    _ref2$params = _ref2.params,
 				    params = _ref2$params === undefined ? {} : _ref2$params,
 				    _ref2$message = _ref2.message,
@@ -1060,6 +1085,9 @@ var cloudTeamCore = function ($, lang) {
 						axios.post(url, params).then(function (result) {
 							var obj = result['data'];
 							flash(obj.message);
+							if (redirectTo !== undefined && redirectTo !== '') {
+								location.href = redirectTo;
+							}
 							table.reload();
 						}).catch(ajaxErrorHandler).finally(function () {
 							unblock();
@@ -1508,7 +1536,7 @@ var cloudTeamCore = function ($, lang) {
 
 			blockPage();
 			if (method === 'post') {
-				return axios.post(url, params).then(function (result) {
+				axios.post(url, params).then(function (result) {
 					_this.find('.modal-content').html(result.data);
 					_this.modal({
 						backdrop: 'static'
@@ -1517,7 +1545,7 @@ var cloudTeamCore = function ($, lang) {
 					unblock();
 				});
 			} else {
-				return axios.get(url, {
+				axios.get(url, {
 					params: params
 				}).then(function (result) {
 					_this.find('.modal-content').html(result.data);
