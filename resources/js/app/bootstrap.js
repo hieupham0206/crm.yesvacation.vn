@@ -10,6 +10,7 @@ try {
 	window.bootbox = require('../../plugins/bootbox/bootbox')
 
 	require('../../plugins/fileinput/bootstrap-fileinput')
+	window.Timer = require('easytimer.js')
 } catch (e) {
 	console.log(e)
 }

@@ -23,34 +23,36 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group row">
-                <div class="col-sm-12 col-md-6 m-form__group-sub">
-                    <label for="txt_date">{{ $lead->label('date') }}</label>
-                    <input class="form-control" name="date" id="txt_date" autocomplete="off"/>
+            <div id="appointment_lead_section" style="display: none">
+                <div class="form-group row">
+                    <div class="col-sm-12 col-md-6 m-form__group-sub">
+                        <label for="txt_date">{{ $lead->label('date') }}</label>
+                        <input class="form-control" name="date" id="txt_date" autocomplete="off"/>
+                    </div>
+                    <div class="col-sm-12 col-md-6 m-form__group-sub">
+                        <label for="select_time">{{ $lead->label('time') }}</label>
+                        <select name="time" id="select_time">
+                            <option value="10:00">10 AM</option>
+                            <option value="15:00">3 PM</option>
+                            <option value="18:00">6 PM</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="col-sm-12 col-md-6 m-form__group-sub">
-                    <label for="select_time">{{ $lead->label('time') }}</label>
-                    <select name="time" id="select_time">
-                        <option value="10:00">10 AM</option>
-                        <option value="15:00">3 PM</option>
-                        <option value="18:00">6 PM</option>
-                    </select>
+                <div class="form-group row">
+                    <div class="col-sm-12 col-md-6 m-form__group-sub">
+                        <label for="txt_spouse_name">{{ $lead->label('spouse_name') }}</label>
+                        <input class="form-control" name="spouse_name" id="txt_spouse_name"/>
+                    </div>
+                    <div class="col-sm-12 col-md-6 m-form__group-sub">
+                        <label for="txt_spouse_phone">{{ $lead->label('spouse_phone') }}</label>
+                        <input class="form-control" name="spouse_phone" id="txt_spouse_phone"/>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-sm-12 col-md-6 m-form__group-sub">
-                    <label for="txt_spouse_name">{{ $lead->label('spouse_name') }}</label>
-                    <input class="form-control" name="spouse_name" id="txt_spouse_name"/>
-                </div>
-                <div class="col-sm-12 col-md-6 m-form__group-sub">
-                    <label for="txt_spouse_phone">{{ $lead->label('spouse_phone') }}</label>
-                    <input class="form-control" name="spouse_phone" id="txt_spouse_phone"/>
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-md-12 m-form__group-sub">
-                    <label for="txt_appointment_email">{{ $lead->label('email') }}</label>
-                    <input class="form-control" name="email" id="txt_appointment_email"/>
+                <div class="form-group row">
+                    <div class="col-md-12 m-form__group-sub">
+                        <label for="txt_appointment_email">{{ $lead->label('email') }}</label>
+                        <input class="form-control" name="email" id="txt_appointment_email"/>
+                    </div>
                 </div>
             </div>
             <div class="form-group row">

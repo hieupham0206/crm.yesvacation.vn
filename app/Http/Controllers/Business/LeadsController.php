@@ -379,34 +379,40 @@ class LeadsController extends Controller
         $date          = $request->date;
         $time          = $request->time;
         $startCallTime = $request->startCallTime;
+        $typeCall      = $request->get('typeCall', 1);
 
         if ($newState) {
             $userId = auth()->id();
 
-            $lead->update([
-                'state'   => $newState,
-                'comment' => $comment,
-                'email'   => $email
-            ]);
+            $leadDatas = [
+                'state'     => $newState,
+                'comment'   => $comment,
+                'call_date' => now()->toDateTimeString()
+            ];
+
+            if ($lead->email !== $email) {
+                $leadDatas['email'] = $email;
+            }
+            $lead->update($leadDatas);
 
             //lưu bảng history_calls
             HistoryCall::create([
-                'type'         => $request->get('typeCall', 1),
+                'type'         => $typeCall,
                 'lead_id'      => $lead->id,
                 'user_id'      => $userId,
                 'state'        => $lead->state,
                 'comment'      => $comment,
-                'time_of_call' => now()->diffInSeconds($startCallTime)
+                'time_of_call' => now()->diffInSeconds($startCallTime),
             ]);
 
             //state = 8: lưu vào bảng appointment
             if ($newState == 8) {
-
                 $attributes = [
                     'lead_id'      => $lead->id,
                     'user_id'      => $userId,
                     'spouse_phone' => $spousePhone,
                     'spouse_name'  => $spouseName,
+                    'code'         => str_random(10)
                 ];
 
                 if ($date && $time) {

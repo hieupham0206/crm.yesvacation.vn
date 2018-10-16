@@ -45,10 +45,10 @@ class HistoryCall extends \App\Models\Base\HistoryCall
         'user_id',
         'lead_id',
         'member_id',
-        'name',
-        'phone',
+        'comment',
         'time_of_call',
-        'type'
+        'type',
+        'state',
     ];
     public static $logName = 'HistoryCall';
 

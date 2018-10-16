@@ -2,6 +2,7 @@
 
 namespace App\Tables\Admin;
 
+use App\Enums\HistoryCallType;
 use App\Models\Callback;
 use App\Tables\DataTable;
 
@@ -12,17 +13,17 @@ class CallbackTable extends DataTable
         $column = $this->column;
 
         switch ($column) {
-            case '1':
-                $column = 'callbacks.name';
-                break;
-            case '2':
-                $column = 'callbacks.title';
-                break;
-            case '3':
-                $column = 'callbacks.created_at';
-                break;
+//            case '1':
+//                $column = 'callbacks.name';
+//                break;
+//            case '2':
+//                $column = 'callbacks.title';
+//                break;
+//            case '3':
+//                $column = 'callbacks.created_at';
+//                break;
             default:
-                $column = 'callbacks.id';
+                $column = 'callbacks.callback_datetime';
                 break;
         }
 
@@ -38,14 +39,14 @@ class CallbackTable extends DataTable
         $this->column = $this->getColumn();
         $callBacks    = $this->getModels();
         $dataArray    = [];
-        $modelName    = (new Callback)->classLabel(true);
+//        $modelName    = (new Callback)->classLabel(true);
 
         $canUpdateCallback = can('update-callBack');
         $canDeleteCallback = can('delete-callBack');
 
         /** @var Callback[] $callBacks */
         foreach ($callBacks as $callBack) {
-            $btnEdit = $btnDelete = '';
+            $btnEdit = $btnCall = $btnDelete = '';
 
             if ($canUpdateCallback) {
                 $btnEdit = ' <a href="' . route('callbacks.edit', $callBack, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Edit') . '">
@@ -53,10 +54,17 @@ class CallbackTable extends DataTable
 				</a>';
             }
 
+//            if ($canDeleteCallback) {
+//                $btnDelete = ' <button type="button" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $callBack->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+//                data-url="' . route('callbacks.destroy', $callBack, false) . '" title="' . __('Delete') . '">
+//                    <i class="fa fa-trash"></i>
+//                </button>';
+//            }
+
             if ($canDeleteCallback) {
-                $btnDelete = ' <button type="button" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $callBack->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
-                data-url="' . route('callbacks.destroy', $callBack, false) . '" title="' . __('Delete') . '">
-                    <i class="fa fa-trash"></i>
+                $btnCall = ' <button type="button" data-lead-id="'. $callBack->lead_id  . ' !!!" data-type-call="'.HistoryCallType::CALLBACK.'" 
+                class="btn btn-sm btn-callback-call btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
+                    <i class="fa fa-phone"></i>
                 </button>';
             }
 
@@ -65,7 +73,7 @@ class CallbackTable extends DataTable
                 $callBack->lead->title,
                 optional($callBack->callback_datetime)->format('d-m-Y H:i'),
 
-               $btnEdit . $btnDelete
+               $btnEdit . $btnCall
             ];
         }
 

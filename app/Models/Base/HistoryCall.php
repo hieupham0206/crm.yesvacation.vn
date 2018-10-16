@@ -2,7 +2,7 @@
 
 /**
  * Created by hieu.pham.
- * Date: Mon, 15 Oct 2018 10:12:22 +0700.
+ * Date: Tue, 16 Oct 2018 21:50:26 +0700.
  */
 
 namespace App\Models\Base;

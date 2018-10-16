@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "copy-webpack-plugin": "^4.5.2",
+    "easytimer.js": "^2.3.0",
     "imagemin-mozjpeg": "^7.0.0",
     "imagemin-webpack-plugin": "^2.2.0"
   }

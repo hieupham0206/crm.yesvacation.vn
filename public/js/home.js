@@ -105,9 +105,8 @@ $(function () {
 			}
 		}),
 		conditionalPaging: true,
-		'columnDefs': []
-		// info: true,
-		// lengthChange: true,
+		'columnDefs': [],
+		sort: false
 	});
 	var tableCustomerHistory = $('#table_customer_history').DataTable({
 		'serverSide': true,
@@ -115,13 +114,12 @@ $(function () {
 		'ajax': $.fn.dataTable.pipeline({
 			url: route('history_calls.table'),
 			data: function data(q) {
-				q.filters = JSON.stringify([{ 'name': 'lead_id', 'value': leadId }]);
+				q.filters = JSON.stringify([{ 'name': 'lead_id', 'value': $('#txt_lead_id').val() }]);
 			}
 		}),
 		conditionalPaging: true,
-		'columnDefs': []
-		// info: true,
-		// lengthChange: true,
+		'columnDefs': [],
+		sort: false
 	});
 	var tableCallback = $('#table_callback').DataTable({
 		'serverSide': true,
@@ -133,9 +131,8 @@ $(function () {
 			}
 		}),
 		conditionalPaging: true,
-		'columnDefs': []
-		// info: true,
-		// lengthChange: true,
+		'columnDefs': [],
+		sort: false
 	});
 	var tableAppointment = $('#table_appointment').DataTable({
 		'serverSide': true,
@@ -147,47 +144,126 @@ $(function () {
 			}
 		}),
 		conditionalPaging: true,
-		'columnDefs': []
-		// info: true,
-		// lengthChange: true,
+		'columnDefs': [],
+		sort: false
 	});
+
+	function showFormChangeState() {
+		var typeCall = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+
+		var url = $('#btn_form_change_state').data('url');
+
+		$('#modal_md').showModal({
+			url: url, params: {
+				typeCall: typeCall
+			}, method: 'get'
+		});
+		callInterval = setInterval(callClock, 1000);
+	}
 
 	$('#leads_form').on('submit', function (e) {
 		e.preventDefault();
-		var url = $('#btn_form_change_state').data('url');
-
-		$('#modal_md').showModal({ url: url, params: {}, method: 'get' });
+		showFormChangeState();
 	});
 
 	$body.on('submit', '#change_state_leads_form', function (e) {
+		var _this = this;
+
 		e.preventDefault();
 		mApp.block('#modal_md');
 
 		$(this).submitForm().then(function () {
+			$(_this).resetForm();
+			resetCallClock();
+			waitClock();
+			reloadTable();
+			$('#span_customer_no').text(++totalCustomer);
+
 			$('#modal_md').modal('hide');
 			mApp.unblock('#modal_md');
-			fetchLead('', 1);
-			resetCallClock();
-			$('#span_customer_no').text(++totalCustomer);
 		});
 	});
 
 	$body.on('submit', '#break_form', function (e) {
+		var _this2 = this;
+
 		e.preventDefault();
 		mApp.block('#modal_md');
 
 		$(this).submitForm().then(function () {
-			$('#modal_md').modal('hide');
-			mApp.unblock('#modal_md');
+			$(_this2).resetForm();
 			$('#btn_pause').hide();
 			$('#btn_resume').show();
 			pauseInterval = setInterval(pauseClock, 1000);
+
+			$('#modal_md').modal('hide');
+			mApp.unblock('#modal_md');
 		});
 	});
 
 	$body.on('click', '.link-lead-name', function () {
 		var leadId = $(this).data('lead-id');
 		fetchLead(leadId, 0);
+		$('#txt_lead_id').val(leadId);
+		reloadLeadRelatedTable();
+	});
+
+	$body.on('click', '.btn-appointment-call', function () {
+		var leadId = $(this).data('lead-id');
+		var typeCall = $(this).data('type-call');
+
+		showFormChangeState(typeCall);
+		fetchLead(leadId, 0);
+		updateCallTypeText('Appointment Call');
+	});
+
+	$body.on('click', '.btn-edit-appointment', function () {
+		var appointmentId = $(this).data('id');
+		var spanAppointmentDatetimeText = $(this).parents('tr').find('.span-appointment-datetime');
+		var appointmentDatetime = spanAppointmentDatetimeText.text();
+		var html = '<div class="input-group">\n\t\t\t\t\t\t\t<input type="text text-datepicker" class="form-control" value="' + appointmentDatetime + '" data-appointment-id="' + appointmentId + '">\n\t\t\t\t\t\t\t<div class="input-group-append">\n\t\t\t\t\t\t\t\t<button class="btn btn-brand btn-change-appointment-datetime" type="button">Submit</button>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>';
+
+		spanAppointmentDatetimeText.html(html);
+		$('.text-datepicker').datepicker();
+	});
+
+	$body.on('click', '.btn-change-appointment-datetime', function () {
+		var _this3 = this;
+
+		var appointmentDatetime = $(this).parents('.input-group').find('.text-datepicker').val();
+		var appointmentId = $(this).data('appointment-id');
+		var urlEdit = route('leads.edit_appointment', appointmentId);
+
+		axios.post(urlEdit, {
+			appointmentDatetime: appointmentDatetime
+		}).then(function (result) {
+			var obj = result['data'];
+			if (obj.message) {
+				flash(obj.message);
+			}
+			$(_this3).parents('tr').find('.span-appointment-datetime').text(appointmentDatetime);
+		}).catch(function (e) {
+			return console.log(e);
+		}).finally(function () {
+			unblock();
+		});
+	});
+
+	$body.on('click', '.btn-callback-call', function () {
+		var leadId = $(this).data('lead-id');
+		var typeCall = $(this).data('type-call');
+
+		showFormChangeState(typeCall);
+		fetchLead(leadId, 0);
+		updateCallTypeText('Callback Call');
+	});
+
+	$body.on('change', '#select_state_modal', function () {
+		if (['7', '8'].includes($(this).val())) {
+			$('#appointment_lead_section').show();
+		} else {
+			$('#appointment_lead_section').hide();
+		}
 	});
 
 	$body.on('change', '#select_reason_break', function () {
@@ -213,7 +289,7 @@ $(function () {
 	});
 
 	$('#btn_resume').on('click', function () {
-		var _this = this;
+		var _this4 = this;
 
 		var url = $(this).data('url');
 		blockPage();
@@ -223,7 +299,7 @@ $(function () {
 			if (obj.message) {
 				flash(obj.message);
 			}
-			$(_this).hide();
+			$(_this4).hide();
 			$('#btn_pause').show();
 			resetPauseClock();
 		}).catch(function (e) {
@@ -231,6 +307,21 @@ $(function () {
 		}).finally(function () {
 			unblock();
 		});
+	});
+
+	var timer = new Timer();
+	timer.addEventListener('started', function (e) {
+		updateCallTypeText('Waiting');
+	});
+	timer.addEventListener('stopped', function (e) {
+		updateCallTypeText('Auto');
+		fetchLead('', 1);
+	});
+	timer.addEventListener('secondsUpdated', function (e) {
+		$('#span_call_time').html(timer.getTimeValues().toString());
+	});
+	timer.addEventListener('targetAchieved', function (e) {
+		$('#span_call_time').html('00:00:00');
 	});
 
 	function fetchLead() {
@@ -317,17 +408,29 @@ $(function () {
 		}
 	}
 
-	function loginTime() {
-		loginClock();
+	function waitClock() {
+		timer.start({ countdown: true, startValues: { seconds: 5 } });
+		$('#span_call_time').html(timer.getTimeValues().toString());
 	}
 
 	function initLoginClock() {
-		var diffTime = $('#span_login_time').data('diff-in-minute');
+		var diffTime = $('#span_login_time').data('diff-login-time');
 		var times = _.split(diffTime, ':');
 
 		loginHours = times[0];
 		loginMinutes = times[1];
 		loginSeconds = times[2];
+	}
+
+	function initBreakClock() {
+		var diffTime = $('#span_pause_time').data('diff-break-time');
+		if (diffTime !== '') {
+			var times = _.split(diffTime, ':');
+
+			pauseHours = times[0];
+			pauseMinutes = times[1];
+			pauseSeconds = times[2];
+		}
 	}
 
 	function resetPauseClock() {
@@ -336,12 +439,30 @@ $(function () {
 	}
 
 	function resetCallClock() {
+		console.log('clear call clock');
 		clearInterval(callInterval);
 		$('#span_call_time').text('00:00:00');
 	}
 
+	function updateCallTypeText(type) {
+		$('#span_call_type').text(type);
+	}
+
+	function reloadTable() {
+		tableAppointment.reload();
+		tableCallback.reload();
+		tableCustomerHistory.reload();
+		tableHistoryCall.reload();
+	}
+
+	function reloadLeadRelatedTable() {
+		tableCustomerHistory.reload();
+		tableHistoryCall.reload();
+	}
+
 	initLoginClock();
-	setInterval(loginTime, 1000);
+	initBreakClock();
+	setInterval(loginClock, 1000);
 });
 
 /***/ })

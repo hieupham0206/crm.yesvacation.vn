@@ -18,8 +18,8 @@
                             </div>
                         </div>
                         <div class="m-portlet__head-tools">
-                            <label for="" class="mr-3">Login time: <span id="span_login_time" class="span-time" data-diff-in-minute="{{ $diffString }}"></span></label>
-                            <label for="" class="mr-3">Pause time: <span id="span_pause_time" class="span-time">00:00:00</span></label>
+                            <label for="" class="mr-3">Login time: <span id="span_login_time" class="span-time" data-diff-login-time="{{ $diffLoginString }}"></span></label>
+                            <label for="" class="mr-3">Pause time: <span id="span_pause_time" class="span-time" data-diff-break-time="{{ $diffBreakString }}">00:00:00</span></label>
 
                             <button class="btn btn-brand btn-sm m-btn m-btn--icon m-btn--custom mr-2" id="btn_pause" data-url="{{ route('users.form_break') }}">
                                 <span><i class="fa fa-pause"></i><span>@lang('Pause')</span></span>
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <div class="m-portlet__head-tools">
-                            <span class="m-portlet__head-text">Type call: Auto</span>
+                            <span class="m-portlet__head-text">Type call: <span id="span_call_type">Auto</span></span>
                             <span class="m-portlet__head-text ml-3">Time: <span id="span_call_time" class="span-time">00:00:00</span></span>
                         </div>
                     </div>
