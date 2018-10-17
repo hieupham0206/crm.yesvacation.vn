@@ -64,11 +64,19 @@ class AppointmentTable extends DataTable
                     <i class="fa fa-phone"></i>
                 </button>';
             }
+            $appointmentDateText         = "<span class='span-appointment-datetime'>" . optional($appointment->appointment_datetime)->format('d-m-Y H:i') . '</span>';
+            if ($appointment->appointment_datetime) {
+                $dateRemain = now()->diffInDays($appointment->appointment_datetime);
+
+                if ($dateRemain == 1) {
+                    $appointmentDateText = "<span class='span-appointment-datetime m--font-danger'>" . optional($appointment->appointment_datetime)->format('d-m-Y H:i') . '</span>';
+                }
+            }
 
             $dataArray[] = [
                 "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
                 $appointment->lead->title,
-                "<span class='span-appointment-datetime'>".optional($appointment->appointment_datetime)->format('d-m-Y H:i') . '</span>',
+                $appointmentDateText,
                 $appointment->lead->comment,
 
                 $btnCall . $btnEdit . $btnDelete

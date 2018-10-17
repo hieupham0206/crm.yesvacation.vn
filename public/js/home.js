@@ -218,18 +218,19 @@ $(function () {
 
 	$body.on('click', '.btn-edit-appointment', function () {
 		var appointmentId = $(this).data('id');
-		var spanAppointmentDatetimeText = $(this).parents('tr').find('.span-appointment-datetime');
+		var $tr = $(this).parents('tr');
+		var spanAppointmentDatetimeText = $tr.find('.span-appointment-datetime');
 		var appointmentDatetime = spanAppointmentDatetimeText.text();
-		var html = '<div class="input-group">\n\t\t\t\t\t\t\t<input type="text text-datepicker" class="form-control" value="' + appointmentDatetime + '" data-appointment-id="' + appointmentId + '">\n\t\t\t\t\t\t\t<div class="input-group-append">\n\t\t\t\t\t\t\t\t<button class="btn btn-success btn-change-appointment-datetime" type="button"><i class="fa fa-check"></i></button>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>';
+		var html = '<div class="input-group">\n\t\t\t\t\t\t\t<input type="text text-inline-datepicker" class="form-control" value="' + appointmentDatetime + '" data-appointment-id="' + appointmentId + '">\n\t\t\t\t\t\t\t<div class="input-group-append">\n\t\t\t\t\t\t\t\t<button class="btn btn-success btn-change-appointment-datetime" type="button"><i class="fa fa-check"></i></button>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>';
 
 		spanAppointmentDatetimeText.html(html);
-		$('.text-datepicker').datepicker();
+		$tr.find('.text-inline-datepicker').datepicker();
 	});
 
 	$body.on('click', '.btn-change-appointment-datetime', function () {
 		var _this3 = this;
 
-		var appointmentDatetime = $(this).parents('.input-group').find('.text-datepicker').val();
+		var appointmentDatetime = $(this).parents('.input-group').find('.text-inline-datepicker').val();
 		var appointmentId = $(this).data('appointment-id');
 		var urlEdit = route('leads.edit_appointment', appointmentId);
 

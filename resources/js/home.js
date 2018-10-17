@@ -128,21 +128,22 @@ $(function() {
 
 	$body.on('click', '.btn-edit-appointment', function() {
 		let appointmentId = $(this).data('id')
-		let spanAppointmentDatetimeText = $(this).parents('tr').find('.span-appointment-datetime')
+		let $tr = $(this).parents('tr')
+		let spanAppointmentDatetimeText = $tr.find('.span-appointment-datetime')
 		let appointmentDatetime = spanAppointmentDatetimeText.text()
 		let html = `<div class="input-group">
-							<input type="text text-datepicker" class="form-control" value="${appointmentDatetime}" data-appointment-id="${appointmentId}">
+							<input type="text text-inline-datepicker" class="form-control" value="${appointmentDatetime}" data-appointment-id="${appointmentId}">
 							<div class="input-group-append">
 								<button class="btn btn-success btn-change-appointment-datetime" type="button"><i class="fa fa-check"></i></button>
 							</div>
 						</div>`
 
 		spanAppointmentDatetimeText.html(html)
-		$('.text-datepicker').datepicker()
+		$tr.find('.text-inline-datepicker').datepicker()
 	})
 
 	$body.on('click', '.btn-change-appointment-datetime', function() {
-		let appointmentDatetime = $(this).parents('.input-group').find('.text-datepicker').val()
+		let appointmentDatetime = $(this).parents('.input-group').find('.text-inline-datepicker').val()
 		let appointmentId = $(this).data('appointment-id')
 		let urlEdit = route('leads.edit_appointment', appointmentId)
 
