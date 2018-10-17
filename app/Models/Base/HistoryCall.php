@@ -2,7 +2,7 @@
 
 /**
  * Created by hieu.pham.
- * Date: Fri, 05 Oct 2018 21:04:12 +0700.
+ * Date: Tue, 16 Oct 2018 21:50:26 +0700.
  */
 
 namespace App\Models\Base;
@@ -16,10 +16,10 @@ use App\Models\BaseModel as Eloquent;
  * @property int $user_id
  * @property int $lead_id
  * @property int $member_id
- * @property string $name
- * @property string $phone
  * @property int $time_of_call
  * @property int $type
+ * @property string $comment
+ * @property int $state
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * 
@@ -38,7 +38,8 @@ class HistoryCall extends Eloquent
 		'lead_id' => 'int',
 		'member_id' => 'int',
 		'time_of_call' => 'int',
-		'type' => 'int'
+		'type' => 'int',
+		'state' => 'int'
 	];
 
 	public function lead()

@@ -14,6 +14,8 @@ final class LeadState extends Enum
     public const NO_INTERESTED = 6;
     public const CALL_LATER = 7;
     public const APPOINTMENT = 8;
+    public const NOT_DEAL_YET = 9;
+    public const MEMBER = 10;
 
     public static function getDescription($value): string
     {
@@ -47,6 +49,14 @@ final class LeadState extends Enum
 
         if ($value === self::APPOINTMENT) {
             return __('Appointment');
+        }
+
+        if ($value === self::NOT_DEAL_YET) {
+            return __('Not deal yet');
+        }
+
+        if ($value === self::MEMBER) {
+            return __('Member');
         }
 
         return parent::getDescription($value);

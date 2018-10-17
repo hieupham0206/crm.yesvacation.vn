@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lead;
+use App\Models\TimeBreak;
+use App\Models\User;
 
 class HomeController extends Controller
 {
@@ -13,14 +15,24 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $lead = Lead::where('is_locked', -1)
-                    ->getAvailable()
-                    ->first();
+        $lead = Lead::getAvailable()->first();
+        $lead->update(['call_date' => now()->toDateTimeString()]);
 
-//        $lead->update(['is_locked' => 1]);
         $lead = $lead ?? new Lead();
+        /** @var User $user */
+        $user            = auth()->user();
+        $lastLoginTime   = $user->last_login;
+        $diffTime        = now()->diffAsCarbonInterval($lastLoginTime);
+        $diffLoginString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
 
-        return view('tele_marketer_console', compact('lead'));
+        $lastBreakTime = TimeBreak::whereNotNull('start_break')->whereNull('end_break')->latest()->first();
+        $diffBreakString = '';
+        if ($lastBreakTime) {
+            $diffTime        = now()->diffAsCarbonInterval($lastBreakTime->start_break);
+            $diffBreakString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
+        }
+
+        return view('tele_marketer_console', compact('lead', 'diffLoginString',  'diffBreakString'));
     }
 
     public function lang()

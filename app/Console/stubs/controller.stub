@@ -41,7 +41,10 @@ class DummyClass extends Controller
      */
     public function create()
     {
-        return view('{{viewName}}.create')->with('{{crudNameSingular}}', new {{modelName}});
+        return view('{{viewName}}.create', [
+            '{{crudNameSingular}}' => new {{modelName}},
+            'action' => route('{{routeName}}.store')
+        ]);
     }
 
     /**
@@ -54,7 +57,7 @@ class DummyClass extends Controller
     {
         {{validationRules}}
         $requestData = $request->all();
-        {{modelName}}::create($requestData);
+        ${{crudNameSingular}} = {{modelName}}::create($requestData);
 
         if ($request->wantsJson()) {
             return $this->asJson([
@@ -62,7 +65,7 @@ class DummyClass extends Controller
             ]);
         }
 
-        return redirect(route('{{routeName}}.index'))->with('message', __( 'Data created successfully' ));
+        return redirect(route('{{routeName}}.show', ${{crudNameSingular}}))->with('message', __( 'Data created successfully' ));
     }
 
     /**
@@ -84,7 +87,11 @@ class DummyClass extends Controller
      */
     public function edit({{modelName}} ${{crudNameSingular}})
     {
-        return view('{{viewName}}.edit', compact('{{crudNameSingular}}'));
+        return view('{{viewName}}.edit', [
+            '{{crudNameSingular}}' => ${{crudNameSingular}},
+            'method' => 'put',
+            'action' => route('{{routeName}}.update', ${{crudNameSingular}})
+        ]);
     }
 
     /**
@@ -106,7 +113,7 @@ class DummyClass extends Controller
             ]);
         }
 
-        return redirect(route('{{routeName}}.index'))->with('message', __( 'Data edited successfully' ));
+        return redirect(route('{{routeName}}.show', ${{crudNameSingular}}))->with('message', __( 'Data edited successfully' ));
     }
 
     /**
@@ -120,12 +127,12 @@ class DummyClass extends Controller
         try {
         	  ${{crudNameSingular}}->delete();
         } catch ( \Exception $e ) {
-            return response()->json( [
+            return $this->asJson( [
                 'message' => "Error: {$e->getMessage()}"
             ], $e->getCode() );
         }
 
-        return response()->json( [
+        return $this->asJson( [
             'message' => __('Data deleted successfully')
         ] );
     }
@@ -141,12 +148,12 @@ class DummyClass extends Controller
             $ids = \request()->get( 'ids' );
             {{modelName}}::destroy( $ids );
         } catch ( \Exception $e ) {
-            return response()->json( [
+            return $this->asJson( [
                 'message' => "Error: {$e->getMessage()}"
             ], $e->getCode() );
         }
 
-        return response()->json( [
+        return $this->asJson( [
             'message' => __( 'Data deleted successfully' )
         ] );
     }
@@ -171,7 +178,7 @@ class DummyClass extends Controller
         $totalCount = ${{crudName}}->count();
         ${{crudName}} = ${{crudName}}->offset($offset)->limit(10)->get();
 
-        return response()->json( [
+        return $this->asJson( [
             'total_count' => $totalCount,
             'items'       => ${{crudName}}->toArray(),
         ] );

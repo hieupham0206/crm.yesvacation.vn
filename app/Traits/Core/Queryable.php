@@ -26,7 +26,7 @@ trait Queryable
                 $this->addCondition($condition);
             }
 
-            return $query;
+            return $this->build($query);
         }
         $this->addCondition($conditions);
 
@@ -50,7 +50,7 @@ trait Queryable
                 $this->addCondition($condition, 'or');
             }
 
-            return $query;
+            return $this->build($query);
         }
         $this->addCondition($conditions, 'or');
 
@@ -124,9 +124,9 @@ trait Queryable
         [$column, $operator, $value] = $configs;
 
         if ( ! isValueEmpty($value)) {
-            [$column, $isForeignKey, $relation, $value] = $this->preparedParam($operator, $column, $value);
+            [$column, $isForeignKey, $relation, $value, $table] = $this->preparedParam($operator, $column, $value);
 
-            $this->conditions[] = [$column, $value, $boolean, $operator, $isForeignKey, $relation];
+            $this->conditions[] = [$column, $value, $boolean, $operator, $isForeignKey, $relation, $table];
         }
     }
 
@@ -139,13 +139,13 @@ trait Queryable
     {
         return $query->where(function (Builder $subQuery) {
             foreach ($this->conditions as $condition) {
-                [$column, $value, $boolean, $operator, $isForeignKey, $relation] = $condition;
+                [$column, $value, $boolean, $operator, $isForeignKey, $relation, $table] = $condition;
                 if ($isForeignKey) {
-                    return $subQuery->whereHas($relation, function (Builder $q) use ($column, $value, $operator, $boolean) {
+                    return $subQuery->whereHas($relation, function (Builder $q) use ($column, $value, $operator, $boolean, $table) {
                         if (\is_array($value)) {
                             $q->whereIn($column, $value, $boolean, $operator === '!=');
                         } else {
-                            $q->where($column, $operator, $value, $boolean);
+                            $q->where("$table.$column", $operator, $value, $boolean);
                         }
                     });
                 }
@@ -171,18 +171,27 @@ trait Queryable
     private function preparedParam($operator, $column, $value): array
     {
         $isForeignKey = $relation = false;
+        $table        = '';
         if (strpos($column, '.') !== false) {
             $columns = collect(explode('.', $column));
-            $column  = $columns->pop();
+            $column  = $columns->last();
 
             $isForeignKey = true;
             $relation     = $columns->implode('.');
+
+            if (strpos($relation, '.') !== false) {
+                $tableAndColumn = collect(explode('.', $relation));
+
+                $tableAndColumn->pop();
+                $relation = $tableAndColumn->pop();
+                $table    = $tableAndColumn->first();
+            }
         }
 
         if (strtolower($operator) === 'like') {
             $value = "%$value%";
         }
 
-        return [$column, $isForeignKey, $relation, $value];
+        return [$column, $isForeignKey, $relation, $value, $table];
     }
 }

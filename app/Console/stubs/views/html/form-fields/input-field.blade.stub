@@ -1,1 +1,3 @@
-<input class="form-control m-input" name="%%itemName%%" type="%%fieldType%%" id="txt_%%itemName%%" value="{{ $%%crudNameSingular%%->%%itemName%% or ''}}" required placeholder="Enter value">
+<input class="form-control text-datepicker" name="%%itemName%%" type="text" id="txt_%%itemName%%" value="{{ $%%crudNameSingular%%->%%itemName%%->format('d-m-Y') ?? old('%%itemName%%')}}" placeholder="{{ __('Enter value') }}"
+autocomplete="off">
+<span class="m-form__help"></span>

@@ -132,20 +132,19 @@ let cloudTeamCore = (function($, lang) {
 			$('.alphanum').alphanum({
 				allow: '-_,./%#@()*',
 			})
-
 			$('.email, .username').alphanum({
 				allow: '@.-_',
 			})
-
-			$('.address').alphanum({
-				allow: '.,/-',
-			})
-			//input có class number chỉ được nhập số
-			$('.numeric, .num').numeric({
+			$('.numeric').numeric({
 				allow: '.',
 				allowMinus: false,
 			})
-			//input có class string chỉ được nhập chữ
+			$('.phone-number').alphanum({
+				allowMinus: false,
+				allowLatin: false,
+				allowOtherCharSets: false,
+				maxLength: 11
+			})
 			$('.string').alpha()
 		}
 	}
@@ -354,6 +353,31 @@ let cloudTeamCore = (function($, lang) {
 								}
 								drawCallback(json)
 							},
+							'error': function(jqXHR) {
+								let errorMsg = null
+								let errorTitle = lang['Error']
+								let status = jqXHR.status
+								if (status === 419) {
+									errorMsg = lang['Login session has expired. Please log in again.']
+								}
+								if (status === 500) {
+									errorMsg = lang['Whoops, something went wrong on our servers.']
+								}
+
+								if (errorMsg) {
+									swal({
+										title: errorTitle,
+										text: errorMsg,
+										type: 'error',
+										confirmButtonClass: 'btn btn-brand m-btn--custom',
+										confirmButtonText: 'OK',
+									}).then(() => {
+										if (status === 419) {
+											location.reload()
+										}
+									})
+								}
+							}
 						})
 					} else {
 						let json = $.extend(true, {}, cacheLastJson)
@@ -420,7 +444,7 @@ let cloudTeamCore = (function($, lang) {
 
 			// noinspection JSUnresolvedVariable
 			$.fn.dataTable.Api.register('actionEdit()',
-				function({btnEdit, params = {}, message = lang['Do you want to continue?'], title = lang['Edit data !!!']} = {}) {
+				function({btnEdit, redirectTo, params = {}, message = lang['Do you want to continue?'], title = lang['Edit data !!!']} = {}) {
 					let table = this
 					let url = btnEdit.data('url')
 					let checkbox = btnEdit.parents('tr').find('.m-checkbox--single > [type="checkbox"]')
@@ -436,6 +460,9 @@ let cloudTeamCore = (function($, lang) {
 							axios.post(url, params).then(result => {
 								let obj = result['data']
 								flash(obj.message)
+								if (redirectTo !== undefined && redirectTo !== '') {
+									location.href = redirectTo
+								}
 								table.reload()
 							}).catch(ajaxErrorHandler).finally(() => {
 								unblock()
@@ -862,7 +889,7 @@ let cloudTeamCore = (function($, lang) {
 		$.fn.showModal = function({url, params = {}, method = 'post'}) {
 			blockPage()
 			if (method === 'post') {
-				return axios.post(url, params).then(result => {
+				axios.post(url, params).then(result => {
 					this.find('.modal-content').html(result.data)
 					this.modal({
 						backdrop: 'static',
@@ -871,7 +898,7 @@ let cloudTeamCore = (function($, lang) {
 					unblock()
 				})
 			} else {
-				return axios.get(url, {
+				axios.get(url, {
 					params: params,
 				}).then(result => {
 					this.find('.modal-content').html(result.data)
@@ -922,7 +949,7 @@ let cloudTeamCore = (function($, lang) {
 		 */
 		$.fn.resetForm = function() {
 			this[0].reset()
-			this.find('select').val([]).trigger('change')
+			this.find('select').val('').trigger('change')
 		}
 
 		//Select2 ajax plugin

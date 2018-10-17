@@ -92,7 +92,8 @@ class Lead extends \App\Models\Base\Lead
         'province_id',
         'phone',
         'state',
-        'comment'
+        'comment',
+        'call_date'
     ];
 
     public function getDescriptionForEvent(string $eventName): string
@@ -143,7 +144,8 @@ class Lead extends \App\Models\Base\Lead
         $user = auth()->user();
 
         $provinceIdFromDept = $user->departments->pluck('province_id')->toArray();
-        $query->whereNotIn('state', [7, 8]);
+        $query->whereNotIn('state', [LeadState::APPOINTMENT, LeadState::CALL_LATER])->whereNull('call_date')
+              ->orderByRaw('call_date asc, created_at asc');
 
         if ($provinceIdFromDept) {
             return $query->where(function (Builder $q) use ($provinceIdFromDept) {

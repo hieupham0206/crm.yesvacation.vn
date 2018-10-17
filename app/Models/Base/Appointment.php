@@ -2,7 +2,7 @@
 
 /**
  * Created by hieu.pham.
- * Date: Sat, 06 Oct 2018 10:43:43 +0700.
+ * Date: Tue, 16 Oct 2018 21:48:13 +0700.
  */
 
 namespace App\Models\Base;
@@ -15,8 +15,12 @@ use App\Models\BaseModel as Eloquent;
  * @property int $id
  * @property int $user_id
  * @property int $lead_id
- * @property int $state
+ * @property string $code
+ * @property string $spouse_name
+ * @property string $spouse_phone
+ * @property \Carbon\Carbon $appointment_datetime
  * @property int $type
+ * @property int $state
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * 
@@ -32,8 +36,12 @@ class Appointment extends Eloquent
 	protected $casts = [
 		'user_id' => 'int',
 		'lead_id' => 'int',
-		'state' => 'int',
-		'type' => 'int'
+		'type' => 'int',
+		'state' => 'int'
+	];
+
+	protected $dates = [
+		'appointment_datetime'
 	];
 
 	public function lead()

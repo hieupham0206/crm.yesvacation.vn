@@ -26,9 +26,7 @@ class CrudViewCommand extends Command
                             {--fields= : Tên các column để hiện trong view.}
                             {--view-path= : The name of the view path.}
                             {--pk=id : The name of the primary key.}
-                            {--validations= : Khai báo field validation trong controller.}
-                            {--custom-data= : Some additional values to use in the crud.}
-                            {--localize=no : Localize the view? yes|no.}';
+                            {--validations= : Khai báo field validation trong controller.}';
 
     /**
      * The console command description.
@@ -278,17 +276,17 @@ class CrudViewCommand extends Command
             ? config('crudgenerator.path') . 'views/' . $formHelper . '/'
             : __DIR__ . '/../stubs/views/' . $formHelper . '/';
 
-        $this->route            = $this->argument('name');
-        $this->crudName         = snake_case($this->argument('name'));
-        $this->varName          = lcfirst($this->argument('name'));
-        $this->crudNameCap      = ucwords($this->crudName);
-        $this->crudNameSingular = lcfirst(str_singular(studly_case($this->route)));
-        $this->modelName        = str_singular($this->argument('name'));
-        $this->title            = camel2words(str_singular(studly_case($this->argument('name'))));
-        $this->modelNameCap     = ucfirst($this->modelName);
-        $this->customData       = $this->option('custom-data');
-        $this->primaryKey       = $this->option('pk');
-        $this->viewName         = $this->route;
+        $this->route       = $this->argument('name');
+        $this->crudName    = snake_case($this->argument('name'));
+        $this->varName     = lcfirst($this->argument('name'));
+        $this->crudNameCap = ucwords($this->crudName);
+
+        $this->modelName    = $this->crudNameSingular = str_singular(variablize($this->argument('name')));
+        $this->modelNameCap = str_singular(studly_case($this->route));
+
+        $this->title      = camel2words(str_singular(studly_case($this->argument('name'))));
+        $this->primaryKey = $this->option('pk');
+        $this->viewName   = $this->route;
 
         $viewDirectory = config('view.paths')[0] . '/';
         $path          = $viewDirectory . $this->viewName . '/';
@@ -305,7 +303,9 @@ class CrudViewCommand extends Command
             File::makeDirectory($path, 0755, true);
         }
 
-        $fields      = $this->option('fields');
+        $fields = $this->option('fields');
+        //Xóa dấu ; cuối cùng để tránh bị lỗi phần tử rỗng
+        $fields      = rtrim($fields, ';');
         $fieldsArray = explode(';', $fields);
 
         $this->formFields = [];
@@ -324,11 +324,26 @@ class CrudViewCommand extends Command
                 $this->formFields[$idx]['options']  = '';
 
                 if ($this->formFields[$idx]['type'] == 'select' && isset($itemArray[2])) {
-                    //options=1_value1**2_value2
                     $options      = trim($itemArray[2]);
                     $options      = str_replace('options=', '', $options);
                     $optionValues = "<option></option>\n";
-                    if (\strpos($options, '**', true) !== false) {
+                    if (starts_with($options, 'enum')) {
+                        //options=enum**className
+                        $options       = explode('**', $options);
+                        $enumClassName = collect($options)->last();
+                        $enumAttribute = lcfirst(str_plural($enumClassName));
+                        $enumVariable  = lcfirst($enumClassName);
+
+                        $optionValues .= '@foreach($' . $this->crudNameSingular . '->' . $enumAttribute . ' as $key => $' . $enumVariable . ')' . "\n";
+                        $optionValues .= '<option value="{{ $key }}" {{ $' . $enumVariable . ' == $key ? \' selected\' : \'\' }}>{{ $' . $enumVariable . ' }}</option>' . "\n";
+                        $optionValues .= '@endforeach' . "\n";
+
+                        //tạo file class enum
+                        $this->call('make:enum', [
+                            'name' => $enumClassName
+                        ]);
+                    } elseif (\strpos($options, '**', true) !== false) {
+                        //options=1_value1**2_value2
                         $options = explode('**', $options);
                         foreach ($options as $option) {
                             $values = explode('_', $option);
@@ -393,9 +408,9 @@ class CrudViewCommand extends Command
     private function defaultTemplating()
     {
         return [
-            'index'   => ['crudName', 'formHeadingHtml', 'route', 'userViewPath', 'modelName', 'viewTemplateDir', 'crudNameSingular'],
+            'index'   => ['crudName', 'formHeadingHtml', 'route', 'userViewPath', 'viewTemplateDir', 'crudNameSingular'],
             '_search' => ['formSearchHtml', 'crudName'],
-            'create'  => ['crudName', 'modelName', 'modelNameCap', 'crudNameSingular', 'route', 'userViewPath', 'viewTemplateDir'],
+            'create'  => ['crudName', 'modelNameCap', 'crudNameSingular', 'route', 'userViewPath', 'viewTemplateDir'],
             'edit'    => ['crudName', 'modelNameCap', 'crudNameSingular', 'title', 'route', 'userViewPath', 'viewTemplateDir'],
             '_form'   => ['formFieldsHtml', 'route', 'crudName', 'modelNameCap', 'crudNameSingular'],
             'show'    => ['formBodyHtmlForShowView', 'crudNameSingular', 'route', 'modelNameCap'],
@@ -418,7 +433,6 @@ class CrudViewCommand extends Command
             $newFile = $path . $name . '.blade.php';
             if (File::copy($file, $newFile)) {
                 $this->templateVars($newFile, $vars);
-                $this->userDefinedVars($newFile);
 
                 continue;
             }
@@ -443,26 +457,6 @@ class CrudViewCommand extends Command
             $replace = $start . $var . $end;
             if (\in_array($var, $this->vars)) {
                 File::put($file, str_replace($replace, $this->$var, File::get($file)));
-            }
-        }
-    }
-
-    /**
-     * Update custom values between delimiter with real values
-     *
-     * @param $file
-     *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    protected function userDefinedVars($file)
-    {
-        [$start, $end] = $this->delimiter;
-
-        if ($this->customData !== null) {
-            $customVars = explode(';', $this->customData);
-            foreach ($customVars as $rawVar) {
-                $arrayVar = explode('=', $rawVar);
-                File::put($file, str_replace($start . $arrayVar[0] . $end, $arrayVar[1], File::get($file)));
             }
         }
     }
@@ -497,8 +491,6 @@ class CrudViewCommand extends Command
     {
         $type = str_replace("'", '', $item['type']);
         switch ($this->typeLookup[$type]) {
-            case 'password':
-                return $this->createPasswordField($item);
             case 'datetime-local':
             case 'time':
                 return $this->createInputField($item);
@@ -531,29 +523,6 @@ class CrudViewCommand extends Command
         $type   = str_replace("'", '', $item['type']);
         $markup = File::get($this->viewDirectoryPath . 'form-fields/form-field.blade.stub');
         $markup = str_replace([$start . 'required' . $end, $start . 'fieldType' . $end, $start . 'itemName' . $end, $start . 'crudNameSingular' . $end], [$required, $this->typeLookup[$type], $item['name'], $this->crudNameSingular], $markup);
-
-        return $this->wrapField(
-            $item,
-            $markup
-        );
-    }
-
-    /**
-     * Create a password field using the form helper.
-     *
-     * @param  array $item
-     *
-     * @return string
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    protected function createPasswordField($item)
-    {
-        [$start, $end] = $this->delimiter;
-
-        $required = $item['required'] ? 'required' : '';
-
-        $markup = File::get($this->viewDirectoryPath . 'form-fields/password-field.blade.stub');
-        $markup = str_replace([$start . 'required' . $end, $start . 'itemName' . $end, $start . 'crudNameSingular' . $end], [$required, $item['name'], $this->crudNameSingular], $markup);
 
         return $this->wrapField(
             $item,

@@ -13,7 +13,7 @@
                 <strong></strong>
             </div>
             <div class="form-group row">
-                <div class="col-12 col-md-6 m-form__group-sub">
+                <div class="col-md-12 m-form__group-sub">
                     <label for="select_state_modal">{{ $lead->label('state') }}</label>
                     <select name="state" class="form-control select" id="select_state_modal">
                         <option></option>
@@ -22,16 +22,49 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-sm-12 col-md-6 m-form__group-sub {{ $errors->has('comment') ? 'has-danger' : ''}}">
+            </div>
+            <div id="appointment_lead_section" style="display: none">
+                <div class="form-group row">
+                    <div class="col-sm-12 col-md-6 m-form__group-sub">
+                        <label for="txt_date">{{ $lead->label('date') }}</label>
+                        <input class="form-control" name="date" id="txt_date" autocomplete="off"/>
+                    </div>
+                    <div class="col-sm-12 col-md-6 m-form__group-sub">
+                        <label for="select_time">{{ $lead->label('time') }}</label>
+                        <select name="time" id="select_time">
+                            <option value="10:00">10 AM</option>
+                            <option value="15:00">3 PM</option>
+                            <option value="18:00">6 PM</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12 col-md-6 m-form__group-sub">
+                        <label for="txt_spouse_name">{{ $lead->label('spouse_name') }}</label>
+                        <input class="form-control" name="spouse_name" id="txt_spouse_name"/>
+                    </div>
+                    <div class="col-sm-12 col-md-6 m-form__group-sub">
+                        <label for="txt_spouse_phone">{{ $lead->label('spouse_phone') }}</label>
+                        <input class="form-control" name="spouse_phone" id="txt_spouse_phone"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12 m-form__group-sub">
+                        <label for="txt_appointment_email">{{ $lead->label('email') }}</label>
+                        <input class="form-control" name="email" id="txt_appointment_email"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12 m-form__group-sub">
                     <label for="textarea_comment">{{ $lead->label('comment') }}</label>
                     <textarea class="form-control" rows="5" name="comment" id="textarea_comment">{{ $lead->comment ?? ''}}</textarea>
-                    {!! $errors->first('comment', '<div class="form-control-feedback">:message</div>') !!}
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-brand m-btn m-btn--icon m-btn--custom"><span><i class="fa fa-save"></i><span>@lang('Save')</span></span></button>
+        <button class="btn btn-brand m-btn m-btn--icon m-btn--custom" id="btn_save_change_state"><span><i class="fa fa-save"></i><span>@lang('Save')</span></span></button>
         <button type="button" class="btn btn-secondary m-btn--custom m-btn--icon" data-dismiss="modal">
             <span>
                 <i class="fa fa-ban"></i>
