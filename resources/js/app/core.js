@@ -949,7 +949,7 @@ let cloudTeamCore = (function($, lang) {
 		 */
 		$.fn.resetForm = function() {
 			this[0].reset()
-			this.find('select').val([]).trigger('change')
+			this.find('select').val('').trigger('change')
 		}
 
 		//Select2 ajax plugin

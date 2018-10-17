@@ -5,3 +5,4 @@ Route::post('/leads/import/', 'LeadsController@import')->name('leads.import');
 
 Route::get('/leads/change-state/form/{lead}', 'LeadsController@formChangeState')->name('leads.form_change_state');
 Route::post('/leads/chage-state/{lead}', 'LeadsController@changeState')->name('leads.change_state');
+Route::post('/leads/appointment/update/{appointment}', 'LeadsController@editAppointment')->name('leads.edit_appointment');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AppointmentConfirmation;
 use App\Models\Appointment;
 use App\Models\Callback;
 use App\Models\HistoryCall;
@@ -419,7 +420,12 @@ class LeadsController extends Controller
                     $appointmentDatetime                = date('Y-m-d H:i:s', strtotime($date . $time));
                     $attributes['appointment_datetime'] = $appointmentDatetime;
                 }
-                Appointment::create($attributes);
+                $appointment = Appointment::create($attributes);
+
+                if ($lead->email) {
+                    $message = (new AppointmentConfirmation(compact('lead', 'appointment')))->onConnection('database')->onQueue('notification');
+                    \Mail::to($email)->queue($message);
+                }
             }
 
             //state = 7: lưu vào bảng callback
@@ -430,11 +436,6 @@ class LeadsController extends Controller
                 ]);
             }
 
-            //todo: gửi mail cho KH
-
-//            $message = (new AppointmentConfirmation())->onConnection('database')->onQueue('notification');
-//            \Mail::to($email)->queue($message);
-
             return response()->json([
                 'message' => __('Data edited successfully')
             ]);
@@ -442,6 +443,19 @@ class LeadsController extends Controller
 
         return response()->json([
             'message' => __('Data edited unsuccessfully')
+        ]);
+    }
+
+    public function editAppointment(Appointment $appointment, Request $request)
+    {
+        $appointmentDatetime = $request->get('appointmentDatetime');
+
+        $appointment->update([
+            'appointment_datetime' => $appointmentDatetime,
+        ]);
+
+        return response()->json([
+            'message' => __('Data edited successfully')
         ]);
     }
 }

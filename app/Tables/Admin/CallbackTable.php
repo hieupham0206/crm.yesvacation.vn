@@ -71,7 +71,7 @@ class CallbackTable extends DataTable
             $dataArray[] = [
                 "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$callBack->lead_id}'>{$callBack->lead->name}</a>",
                 $callBack->lead->title,
-                optional($callBack->callback_datetime)->format('d-m-Y H:i'),
+                "<span class='span-appointment-datetime'>".optional($callBack->callback_datetime)->format('d-m-Y H:i') . '</span>',
 
                $btnEdit . $btnCall
             ];

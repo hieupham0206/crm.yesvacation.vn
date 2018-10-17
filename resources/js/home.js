@@ -1,6 +1,5 @@
 $(function() {
 	let userId = $('#txt_user_id').val()
-	let leadId = $('#txt_lead_id').val()
 
 	let loginHours = 0, loginMinutes = 0, loginSeconds = 0
 	let callHours = 0, callMinutes = 0, callSeconds = 0
@@ -134,7 +133,7 @@ $(function() {
 		let html = `<div class="input-group">
 							<input type="text text-datepicker" class="form-control" value="${appointmentDatetime}" data-appointment-id="${appointmentId}">
 							<div class="input-group-append">
-								<button class="btn btn-brand btn-change-appointment-datetime" type="button">Submit</button>
+								<button class="btn btn-success btn-change-appointment-datetime" type="button"><i class="fa fa-check"></i></button>
 							</div>
 						</div>`
 
@@ -217,17 +216,17 @@ $(function() {
 	})
 
 	let timer = new Timer()
-	timer.addEventListener('started', function(e) {
+	timer.addEventListener('started', function() {
 		updateCallTypeText('Waiting')
 	})
-	timer.addEventListener('stopped', function(e) {
+	timer.addEventListener('stopped', function() {
 		updateCallTypeText('Auto')
 		fetchLead('', 1)
 	})
-	timer.addEventListener('secondsUpdated', function(e) {
+	timer.addEventListener('secondsUpdated', function() {
 		$('#span_call_time').html(timer.getTimeValues().toString())
 	})
-	timer.addEventListener('targetAchieved', function(e) {
+	timer.addEventListener('targetAchieved', function() {
 		$('#span_call_time').html('00:00:00')
 	})
 
@@ -250,6 +249,13 @@ $(function() {
 		})
 	}
 
+	function harold(standIn) {
+		if (standIn < 10) {
+			standIn = '0' + standIn
+		}
+		return standIn
+	}
+
 	function loginClock() {
 		loginSeconds++
 		if (loginSeconds === 60) {
@@ -262,13 +268,6 @@ $(function() {
 			}
 		}
 		$('#span_login_time').text(harold(loginHours) + ':' + harold(loginMinutes) + ':' + harold(loginSeconds))
-
-		function harold(standIn) {
-			if (standIn < 10) {
-				standIn = '0' + standIn
-			}
-			return standIn
-		}
 	}
 
 	function callClock() {
@@ -283,13 +282,6 @@ $(function() {
 			}
 		}
 		$('#span_call_time').text(harold(callHours) + ':' + harold(callMinutes) + ':' + harold(callSeconds))
-
-		function harold(standIn) {
-			if (standIn < 10) {
-				standIn = '0' + standIn
-			}
-			return standIn
-		}
 	}
 
 	function pauseClock() {
@@ -304,13 +296,6 @@ $(function() {
 			}
 		}
 		$('#span_pause_time').text(harold(pauseHours) + ':' + harold(pauseMinutes) + ':' + harold(pauseSeconds))
-
-		function harold(standIn) {
-			if (standIn < 10) {
-				standIn = '0' + standIn
-			}
-			return standIn
-		}
 	}
 
 	function waitClock() {
@@ -344,7 +329,6 @@ $(function() {
 	}
 
 	function resetCallClock() {
-		console.log('clear call clock')
 		clearInterval(callInterval)
 		$('#span_call_time').text('00:00:00')
 	}

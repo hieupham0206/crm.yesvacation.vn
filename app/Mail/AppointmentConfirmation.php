@@ -10,15 +10,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class AppointmentConfirmation extends Mailable
 {
     use Queueable, SerializesModels;
+    private $params;
 
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param $params
      */
-    public function __construct()
+    public function __construct($params)
     {
         //
+        $this->params = $params;
     }
 
     /**
@@ -28,6 +30,10 @@ class AppointmentConfirmation extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.appointment_confirmation');
+        return $this
+            ->from(config('mail.from.address'), config('mail.from.name'))
+            ->subject('Thông báo xác nhận')
+            ->view('emails.appointment_confirmation.address')
+            ->with(['params' => $this->params]);
     }
 }

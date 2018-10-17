@@ -60,25 +60,24 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 59);
+/******/ 	return __webpack_require__(__webpack_require__.s = 61);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 59:
+/***/ 61:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(60);
+module.exports = __webpack_require__(62);
 
 
 /***/ }),
 
-/***/ 60:
+/***/ 62:
 /***/ (function(module, exports) {
 
 $(function () {
 	var userId = $('#txt_user_id').val();
-	var leadId = $('#txt_lead_id').val();
 
 	var loginHours = 0,
 	    loginMinutes = 0,
@@ -221,7 +220,7 @@ $(function () {
 		var appointmentId = $(this).data('id');
 		var spanAppointmentDatetimeText = $(this).parents('tr').find('.span-appointment-datetime');
 		var appointmentDatetime = spanAppointmentDatetimeText.text();
-		var html = '<div class="input-group">\n\t\t\t\t\t\t\t<input type="text text-datepicker" class="form-control" value="' + appointmentDatetime + '" data-appointment-id="' + appointmentId + '">\n\t\t\t\t\t\t\t<div class="input-group-append">\n\t\t\t\t\t\t\t\t<button class="btn btn-brand btn-change-appointment-datetime" type="button">Submit</button>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>';
+		var html = '<div class="input-group">\n\t\t\t\t\t\t\t<input type="text text-datepicker" class="form-control" value="' + appointmentDatetime + '" data-appointment-id="' + appointmentId + '">\n\t\t\t\t\t\t\t<div class="input-group-append">\n\t\t\t\t\t\t\t\t<button class="btn btn-success btn-change-appointment-datetime" type="button"><i class="fa fa-check"></i></button>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>';
 
 		spanAppointmentDatetimeText.html(html);
 		$('.text-datepicker').datepicker();
@@ -310,17 +309,17 @@ $(function () {
 	});
 
 	var timer = new Timer();
-	timer.addEventListener('started', function (e) {
+	timer.addEventListener('started', function () {
 		updateCallTypeText('Waiting');
 	});
-	timer.addEventListener('stopped', function (e) {
+	timer.addEventListener('stopped', function () {
 		updateCallTypeText('Auto');
 		fetchLead('', 1);
 	});
-	timer.addEventListener('secondsUpdated', function (e) {
+	timer.addEventListener('secondsUpdated', function () {
 		$('#span_call_time').html(timer.getTimeValues().toString());
 	});
-	timer.addEventListener('targetAchieved', function (e) {
+	timer.addEventListener('targetAchieved', function () {
 		$('#span_call_time').html('00:00:00');
 	});
 
@@ -345,6 +344,13 @@ $(function () {
 		});
 	}
 
+	function harold(standIn) {
+		if (standIn < 10) {
+			standIn = '0' + standIn;
+		}
+		return standIn;
+	}
+
 	function loginClock() {
 		loginSeconds++;
 		if (loginSeconds === 60) {
@@ -357,13 +363,6 @@ $(function () {
 			}
 		}
 		$('#span_login_time').text(harold(loginHours) + ':' + harold(loginMinutes) + ':' + harold(loginSeconds));
-
-		function harold(standIn) {
-			if (standIn < 10) {
-				standIn = '0' + standIn;
-			}
-			return standIn;
-		}
 	}
 
 	function callClock() {
@@ -378,13 +377,6 @@ $(function () {
 			}
 		}
 		$('#span_call_time').text(harold(callHours) + ':' + harold(callMinutes) + ':' + harold(callSeconds));
-
-		function harold(standIn) {
-			if (standIn < 10) {
-				standIn = '0' + standIn;
-			}
-			return standIn;
-		}
 	}
 
 	function pauseClock() {
@@ -399,13 +391,6 @@ $(function () {
 			}
 		}
 		$('#span_pause_time').text(harold(pauseHours) + ':' + harold(pauseMinutes) + ':' + harold(pauseSeconds));
-
-		function harold(standIn) {
-			if (standIn < 10) {
-				standIn = '0' + standIn;
-			}
-			return standIn;
-		}
 	}
 
 	function waitClock() {
@@ -439,7 +424,6 @@ $(function () {
 	}
 
 	function resetCallClock() {
-		console.log('clear call clock');
 		clearInterval(callInterval);
 		$('#span_call_time').text('00:00:00');
 	}
