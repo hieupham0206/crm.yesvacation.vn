@@ -18,12 +18,19 @@
                     <select name="state" class="form-control select" id="select_state_modal">
                         <option></option>
                         @foreach ($lead->states as $key => $state)
-                            <option value="{{ $key }}" {{ $lead->state == $key || (! $lead->exists && $key === 1) ? ' selected' : '' }}>{{ $state }}</option>
+                            @if($typeCall == 3)
+                                @if (\in_array($key, [1,9,10], true))
+                                    @continue
+                                @endif
+                                <option value="{{ $key }}" {{ $lead->state == $key || (! $lead->exists && $key === 1) ? ' selected' : '' }}>{{ $state }}</option>
+                            @else
+                                <option value="{{ $key }}" {{ $lead->state == $key || (! $lead->exists && $key === 1) ? ' selected' : '' }}>{{ $state }}</option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
             </div>
-            <div id="appointment_lead_section" style="display: none">
+            @if($typeCall == 3)
                 <div class="form-group row">
                     <div class="col-sm-12 col-md-6 m-form__group-sub">
                         <label for="txt_date">{{ $lead->label('date') }}</label>
@@ -38,29 +45,46 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-sm-12 col-md-6 m-form__group-sub">
-                        <label for="txt_spouse_name">{{ $lead->label('spouse_name') }}</label>
-                        <input class="form-control" name="spouse_name" id="txt_spouse_name"/>
+            @else
+                <div id="appointment_lead_section" style="display: none">
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 m-form__group-sub">
+                            <label for="txt_date">{{ $lead->label('date') }}</label>
+                            <input class="form-control" name="date" id="txt_date" autocomplete="off"/>
+                        </div>
+                        <div class="col-sm-12 col-md-6 m-form__group-sub">
+                            <label for="select_time">{{ $lead->label('time') }}</label>
+                            <select name="time" id="select_time">
+                                <option value="10:00">10 AM</option>
+                                <option value="15:00">3 PM</option>
+                                <option value="18:00">6 PM</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-sm-12 col-md-6 m-form__group-sub">
-                        <label for="txt_spouse_phone">{{ $lead->label('spouse_phone') }}</label>
-                        <input class="form-control" name="spouse_phone" id="txt_spouse_phone"/>
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-md-6 m-form__group-sub">
+                            <label for="txt_spouse_name">{{ $lead->label('spouse_name') }}</label>
+                            <input class="form-control" name="spouse_name" id="txt_spouse_name"/>
+                        </div>
+                        <div class="col-sm-12 col-md-6 m-form__group-sub">
+                            <label for="txt_spouse_phone">{{ $lead->label('spouse_phone') }}</label>
+                            <input class="form-control" name="spouse_phone" id="txt_spouse_phone"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12 m-form__group-sub">
+                            <label for="txt_appointment_email">{{ $lead->label('email') }}</label>
+                            <input class="form-control" name="email" id="txt_appointment_email"/>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-md-12 m-form__group-sub">
-                        <label for="txt_appointment_email">{{ $lead->label('email') }}</label>
-                        <input class="form-control" name="email" id="txt_appointment_email"/>
+                        <label for="textarea_comment">{{ $lead->label('comment') }}</label>
+                        <textarea class="form-control" rows="5" name="comment" id="textarea_comment">{{ $lead->comment ?? ''}}</textarea>
                     </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-md-12 m-form__group-sub">
-                    <label for="textarea_comment">{{ $lead->label('comment') }}</label>
-                    <textarea class="form-control" rows="5" name="comment" id="textarea_comment">{{ $lead->comment ?? ''}}</textarea>
-                </div>
-            </div>
+            @endif
         </div>
     </div>
     <div class="modal-footer">

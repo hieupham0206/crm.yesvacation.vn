@@ -66,14 +66,14 @@ class LeadsController extends Controller
     {
         $this->validate($request, [
             'name'  => 'required',
-            'phone' => 'unique:leads'
+            'phone' => 'unique:leads',
         ]);
         $requestData = $request->all();
         Lead::create($requestData);
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => __('Data created successfully')
+                'message' => __('Data created successfully'),
             ]);
         }
 
@@ -117,14 +117,14 @@ class LeadsController extends Controller
     {
         $this->validate($request, [
             'name'  => 'required',
-            'phone' => 'unique:leads'
+            'phone' => 'unique:leads',
         ]);
         $requestData = $request->all();
         $lead->update($requestData);
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => __('Data edited successfully')
+                'message' => __('Data edited successfully'),
             ]);
         }
 
@@ -144,12 +144,12 @@ class LeadsController extends Controller
             $lead->delete();
         } catch (\Exception $e) {
             return response()->json([
-                'message' => "Error: {$e->getMessage()}"
+                'message' => "Error: {$e->getMessage()}",
             ], $e->getCode());
         }
 
         return response()->json([
-            'message' => __('Data deleted successfully')
+            'message' => __('Data deleted successfully'),
         ]);
     }
 
@@ -166,12 +166,12 @@ class LeadsController extends Controller
             Lead::destroy($ids);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => "Error: {$e->getMessage()}"
+                'message' => "Error: {$e->getMessage()}",
             ], $e->getCode());
         }
 
         return response()->json([
-            'message' => __('Data deleted successfully')
+            'message' => __('Data deleted successfully'),
         ]);
     }
 
@@ -296,7 +296,7 @@ class LeadsController extends Controller
                     $customerAttributes = array_merge(compact('name', 'phone', 'email', 'title', 'address'), [
                         'created_at'  => now()->toDateTimeString(),
                         'birthday'    => null,
-                        'province_id' => null
+                        'province_id' => null,
                     ]);
                     if ($birthday) {
                         $birthday                       = Carbon::parse(trim($birthday))->toDateString();
@@ -350,7 +350,7 @@ class LeadsController extends Controller
         }
 
         return response()->json([
-            'message' => __('File not found')
+            'message' => __('File not found'),
         ], 500);
     }
 
@@ -361,7 +361,9 @@ class LeadsController extends Controller
      */
     public function formChangeState(Lead $lead)
     {
-        return view('business.leads._form_change_state', ['lead' => $lead]);
+        $typeCall = request()->get('typeCall');
+
+        return view('business.leads._form_change_state', ['lead' => $lead, 'typeCall' => $typeCall]);
     }
 
     /**
@@ -388,7 +390,7 @@ class LeadsController extends Controller
             $leadDatas = [
                 'state'     => $newState,
                 'comment'   => $comment,
-                'call_date' => now()->toDateTimeString()
+                'call_date' => now()->toDateTimeString(),
             ];
 
             if ($lead->email !== $email) {
@@ -413,7 +415,7 @@ class LeadsController extends Controller
                     'user_id'      => $userId,
                     'spouse_phone' => $spousePhone,
                     'spouse_name'  => $spouseName,
-                    'code'         => str_random(10)
+                    'code'         => str_random(10),
                 ];
 
                 if ($date && $time) {
@@ -432,17 +434,17 @@ class LeadsController extends Controller
             if ($newState == 7) {
                 Callback::create([
                     'lead_id' => $lead->id,
-                    'user_id' => $userId
+                    'user_id' => $userId,
                 ]);
             }
 
             return response()->json([
-                'message' => __('Data edited successfully')
+                'message' => __('Data edited successfully'),
             ]);
         }
 
         return response()->json([
-            'message' => __('Data edited unsuccessfully')
+            'message' => __('Data edited unsuccessfully'),
         ]);
     }
 
@@ -455,7 +457,7 @@ class LeadsController extends Controller
         ]);
 
         return response()->json([
-            'message' => __('Data edited successfully')
+            'message' => __('Data edited successfully'),
         ]);
     }
 }

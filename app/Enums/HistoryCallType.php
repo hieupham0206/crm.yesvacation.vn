@@ -8,6 +8,6 @@ final class HistoryCallType extends Enum
 {
     public const MANUAL = 1;
     public const HISTORY = 2;
-    public const CALLBACK = 2;
-    public const APPOINTMENT = 2;
+    public const CALLBACK = 3;
+    public const APPOINTMENT = 4;
 }
