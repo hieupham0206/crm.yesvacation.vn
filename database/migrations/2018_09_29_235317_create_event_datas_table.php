@@ -15,9 +15,12 @@ class CreateEventDatasTable extends Migration
         Schema::create('event_datas', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->unsignedInteger('lead_id');
+            $table->unsignedInteger('rep_id');
+            $table->unsignedInteger('to_id');
+            $table->unsignedInteger('appointment_id');
+            $table->unsignedInteger('lead_id')->comment('Tương ứng với lead_id bên appointment');
 
-            $table->timestamp('appointment_datetime')->nullable();
+            $table->string('voucher_code', 100);
 
             $table->timestamp('time_in')->nullable();
             $table->timestamp('time_out')->nullable();
