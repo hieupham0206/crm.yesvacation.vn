@@ -68,9 +68,9 @@
                                 </div>
                             </div>
                             <div class="form-group m-form__group row">
-                                <div class="col-sm-12 col-md-4 m-form__group-sub {{ $errors->has('phone') ? 'has-danger' : ''}}">
+                                <div class="col-sm-12 col-md-8 m-form__group-sub {{ $errors->has('phone') ? 'has-danger' : ''}}">
                                     <label for="span_lead_phone">{{ $lead->label('phone') }}</label>
-                                    <span style="color: red; font-weight: bold" id="span_lead_phone">{{ $lead->phone }}</span>
+                                    <span class="font-weight-bold m--font-danger m--icon-font-size-lg4 ml-3" id="span_lead_phone">{{ $lead->phone }}</span>
                                 </div>
                                 <div class="col-sm-12 col-md-4 m-form__group-sub {{ $errors->has('phone') ? 'has-danger' : ''}}">
                                     <button class="btn btn-brand m-btn m-btn--icon m-btn--custom" id="btn_form_change_state" data-url="{{ route('leads.form_change_state', $lead) }}">
