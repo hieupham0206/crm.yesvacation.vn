@@ -448,13 +448,32 @@ class LeadsController extends Controller
         ]);
     }
 
-    public function editAppointment(Appointment $appointment, Request $request)
+    public function editAppointmentTime(Appointment $appointment, Request $request)
     {
-        $appointmentDatetime = $request->get('appointmentDatetime');
+        $dateTime = $request->get('dateTime');
 
-        $appointment->update([
-            'appointment_datetime' => $appointmentDatetime,
+        if ($dateTime) {
+            $dateTime = date('Y-m-d H:i:s', strtotime($dateTime));
+            $appointment->update([
+                'appointment_datetime' => $dateTime,
+            ]);
+        }
+
+        return response()->json([
+            'message' => __('Data edited successfully'),
         ]);
+    }
+
+    public function editCallbackTime(Appointment $appointment, Request $request)
+    {
+        $datetime = $request->get('datetime');
+
+        if ($datetime) {
+            $datetime = date('Y-m-d H:i:s', strtotime($datetime));
+            $appointment->update([
+                'callback_datetime' => $datetime,
+            ]);
+        }
 
         return response()->json([
             'message' => __('Data edited successfully'),

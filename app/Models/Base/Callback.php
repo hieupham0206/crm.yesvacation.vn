@@ -2,7 +2,7 @@
 
 /**
  * Created by hieu.pham.
- * Date: Sat, 06 Oct 2018 10:44:08 +0700.
+ * Date: Fri, 19 Oct 2018 21:04:16 +0700.
  */
 
 namespace App\Models\Base;
@@ -15,6 +15,7 @@ use App\Models\BaseModel as Eloquent;
  * @property int $id
  * @property int $user_id
  * @property int $lead_id
+ * @property \Carbon\Carbon $callback_datetime
  * @property int $state
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -32,6 +33,10 @@ class Callback extends Eloquent
 		'user_id' => 'int',
 		'lead_id' => 'int',
 		'state' => 'int'
+	];
+
+	protected $dates = [
+		'callback_datetime'
 	];
 
 	public function lead()

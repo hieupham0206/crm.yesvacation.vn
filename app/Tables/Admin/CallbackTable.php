@@ -39,7 +39,7 @@ class CallbackTable extends DataTable
         $this->column = $this->getColumn();
         $callBacks    = $this->getModels();
         $dataArray    = [];
-//        $modelName    = (new Callback)->classLabel(true);
+        $modelName    = (new Callback)->classLabel(true);
 
         $canUpdateCallback = can('update-callBack');
         $canDeleteCallback = can('delete-callBack');
@@ -49,31 +49,34 @@ class CallbackTable extends DataTable
             $btnEdit = $btnCall = $btnDelete = '';
 
             if ($canUpdateCallback) {
-                $btnEdit = ' <a href="' . route('callbacks.edit', $callBack, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Edit') . '">
+//                $btnEdit = ' <a href="' . route('callbacks.edit', $callBack, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Edit') . '">
+//					<i class="fa fa-edit"></i>
+//				</a>';
+                $btnEdit = ' <button data-id="'.$callBack->id.'" data-url="'.route('leads.edit_callback_time', $callBack).'" class="btn btn-sm btn-brand btn-edit-datetime m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Edit') . '">
 					<i class="fa fa-edit"></i>
-				</a>';
+				</button>';
+            }
+
+            if ($canDeleteCallback) {
+                $btnDelete = ' <button type="button" data-route="callbacks" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $callBack->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                data-url="' . route('callbacks.destroy', $callBack, false) . '" title="' . __('Delete') . '">
+                    <i class="fa fa-trash"></i>
+                </button>';
             }
 
 //            if ($canDeleteCallback) {
-//                $btnDelete = ' <button type="button" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $callBack->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
-//                data-url="' . route('callbacks.destroy', $callBack, false) . '" title="' . __('Delete') . '">
-//                    <i class="fa fa-trash"></i>
-//                </button>';
-//            }
-
-            if ($canDeleteCallback) {
                 $btnCall = ' <button type="button" data-lead-id="'. $callBack->lead_id  . ' !!!" data-type-call="'.HistoryCallType::CALLBACK.'" 
-                class="btn btn-sm btn-callback-call btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
+                class="btn btn-sm btn-callback-call btn-primary btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
                     <i class="fa fa-phone"></i>
                 </button>';
-            }
+//            }
 
             $dataArray[] = [
                 "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$callBack->lead_id}'>{$callBack->lead->name}</a>",
                 $callBack->lead->title,
-                "<span class='span-appointment-datetime'>".optional($callBack->callback_datetime)->format('d-m-Y H:i') . '</span>',
+                "<span class='span-datetime'>".optional($callBack->callback_datetime)->format('d-m-Y H:i') . '</span>',
 
-               $btnEdit . $btnCall
+                $btnCall . $btnEdit . $btnDelete
             ];
         }
 

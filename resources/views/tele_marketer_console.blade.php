@@ -129,7 +129,8 @@
                                 <tr>
                                     <th>{{ $lead->label('name') }}</th>
                                     <th>{{ $lead->label('title') }}</th>
-                                    <th>{{ $lead->label('created_at') }}</th>
+                                    <th>{{ $lead->label('callback_datetime') }}</th>
+                                    <th>@lang('Actions')</th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>

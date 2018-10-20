@@ -78,6 +78,19 @@ $(function() {
 		showFormChangeState()
 	})
 
+	$body.on('click', '.btn-delete', function() {
+		let route = $(this).data('route')
+		if (route === 'callbacks') {
+			tableCallback.actionDelete({
+				btnDelete: $(this),
+			})
+		} else if (route === 'appointments') {
+			tableAppointment.actionDelete({
+				btnDelete: $(this),
+			})
+		}
+	})
+
 	$body.on('submit', '#change_state_leads_form', function(e) {
 		e.preventDefault()
 		mApp.block('#modal_md')
@@ -126,35 +139,51 @@ $(function() {
 
 	})
 
-	$body.on('click', '.btn-edit-appointment', function() {
+	$body.on('click', '.btn-edit-datetime', function() {
 		let appointmentId = $(this).data('id')
 		let $tr = $(this).parents('tr')
-		let spanAppointmentDatetimeText = $tr.find('.span-appointment-datetime')
+		let spanAppointmentDatetimeText = $tr.find('.span-datetime')
 		let appointmentDatetime = spanAppointmentDatetimeText.text()
+		let urlEdit = $(this).data('url')
+
 		let html = `<div class="input-group">
-							<input type="text text-inline-datepicker" class="form-control" value="${appointmentDatetime}" data-appointment-id="${appointmentId}">
+							<input type="text" class="form-control text-inline-datepicker" value="${appointmentDatetime}" data-appointment-id="${appointmentId}">
 							<div class="input-group-append">
-								<button class="btn btn-success btn-change-appointment-datetime" type="button"><i class="fa fa-check"></i></button>
+								<button class="btn btn-success btn-change-datetime btn-sm" type="button" data-url="${urlEdit}"><i class="fa fa-check"></i></button>
+								<button class="btn btn-danger btn-cancel-datetime btn-sm" type="button"><i class="fa fa-trash"></i></button>
 							</div>
 						</div>`
 
 		spanAppointmentDatetimeText.html(html)
-		$tr.find('.text-inline-datepicker').datepicker()
+		$tr.find('.text-inline-datepicker').datetimepicker({
+			startDate: new Date(),
+		})
+		$(this).prop('disabled', true)
 	})
 
-	$body.on('click', '.btn-change-appointment-datetime', function() {
-		let appointmentDatetime = $(this).parents('.input-group').find('.text-inline-datepicker').val()
-		let appointmentId = $(this).data('appointment-id')
-		let urlEdit = route('leads.edit_appointment', appointmentId)
+	$body.on('click', '.btn-cancel-datetime', function() {
+		let parents = $(this).parents('tr')
+		let appointmentDatetime = parents.find('.text-inline-datepicker').val()
+		parents.find('.span-datetime').text(appointmentDatetime)
+
+		parents.find('.btn-edit-datetime').prop('disabled', false)
+	})
+
+	$body.on('click', '.btn-change-datetime', function() {
+		let $textInlineDatepicker = $(this).parents('.input-group').find('.text-inline-datepicker')
+		let dateTime = $textInlineDatepicker.val()
+		let urlEdit = $(this).data('url')
 
 		axios.post(urlEdit, {
-			appointmentDatetime: appointmentDatetime,
+			dateTime: dateTime,
 		}).then(result => {
 			let obj = result['data']
 			if (obj.message) {
 				flash(obj.message)
 			}
-			$(this).parents('tr').find('.span-appointment-datetime').text(appointmentDatetime)
+			let parents = $(this).parents('tr')
+			parents.find('.span-datetime').text(dateTime)
+			parents.find('.btn-edit-datetime').prop('disabled', false)
 		}).catch(e => console.log(e)).finally(() => {
 			unblock()
 		})
