@@ -117,7 +117,15 @@ class LeadsController extends Controller
     {
         $this->validate($request, [
             'name'  => 'required',
-            'phone' => 'unique:leads',
+            'phone' => [
+                function ($attribute, $value, $fail) use ($lead) {
+                    $existedLead = Lead::wherePhone($value)->first();
+                    if ($existedLead && $existedLead->id !== $lead->id) {
+                        return $fail(__(ucfirst($attribute)) . ' đã tồn tại trong cơ sở dữ liệu.');
+                    }
+                },
+                'required'
+            ]
         ]);
         $requestData = $request->all();
         $lead->update($requestData);
