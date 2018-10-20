@@ -274,6 +274,7 @@ class LeadsController extends Controller
                     $dataFails[] = [
                         'reason' => $message,
                         'row'    => $rowIndex,
+                        'phone'  => $phone,
                     ];
                     $totalFail++;
                     continue;
@@ -287,6 +288,7 @@ class LeadsController extends Controller
                     $dataFails[] = [
                         'reason' => $message,
                         'row'    => $rowIndex,
+                        'phone'  => $phone,
                     ];
                     continue;
                 }
@@ -324,11 +326,13 @@ class LeadsController extends Controller
 
                 $sheet = $excel->setActiveSheetIndex(0);
                 $sheet->setCellValue('A1', 'Dòng')
-                      ->setCellValue('B1', 'Lí do');
+                      ->setCellValue('B1', 'Lí do')
+                      ->setCellValue('C1', 'Số điện thoại');
                 $row = 2;
                 foreach ($dataFails as $dataFail) {
                     $sheet->setCellValue('A' . $row, $dataFail['row'])
-                          ->setCellValue('B' . $row, $dataFail['reason']);
+                          ->setCellValue('B' . $row, $dataFail['reason'])
+                          ->setCellValue('C' . $row, $dataFail['phone']);
                     $row++;
                 }
                 $excelWriter   = new Xlsx($excel);

@@ -157,7 +157,6 @@ $(function () {
 				typeCall: typeCall
 			}, method: 'get'
 		});
-		callInterval = setInterval(callClock, 1000);
 	}
 
 	$('#leads_form').on('submit', function (e) {
@@ -344,6 +343,7 @@ $(function () {
 	timer.addEventListener('stopped', function () {
 		updateCallTypeText('Auto');
 		fetchLead('', 1);
+		callInterval = setInterval(callClock, 1000);
 	});
 	timer.addEventListener('secondsUpdated', function () {
 		$('#span_call_time').html(timer.getTimeValues().toString());
