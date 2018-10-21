@@ -147,34 +147,28 @@ $(function () {
 		sort: false
 	});
 
-	function showFormChangeState() {
-		var typeCall = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-
-		var url = $('#btn_form_change_state').data('url');
+	function showFormChangeState(_ref) {
+		var _ref$typeCall = _ref.typeCall,
+		    typeCall = _ref$typeCall === undefined ? 1 : _ref$typeCall,
+		    url = _ref.url,
+		    _ref$callId = _ref.callId,
+		    callId = _ref$callId === undefined ? '' : _ref$callId,
+		    _ref$table = _ref.table,
+		    table = _ref$table === undefined ? '' : _ref$table;
 
 		$('#modal_md').showModal({
 			url: url, params: {
-				typeCall: typeCall
+				typeCall: typeCall,
+				callId: callId,
+				table: table
 			}, method: 'get'
 		});
 	}
 
 	$('#leads_form').on('submit', function (e) {
 		e.preventDefault();
-		showFormChangeState();
-	});
-
-	$body.on('click', '.btn-delete', function () {
-		var route = $(this).data('route');
-		if (route === 'callbacks') {
-			tableCallback.actionDelete({
-				btnDelete: $(this)
-			});
-		} else if (route === 'appointments') {
-			tableAppointment.actionDelete({
-				btnDelete: $(this)
-			});
-		}
+		var url = $('#btn_form_change_state').data('url');
+		showFormChangeState({ url: url });
 	});
 
 	$body.on('submit', '#change_state_leads_form', function (e) {
@@ -201,15 +195,34 @@ $(function () {
 		e.preventDefault();
 		mApp.block('#modal_md');
 
-		$(this).submitForm().then(function () {
+		$(this).submitForm().then(function (result) {
 			$(_this2).resetForm();
 			$('#btn_pause').hide();
 			$('#btn_resume').show();
-			pauseInterval = setInterval(pauseClock, 1000);
+			var target = result.maxTimeBreak;
+
+			breakTimer.start({ precision: 'seconds', startValues: { seconds: 0 }, target: { seconds: parseInt(target) } });
 
 			$('#modal_md').modal('hide');
 			mApp.unblock('#modal_md');
 		});
+	});
+
+	$body.on('click', '.btn-delete', function () {
+		var route = $(this).data('route');
+		if (route === 'callbacks') {
+			tableCallback.actionDelete({
+				btnDelete: $(this)
+			});
+		} else if (route === 'appointments') {
+			tableAppointment.actionDelete({
+				btnDelete: $(this)
+			});
+		} else if (route === 'history_calls') {
+			tableHistoryCall.actionDelete({
+				btnDelete: $(this)
+			});
+		}
 	});
 
 	$body.on('click', '.link-lead-name', function () {
@@ -222,10 +235,27 @@ $(function () {
 	$body.on('click', '.btn-appointment-call', function () {
 		var leadId = $(this).data('lead-id');
 		var typeCall = $(this).data('type-call');
+		var callId = $(this).data('id');
 
-		showFormChangeState(typeCall);
-		fetchLead(leadId, 0);
+		showFormChangeState({ typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: 'appointments' });
 		updateCallTypeText('Appointment Call');
+	});
+
+	$body.on('click', '.btn-callback-call', function () {
+		var leadId = $(this).data('lead-id');
+		var typeCall = $(this).data('type-call');
+		var callId = $(this).data('id');
+
+		showFormChangeState({ typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: 'callbacks' });
+		updateCallTypeText('Callback Call');
+	});
+
+	$body.on('click', '.btn-history-call', function () {
+		var leadId = $(this).data('lead-id');
+		var typeCall = $(this).data('type-call');
+
+		showFormChangeState({ typeCall: typeCall, url: route('leads.form_change_state', leadId) });
+		updateCallTypeText('History Call');
 	});
 
 	$body.on('click', '.btn-edit-datetime', function () {
@@ -276,15 +306,6 @@ $(function () {
 		});
 	});
 
-	$body.on('click', '.btn-callback-call', function () {
-		var leadId = $(this).data('lead-id');
-		var typeCall = $(this).data('type-call');
-
-		showFormChangeState(typeCall);
-		fetchLead(leadId, 0);
-		updateCallTypeText('Callback Call');
-	});
-
 	$body.on('change', '#select_state_modal', function () {
 		if (['7', '8'].includes($(this).val())) {
 			$('#appointment_lead_section').show();
@@ -315,13 +336,14 @@ $(function () {
 		$('#modal_md').showModal({ url: url, params: {}, method: 'get' });
 	});
 
-	$('#btn_resume').on('click', function () {
+	function resume() {
 		var _this4 = this;
 
-		var url = $(this).data('url');
-		blockPage();
+		var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-		axios.post(url).then(function (result) {
+		blockPage();
+		var url = $('#btn_resume').data('url');
+		return axios.post(url, params).then(function (result) {
 			var obj = result['data'];
 			if (obj.message) {
 				flash(obj.message);
@@ -334,22 +356,10 @@ $(function () {
 		}).finally(function () {
 			unblock();
 		});
-	});
+	}
 
-	var timer = new Timer();
-	timer.addEventListener('started', function () {
-		updateCallTypeText('Waiting');
-	});
-	timer.addEventListener('stopped', function () {
-		updateCallTypeText('Auto');
-		fetchLead('', 1);
-		callInterval = setInterval(callClock, 1000);
-	});
-	timer.addEventListener('secondsUpdated', function () {
-		$('#span_call_time').html(timer.getTimeValues().toString());
-	});
-	timer.addEventListener('targetAchieved', function () {
-		$('#span_call_time').html('00:00:00');
+	$('#btn_resume').on('click', function () {
+		resume();
 	});
 
 	function fetchLead() {
@@ -372,6 +382,33 @@ $(function () {
 			$('#span_lead_title').text(lead.title);
 		});
 	}
+
+	var waitTimer = new Timer();
+	waitTimer.addEventListener('started', function () {
+		updateCallTypeText('Waiting');
+	});
+	waitTimer.addEventListener('stopped', function () {
+		updateCallTypeText('Auto');
+		fetchLead('', 1);
+		callInterval = setInterval(callClock, 1000);
+	});
+	waitTimer.addEventListener('secondsUpdated', function () {
+		$('#span_call_time').html(waitTimer.getTimeValues().toString());
+	});
+	waitTimer.addEventListener('targetAchieved', function () {
+		$('#span_call_time').html('00:00:00');
+	});
+
+	var breakTimer = new Timer();
+	breakTimer.addEventListener('secondsUpdated', function () {
+		$('#span_pause_time').html(breakTimer.getTimeValues().toString());
+	});
+	breakTimer.addEventListener('targetAchieved', function () {
+		$('#btn_resume').trigger('click');
+		resume().then(function () {
+			flash('Đã quá thời gian nghỉ, vui lòng trở lại làm việc.', 'danger', false);
+		});
+	});
 
 	function harold(standIn) {
 		if (standIn < 10) {
@@ -408,23 +445,9 @@ $(function () {
 		$('#span_call_time').text(harold(callHours) + ':' + harold(callMinutes) + ':' + harold(callSeconds));
 	}
 
-	function pauseClock() {
-		pauseSeconds++;
-		if (pauseSeconds === 60) {
-			pauseMinutes++;
-			pauseSeconds = 0;
-
-			if (pauseMinutes === 60) {
-				pauseMinutes = 0;
-				pauseHours++;
-			}
-		}
-		$('#span_pause_time').text(harold(pauseHours) + ':' + harold(pauseMinutes) + ':' + harold(pauseSeconds));
-	}
-
 	function waitClock() {
-		timer.start({ countdown: true, startValues: { seconds: 5 } });
-		$('#span_call_time').html(timer.getTimeValues().toString());
+		waitTimer.start({ countdown: true, startValues: { seconds: 5 } });
+		$('#span_call_time').html(waitTimer.getTimeValues().toString());
 	}
 
 	function initLoginClock() {
@@ -438,12 +461,17 @@ $(function () {
 
 	function initBreakClock() {
 		var diffTime = $('#span_pause_time').data('diff-break-time');
+		var maxBreakTime = $('#span_pause_time').data('max-break-time');
 		if (diffTime !== '') {
 			var times = _.split(diffTime, ':');
 
 			pauseHours = times[0];
 			pauseMinutes = times[1];
 			pauseSeconds = times[2];
+
+			breakTimer.start({ precision: 'seconds', startValues: { seconds: pauseSeconds }, target: { seconds: maxBreakTime } });
+			$('#btn_pause').hide();
+			$('#btn_resume').show();
 		}
 	}
 

@@ -59,8 +59,8 @@ class AppointmentTable extends DataTable
             }
 
 //            if ($canDeleteAppointment) {
-                $btnCall = ' <button type="button" data-lead-id="'. $appointment->lead_id  . ' !!!" data-type-call="'.HistoryCallType::APPOINTMENT.'" 
-                class="btn btn-sm btn-appointment-call btn-primary btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
+                $btnCall = ' <button type="button" data-id="'.$appointment->id.'" data-lead-id="'. $appointment->lead_id  . ' !!!" data-type-call="'.HistoryCallType::APPOINTMENT.'" 
+                class="btn btn-sm btn-appointment-call btn-primary m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
                     <i class="fa fa-phone"></i>
                 </button>';
 //            }

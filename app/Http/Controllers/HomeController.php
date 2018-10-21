@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Lead;
 use App\Models\TimeBreak;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 
 class HomeController extends Controller
 {
@@ -16,7 +17,9 @@ class HomeController extends Controller
     public function index()
     {
         $lead = Lead::getAvailable()->first();
-        $lead->update(['call_date' => now()->toDateTimeString()]);
+        if ($lead) {
+            $lead->update(['call_date' => now()->toDateTimeString()]);
+        }
 
         $lead = $lead ?? new Lead();
         /** @var User $user */
@@ -25,14 +28,21 @@ class HomeController extends Controller
         $diffTime        = now()->diffAsCarbonInterval($lastLoginTime);
         $diffLoginString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
 
-        $lastBreakTime = TimeBreak::whereNotNull('start_break')->whereNull('end_break')->latest()->first();
-        $diffBreakString = '';
+        $lastBreakTime   = TimeBreak::whereNotNull('start_break')->whereNull('end_break')->whereDate('start_break', Carbon::today())->latest()->first();
+        $diffBreakString = $maxBreakTime = '';
         if ($lastBreakTime) {
-            $diffTime        = now()->diffAsCarbonInterval($lastBreakTime->start_break);
-            $diffBreakString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
+            $scheduleTimeSeconds = now()->diffInSeconds($lastBreakTime->start_break);
+
+            $maxBreakTime = $lastBreakTime->reason_break->time_alert * 60;
+            if ($scheduleTimeSeconds > $maxBreakTime) {
+                $lastBreakTime->update(['end_break' => now()->toDateTimeString()]);
+            } else {
+                $diffTime        = now()->diffAsCarbonInterval($lastBreakTime->start_break);
+                $diffBreakString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
+            }
         }
 
-        return view('tele_marketer_console', compact('lead', 'diffLoginString',  'diffBreakString'));
+        return view('tele_marketer_console', compact('lead', 'diffLoginString', 'diffBreakString', 'maxBreakTime'));
     }
 
     public function lang()
@@ -52,7 +62,7 @@ class HomeController extends Controller
             $results = \App\Models\QuickSearch::search($query)->get()->map(function ($elem) {
                 return [
                     'text' => $elem['search_text'],
-                    'url'  => $elem['route']
+                    'url'  => $elem['route'],
                 ];
             })->toArray();
         }

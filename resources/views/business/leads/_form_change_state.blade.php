@@ -7,6 +7,7 @@
     </div>
     <div class="modal-body">
         @csrf
+        <input type="hidden" name="call_id" value="{{ $callId }}"><input type="hidden" name="table" value="{{ $table }}">
         <div class="m-portlet__body">
             <div role="alert" class="alert alert-dismissible fade show m-alert m-alert--air alert-danger" style="display: none;">
                 <button type="button" data-dismiss="alert" aria-label="Close" class="close"></button>

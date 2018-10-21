@@ -52,13 +52,13 @@ class HistoryCallTable extends DataTable
 //            }
 //
             if ($canDeleteHistoryCall) {
-                $btnDelete = ' <button type="button" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $historyCall->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                $btnDelete = ' <button type="button" data-route="history_calls"  data-title="' . __('Delete') . ' ' . $modelName . ' ' . $historyCall->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
                 data-url="' . route('history_calls.destroy', $historyCall, false) . '" title="' . __('Delete') . '">
                     <i class="fa fa-trash"></i>
                 </button>';
             }
             $btnCall = ' <button type="button" data-lead-id="'. $historyCall->lead_id  . ' !!!" data-type-call="'.HistoryCallType::HISTORY.'" 
-                class="btn btn-sm btn-callback-call btn-primary btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
+                class="btn btn-sm btn-history-call btn-primary m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
                     <i class="fa fa-phone"></i>
                 </button>';
 

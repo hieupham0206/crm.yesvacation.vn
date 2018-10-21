@@ -124,8 +124,8 @@ class LeadsController extends Controller
                         return $fail(__(ucfirst($attribute)) . ' đã tồn tại trong cơ sở dữ liệu.');
                     }
                 },
-                'required'
-            ]
+                'required',
+            ],
         ]);
         $requestData = $request->all();
         $lead->update($requestData);
@@ -374,8 +374,10 @@ class LeadsController extends Controller
     public function formChangeState(Lead $lead)
     {
         $typeCall = request()->get('typeCall');
+        $callId   = request()->get('callId');
+        $table    = request()->get('table');
 
-        return view('business.leads._form_change_state', ['lead' => $lead, 'typeCall' => $typeCall]);
+        return view('business.leads._form_change_state', ['lead' => $lead, 'typeCall' => $typeCall, 'callId' => $callId, 'table' => $table]);
     }
 
     /**
@@ -394,7 +396,10 @@ class LeadsController extends Controller
         $date          = $request->date;
         $time          = $request->time;
         $startCallTime = $request->startCallTime;
-        $typeCall      = $request->get('typeCall', 1);
+
+        $typeCall = $request->get('typeCall', 1);
+        $callId   = $request->get('call_id', 1);
+        $table    = $request->get('table', 1);
 
         if ($newState) {
             $userId = auth()->id();
@@ -448,6 +453,15 @@ class LeadsController extends Controller
                     'lead_id' => $lead->id,
                     'user_id' => $userId,
                 ]);
+            }
+
+            //nếu gọi callback hoặc appointment => xóa thong tin
+            if ($table) {
+                if ($table === 'callbacks') {
+                    Callback::destroy([$callId]);
+                } elseif ($table === 'appoinments') {
+                    Appointment::destroy([$callId]);
+                }
             }
 
             return response()->json([
