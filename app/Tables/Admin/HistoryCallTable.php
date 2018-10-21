@@ -2,6 +2,7 @@
 
 namespace App\Tables\Admin;
 
+use App\Enums\HistoryCallType;
 use App\Models\HistoryCall;
 use App\Tables\DataTable;
 
@@ -35,14 +36,14 @@ class HistoryCallTable extends DataTable
         $this->column = $this->getColumn();
         $historyCalls = $this->getModels();
         $dataArray    = [];
-//        $modelName    = (new HistoryCall)->classLabel(true);
+        $modelName    = (new HistoryCall)->classLabel(true);
 
 //        $canUpdateHistoryCall = can('update-historyCall');
-//        $canDeleteHistoryCall = can('delete-historyCall');
+        $canDeleteHistoryCall = can('delete-historyCall');
 
         /** @var HistoryCall[] $historyCalls */
         foreach ($historyCalls as $historyCall) {
-//            $btnEdit = $btnDelete = '';
+            $btnEdit = $btnDelete = '';
 //
 //            if ($canUpdateHistoryCall) {
 //                $btnEdit = ' <a href="' . route('history_calls.edit', $historyCall, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Edit') . '">
@@ -50,18 +51,22 @@ class HistoryCallTable extends DataTable
 //				</a>';
 //            }
 //
-//            if ($canDeleteHistoryCall) {
-//                $btnDelete = ' <button type="button" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $historyCall->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
-//                data-url="' . route('history_calls.destroy', $historyCall, false) . '" title="' . __('Delete') . '">
-//                    <i class="fa fa-trash"></i>
-//                </button>';
-//            }
+            if ($canDeleteHistoryCall) {
+                $btnDelete = ' <button type="button" data-route="history_calls"  data-title="' . __('Delete') . ' ' . $modelName . ' ' . $historyCall->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                data-url="' . route('history_calls.destroy', $historyCall, false) . '" title="' . __('Delete') . '">
+                    <i class="fa fa-trash"></i>
+                </button>';
+            }
+            $btnCall = ' <button type="button" data-lead-id="'. $historyCall->lead_id  . ' !!!" data-type-call="'.HistoryCallType::HISTORY.'" 
+                class="btn btn-sm btn-history-call btn-primary m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
+                    <i class="fa fa-phone"></i>
+                </button>';
 
             $dataArray[] = [
                 "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$historyCall->lead_id}'>{$historyCall->lead->name}</a>",
                 $historyCall->lead->title,
                 $historyCall->created_at,
-
+                $btnCall . $btnDelete
 //                '<a href="' . route('history_calls.show', $historyCall, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('View') . '">
 //					<i class="fa fa-eye"></i>
 //				</a>' . $btnEdit . $btnDelete

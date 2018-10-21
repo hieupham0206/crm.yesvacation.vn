@@ -66,14 +66,14 @@ class LeadsController extends Controller
     {
         $this->validate($request, [
             'name'  => 'required',
-            'phone' => 'unique:leads'
+            'phone' => 'unique:leads',
         ]);
         $requestData = $request->all();
         Lead::create($requestData);
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => __('Data created successfully')
+                'message' => __('Data created successfully'),
             ]);
         }
 
@@ -117,14 +117,22 @@ class LeadsController extends Controller
     {
         $this->validate($request, [
             'name'  => 'required',
-            'phone' => 'unique:leads'
+            'phone' => [
+                function ($attribute, $value, $fail) use ($lead) {
+                    $existedLead = Lead::wherePhone($value)->first();
+                    if ($existedLead && $existedLead->id !== $lead->id) {
+                        return $fail(__(ucfirst($attribute)) . ' đã tồn tại trong cơ sở dữ liệu.');
+                    }
+                },
+                'required',
+            ],
         ]);
         $requestData = $request->all();
         $lead->update($requestData);
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => __('Data edited successfully')
+                'message' => __('Data edited successfully'),
             ]);
         }
 
@@ -144,12 +152,12 @@ class LeadsController extends Controller
             $lead->delete();
         } catch (\Exception $e) {
             return response()->json([
-                'message' => "Error: {$e->getMessage()}"
+                'message' => "Error: {$e->getMessage()}",
             ], $e->getCode());
         }
 
         return response()->json([
-            'message' => __('Data deleted successfully')
+            'message' => __('Data deleted successfully'),
         ]);
     }
 
@@ -166,12 +174,12 @@ class LeadsController extends Controller
             Lead::destroy($ids);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => "Error: {$e->getMessage()}"
+                'message' => "Error: {$e->getMessage()}",
             ], $e->getCode());
         }
 
         return response()->json([
-            'message' => __('Data deleted successfully')
+            'message' => __('Data deleted successfully'),
         ]);
     }
 
@@ -274,6 +282,7 @@ class LeadsController extends Controller
                     $dataFails[] = [
                         'reason' => $message,
                         'row'    => $rowIndex,
+                        'phone'  => $phone,
                     ];
                     $totalFail++;
                     continue;
@@ -287,6 +296,7 @@ class LeadsController extends Controller
                     $dataFails[] = [
                         'reason' => $message,
                         'row'    => $rowIndex,
+                        'phone'  => $phone,
                     ];
                     continue;
                 }
@@ -296,7 +306,7 @@ class LeadsController extends Controller
                     $customerAttributes = array_merge(compact('name', 'phone', 'email', 'title', 'address'), [
                         'created_at'  => now()->toDateTimeString(),
                         'birthday'    => null,
-                        'province_id' => null
+                        'province_id' => null,
                     ]);
                     if ($birthday) {
                         $birthday                       = Carbon::parse(trim($birthday))->toDateString();
@@ -324,11 +334,13 @@ class LeadsController extends Controller
 
                 $sheet = $excel->setActiveSheetIndex(0);
                 $sheet->setCellValue('A1', 'Dòng')
-                      ->setCellValue('B1', 'Lí do');
+                      ->setCellValue('B1', 'Lí do')
+                      ->setCellValue('C1', 'Số điện thoại');
                 $row = 2;
                 foreach ($dataFails as $dataFail) {
                     $sheet->setCellValue('A' . $row, $dataFail['row'])
-                          ->setCellValue('B' . $row, $dataFail['reason']);
+                          ->setCellValue('B' . $row, $dataFail['reason'])
+                          ->setCellValue('C' . $row, $dataFail['phone']);
                     $row++;
                 }
                 $excelWriter   = new Xlsx($excel);
@@ -350,7 +362,7 @@ class LeadsController extends Controller
         }
 
         return response()->json([
-            'message' => __('File not found')
+            'message' => __('File not found'),
         ], 500);
     }
 
@@ -361,7 +373,11 @@ class LeadsController extends Controller
      */
     public function formChangeState(Lead $lead)
     {
-        return view('business.leads._form_change_state', ['lead' => $lead]);
+        $typeCall = request()->get('typeCall');
+        $callId   = request()->get('callId');
+        $table    = request()->get('table');
+
+        return view('business.leads._form_change_state', ['lead' => $lead, 'typeCall' => $typeCall, 'callId' => $callId, 'table' => $table]);
     }
 
     /**
@@ -380,7 +396,10 @@ class LeadsController extends Controller
         $date          = $request->date;
         $time          = $request->time;
         $startCallTime = $request->startCallTime;
-        $typeCall      = $request->get('typeCall', 1);
+
+        $typeCall = $request->get('typeCall', 1);
+        $callId   = $request->get('call_id', 1);
+        $table    = $request->get('table', 1);
 
         if ($newState) {
             $userId = auth()->id();
@@ -388,7 +407,7 @@ class LeadsController extends Controller
             $leadDatas = [
                 'state'     => $newState,
                 'comment'   => $comment,
-                'call_date' => now()->toDateTimeString()
+                'call_date' => now()->toDateTimeString(),
             ];
 
             if ($lead->email !== $email) {
@@ -413,7 +432,7 @@ class LeadsController extends Controller
                     'user_id'      => $userId,
                     'spouse_phone' => $spousePhone,
                     'spouse_name'  => $spouseName,
-                    'code'         => str_random(10)
+                    'code'         => str_random(10),
                 ];
 
                 if ($date && $time) {
@@ -432,30 +451,58 @@ class LeadsController extends Controller
             if ($newState == 7) {
                 Callback::create([
                     'lead_id' => $lead->id,
-                    'user_id' => $userId
+                    'user_id' => $userId,
                 ]);
             }
 
+            //nếu gọi callback hoặc appointment => xóa thong tin
+            if ($table) {
+                if ($table === 'callbacks') {
+                    Callback::destroy([$callId]);
+                } elseif ($table === 'appoinments') {
+                    Appointment::destroy([$callId]);
+                }
+            }
+
             return response()->json([
-                'message' => __('Data edited successfully')
+                'message' => __('Data edited successfully'),
             ]);
         }
 
         return response()->json([
-            'message' => __('Data edited unsuccessfully')
+            'message' => __('Data edited unsuccessfully'),
         ]);
     }
 
-    public function editAppointment(Appointment $appointment, Request $request)
+    public function editAppointmentTime(Appointment $appointment, Request $request)
     {
-        $appointmentDatetime = $request->get('appointmentDatetime');
+        $dateTime = $request->get('dateTime');
 
-        $appointment->update([
-            'appointment_datetime' => $appointmentDatetime,
-        ]);
+        if ($dateTime) {
+            $dateTime = date('Y-m-d H:i:s', strtotime($dateTime));
+            $appointment->update([
+                'appointment_datetime' => $dateTime,
+            ]);
+        }
 
         return response()->json([
-            'message' => __('Data edited successfully')
+            'message' => __('Data edited successfully'),
+        ]);
+    }
+
+    public function editCallbackTime(Appointment $appointment, Request $request)
+    {
+        $datetime = $request->get('datetime');
+
+        if ($datetime) {
+            $datetime = date('Y-m-d H:i:s', strtotime($datetime));
+            $appointment->update([
+                'callback_datetime' => $datetime,
+            ]);
+        }
+
+        return response()->json([
+            'message' => __('Data edited successfully'),
         ]);
     }
 }

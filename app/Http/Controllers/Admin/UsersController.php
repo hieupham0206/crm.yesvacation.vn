@@ -78,7 +78,7 @@ class UsersController extends Controller
                 'required',
                 'confirmed',
                 'min:8',
-                'regex:/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$/'
+                'regex:/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$/',
             ],
         ]);
 
@@ -150,7 +150,7 @@ class UsersController extends Controller
                 'nullable',
                 'confirmed',
                 'min:8',
-                'regex:/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$/'
+                'regex:/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$/',
             ],
         ]);
 
@@ -198,7 +198,7 @@ class UsersController extends Controller
 
         if ($request->isConfirm) {
             return response()->json([
-                'message' => __('Data edited successfully')
+                'message' => __('Data edited successfully'),
             ]);
         }
 
@@ -237,7 +237,7 @@ class UsersController extends Controller
         foreach ($users as $user) {
             $user->fillable([
                 'password',
-                'state'
+                'state',
             ]);
 
             $user->fill($request->all());
@@ -259,7 +259,7 @@ class UsersController extends Controller
         }
 
         return response()->json([
-            'message' => __('Data edited successfully')
+            'message' => __('Data edited successfully'),
         ]);
     }
 
@@ -303,16 +303,16 @@ class UsersController extends Controller
         try {
             if ($state !== null && $user->update(['state' => $state])) {
                 return response()->json([
-                    'message' => __('Data edited successfully')
+                    'message' => __('Data edited successfully'),
                 ]);
             }
 
             return response()->json([
-                'message' => __('Data edited unsuccessfully')
+                'message' => __('Data edited unsuccessfully'),
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => "Error: {$e->getMessage()}"
+                'message' => "Error: {$e->getMessage()}",
             ], $e->getCode());
         }
     }
@@ -331,12 +331,12 @@ class UsersController extends Controller
             $user->delete();
         } catch (\Exception $e) {
             return response()->json([
-                'message' => "Error: {$e->getMessage()}"
+                'message' => "Error: {$e->getMessage()}",
             ], $e->getCode());
         }
 
         return response()->json([
-            'message' => __('Data deleted successfully')
+            'message' => __('Data deleted successfully'),
         ]);
     }
 
@@ -353,12 +353,12 @@ class UsersController extends Controller
             User::destroy($ids);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => "Error: {$e->getMessage()}"
+                'message' => "Error: {$e->getMessage()}",
             ], $e->getCode());
         }
 
         return response()->json([
-            'message' => __('Data deleted successfully')
+            'message' => __('Data deleted successfully'),
         ]);
     }
 
@@ -375,7 +375,7 @@ class UsersController extends Controller
                 'required',
                 'confirmed',
                 'min:8',
-                'regex:/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$/'
+                'regex:/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$/',
             ],
         ]);
 
@@ -393,12 +393,12 @@ class UsersController extends Controller
             $user->save();
 
             return response()->json([
-                'message' => __('Password changed successfully')
+                'message' => __('Password changed successfully'),
             ]);
         }
 
         return response()->json([
-            'message' => __('Current password is not correct')
+            'message' => __('Current password is not correct'),
         ], 500);
     }
 
@@ -421,16 +421,17 @@ class UsersController extends Controller
         $breakDatas = [
             'start_break'     => now()->toDateTimeString(),
             'reason_break_id' => $reasonBreakId,
-            'user_id'         => auth()->id()
+            'user_id'         => auth()->id(),
         ];
         if ($anotherReasonText) {
             $breakDatas['another_reason'] = $anotherReasonText;
         }
 
-        TimeBreak::create($breakDatas);
+        $timebreak = TimeBreak::create($breakDatas);
 
         return response()->json([
-            'message' => __('Data edited successfully')
+            'message'      => __('Data edited successfully'),
+            'maxTimeBreak' => $timebreak->reason_break->time_alert * 60,
         ]);
     }
 
@@ -444,16 +445,16 @@ class UsersController extends Controller
 
         if ($timebreak) {
             $timebreak->update([
-                'end_break' => now()->toDateTimeString()
+                'end_break' => now()->toDateTimeString(),
             ]);
 
             return response()->json([
-                'message' => __('Data edited successfully')
+                'message' => __('Data edited successfully'),
             ]);
         }
 
         return response()->json([
-            'message' => __('Data edited unsuccessfully')
+            'message' => __('Data edited unsuccessfully'),
         ]);
     }
 }

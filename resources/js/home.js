@@ -62,20 +62,20 @@ $(function() {
 		sort: false,
 	})
 
-	function showFormChangeState(typeCall = 1) {
-		let url = $('#btn_form_change_state').data('url')
-
+	function showFormChangeState({typeCall = 1, url, callId = '', table = ''}) {
 		$('#modal_md').showModal({
 			url: url, params: {
-				typeCall: typeCall,
+				typeCall,
+				callId,
+				table
 			}, method: 'get',
 		})
-		callInterval = setInterval(callClock, 1000)
 	}
 
 	$('#leads_form').on('submit', function(e) {
 		e.preventDefault()
-		showFormChangeState()
+		let url = $('#btn_form_change_state').data('url')
+		showFormChangeState({url: url})
 	})
 
 	$body.on('submit', '#change_state_leads_form', function(e) {
@@ -98,15 +98,34 @@ $(function() {
 		e.preventDefault()
 		mApp.block('#modal_md')
 
-		$(this).submitForm().then(() => {
+		$(this).submitForm().then(result => {
 			$(this).resetForm()
 			$('#btn_pause').hide()
 			$('#btn_resume').show()
-			pauseInterval = setInterval(pauseClock, 1000)
+			let target = result.maxTimeBreak
+
+			breakTimer.start({precision: 'seconds', startValues: {seconds: 0}, target: {seconds: parseInt(target)}});
 
 			$('#modal_md').modal('hide')
 			mApp.unblock('#modal_md')
 		})
+	})
+
+	$body.on('click', '.btn-delete', function() {
+		let route = $(this).data('route')
+		if (route === 'callbacks') {
+			tableCallback.actionDelete({
+				btnDelete: $(this),
+			})
+		} else if (route === 'appointments') {
+			tableAppointment.actionDelete({
+				btnDelete: $(this),
+			})
+		} else if (route === 'history_calls') {
+			tableHistoryCall.actionDelete({
+				btnDelete: $(this),
+			})
+		}
 	})
 
 	$body.on('click', '.link-lead-name', function() {
@@ -119,54 +138,78 @@ $(function() {
 	$body.on('click', '.btn-appointment-call', function() {
 		let leadId = $(this).data('lead-id')
 		let typeCall = $(this).data('type-call')
+		let callId = $(this).data('id')
 
-		showFormChangeState(typeCall)
-		fetchLead(leadId, 0)
+		showFormChangeState({typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: 'appointments'})
 		updateCallTypeText('Appointment Call')
 
-	})
-
-	$body.on('click', '.btn-edit-appointment', function() {
-		let appointmentId = $(this).data('id')
-		let $tr = $(this).parents('tr')
-		let spanAppointmentDatetimeText = $tr.find('.span-appointment-datetime')
-		let appointmentDatetime = spanAppointmentDatetimeText.text()
-		let html = `<div class="input-group">
-							<input type="text text-inline-datepicker" class="form-control" value="${appointmentDatetime}" data-appointment-id="${appointmentId}">
-							<div class="input-group-append">
-								<button class="btn btn-success btn-change-appointment-datetime" type="button"><i class="fa fa-check"></i></button>
-							</div>
-						</div>`
-
-		spanAppointmentDatetimeText.html(html)
-		$tr.find('.text-inline-datepicker').datepicker()
-	})
-
-	$body.on('click', '.btn-change-appointment-datetime', function() {
-		let appointmentDatetime = $(this).parents('.input-group').find('.text-inline-datepicker').val()
-		let appointmentId = $(this).data('appointment-id')
-		let urlEdit = route('leads.edit_appointment', appointmentId)
-
-		axios.post(urlEdit, {
-			appointmentDatetime: appointmentDatetime,
-		}).then(result => {
-			let obj = result['data']
-			if (obj.message) {
-				flash(obj.message)
-			}
-			$(this).parents('tr').find('.span-appointment-datetime').text(appointmentDatetime)
-		}).catch(e => console.log(e)).finally(() => {
-			unblock()
-		})
 	})
 
 	$body.on('click', '.btn-callback-call', function() {
 		let leadId = $(this).data('lead-id')
 		let typeCall = $(this).data('type-call')
+		let callId = $(this).data('id')
 
-		showFormChangeState(typeCall)
-		fetchLead(leadId, 0)
+		showFormChangeState({typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: 'callbacks'})
 		updateCallTypeText('Callback Call')
+	})
+
+	$body.on('click', '.btn-history-call', function() {
+		let leadId = $(this).data('lead-id')
+		let typeCall = $(this).data('type-call')
+
+		showFormChangeState({typeCall: typeCall, url: route('leads.form_change_state', leadId)})
+		updateCallTypeText('History Call')
+	})
+
+	$body.on('click', '.btn-edit-datetime', function() {
+		let appointmentId = $(this).data('id')
+		let $tr = $(this).parents('tr')
+		let spanAppointmentDatetimeText = $tr.find('.span-datetime')
+		let appointmentDatetime = spanAppointmentDatetimeText.text()
+		let urlEdit = $(this).data('url')
+
+		let html = `<div class="input-group">
+							<input type="text" class="form-control text-inline-datepicker" value="${appointmentDatetime}" data-appointment-id="${appointmentId}">
+							<div class="input-group-append">
+								<button class="btn btn-success btn-change-datetime btn-sm" type="button" data-url="${urlEdit}"><i class="fa fa-check"></i></button>
+								<button class="btn btn-danger btn-cancel-datetime btn-sm" type="button"><i class="fa fa-trash"></i></button>
+							</div>
+						</div>`
+
+		spanAppointmentDatetimeText.html(html)
+		$tr.find('.text-inline-datepicker').datetimepicker({
+			startDate: new Date(),
+		})
+		$(this).prop('disabled', true)
+	})
+
+	$body.on('click', '.btn-cancel-datetime', function() {
+		let parents = $(this).parents('tr')
+		let appointmentDatetime = parents.find('.text-inline-datepicker').val()
+		parents.find('.span-datetime').text(appointmentDatetime)
+
+		parents.find('.btn-edit-datetime').prop('disabled', false)
+	})
+
+	$body.on('click', '.btn-change-datetime', function() {
+		let $textInlineDatepicker = $(this).parents('.input-group').find('.text-inline-datepicker')
+		let dateTime = $textInlineDatepicker.val()
+		let urlEdit = $(this).data('url')
+
+		axios.post(urlEdit, {
+			dateTime: dateTime,
+		}).then(result => {
+			let obj = result['data']
+			if (obj.message) {
+				flash(obj.message)
+			}
+			let parents = $(this).parents('tr')
+			parents.find('.span-datetime').text(dateTime)
+			parents.find('.btn-edit-datetime').prop('disabled', false)
+		}).catch(e => console.log(e)).finally(() => {
+			unblock()
+		})
 	})
 
 	$body.on('change', '#select_state_modal', function() {
@@ -199,11 +242,10 @@ $(function() {
 		$('#modal_md').showModal({url: url, params: {}, method: 'get'})
 	})
 
-	$('#btn_resume').on('click', function() {
-		let url = $(this).data('url')
+	function resume(params = {}) {
 		blockPage()
-
-		axios.post(url).then(result => {
+		let url = $('#btn_resume').data('url')
+		return axios.post(url, params).then(result => {
 			let obj = result['data']
 			if (obj.message) {
 				flash(obj.message)
@@ -214,21 +256,10 @@ $(function() {
 		}).catch(e => console.log(e)).finally(() => {
 			unblock()
 		})
-	})
+	}
 
-	let timer = new Timer()
-	timer.addEventListener('started', function() {
-		updateCallTypeText('Waiting')
-	})
-	timer.addEventListener('stopped', function() {
-		updateCallTypeText('Auto')
-		fetchLead('', 1)
-	})
-	timer.addEventListener('secondsUpdated', function() {
-		$('#span_call_time').html(timer.getTimeValues().toString())
-	})
-	timer.addEventListener('targetAchieved', function() {
-		$('#span_call_time').html('00:00:00')
+	$('#btn_resume').on('click', function() {
+		resume()
 	})
 
 	function fetchLead(leadId = '', isNew = 1) {
@@ -249,6 +280,33 @@ $(function() {
 
 		})
 	}
+
+	let waitTimer = new Timer()
+	waitTimer.addEventListener('started', function() {
+		updateCallTypeText('Waiting')
+	})
+	waitTimer.addEventListener('stopped', function() {
+		updateCallTypeText('Auto')
+		fetchLead('', 1)
+		callInterval = setInterval(callClock, 1000)
+	})
+	waitTimer.addEventListener('secondsUpdated', function() {
+		$('#span_call_time').html(waitTimer.getTimeValues().toString())
+	})
+	waitTimer.addEventListener('targetAchieved', function() {
+		$('#span_call_time').html('00:00:00')
+	})
+
+	let breakTimer = new Timer()
+	breakTimer.addEventListener('secondsUpdated', function() {
+		$('#span_pause_time').html(breakTimer.getTimeValues().toString())
+	})
+	breakTimer.addEventListener('targetAchieved', function() {
+		$('#btn_resume').trigger('click')
+		resume().then(() => {
+			flash('Đã quá thời gian nghỉ, vui lòng trở lại làm việc.', 'danger', false)
+		})
+	})
 
 	function harold(standIn) {
 		if (standIn < 10) {
@@ -285,23 +343,9 @@ $(function() {
 		$('#span_call_time').text(harold(callHours) + ':' + harold(callMinutes) + ':' + harold(callSeconds))
 	}
 
-	function pauseClock() {
-		pauseSeconds++
-		if (pauseSeconds === 60) {
-			pauseMinutes++
-			pauseSeconds = 0
-
-			if (pauseMinutes === 60) {
-				pauseMinutes = 0
-				pauseHours++
-			}
-		}
-		$('#span_pause_time').text(harold(pauseHours) + ':' + harold(pauseMinutes) + ':' + harold(pauseSeconds))
-	}
-
 	function waitClock() {
-		timer.start({countdown: true, startValues: {seconds: 5}})
-		$('#span_call_time').html(timer.getTimeValues().toString())
+		waitTimer.start({countdown: true, startValues: {seconds: 5}})
+		$('#span_call_time').html(waitTimer.getTimeValues().toString())
 	}
 
 	function initLoginClock() {
@@ -315,12 +359,17 @@ $(function() {
 
 	function initBreakClock() {
 		let diffTime = $('#span_pause_time').data('diff-break-time')
+		let maxBreakTime = $('#span_pause_time').data('max-break-time')
 		if (diffTime !== '') {
 			let times = _.split(diffTime, ':')
 
 			pauseHours = times[0]
 			pauseMinutes = times[1]
 			pauseSeconds = times[2]
+
+			breakTimer.start({precision: 'seconds', startValues: {seconds: pauseSeconds}, target: {seconds: maxBreakTime}});
+			$('#btn_pause').hide()
+			$('#btn_resume').show()
 		}
 	}
 

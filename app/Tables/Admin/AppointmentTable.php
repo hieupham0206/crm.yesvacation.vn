@@ -46,30 +46,30 @@ class AppointmentTable extends DataTable
 //            }
 
             if ($canUpdateAppointment) {
-                $btnEdit = ' <button data-id="'.$appointment->id.'" class="btn btn-sm btn-brand btn-edit-appointment m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Edit') . '">
+                $btnEdit = ' <button data-id="'.$appointment->id.'" data-url="'.route('leads.edit_appointment_time', $appointment).'" class="btn btn-sm btn-brand btn-edit-datetime m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Edit') . '">
 					<i class="fa fa-edit"></i>
 				</button>';
             }
 
-//            if ($canDeleteAppointment) {
-//                $btnDelete = ' <button type="button" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $appointment->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
-//                data-url="' . route('appointments.destroy', $appointment, false) . '" title="' . __('Delete') . '">
-//                    <i class="fa fa-trash"></i>
-//                </button>';
-//            }
-
             if ($canDeleteAppointment) {
-                $btnCall = ' <button type="button" data-lead-id="'. $appointment->lead_id  . ' !!!" data-type-call="'.HistoryCallType::APPOINTMENT.'" 
-                class="btn btn-sm btn-appointment-call btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
-                    <i class="fa fa-phone"></i>
+                $btnDelete = ' <button type="button" data-route="appointments" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $appointment->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                data-url="' . route('appointments.destroy', $appointment, false) . '" title="' . __('Delete') . '">
+                    <i class="fa fa-trash"></i>
                 </button>';
             }
-            $appointmentDateText         = "<span class='span-appointment-datetime'>" . optional($appointment->appointment_datetime)->format('d-m-Y H:i') . '</span>';
+
+//            if ($canDeleteAppointment) {
+                $btnCall = ' <button type="button" data-id="'.$appointment->id.'" data-lead-id="'. $appointment->lead_id  . ' !!!" data-type-call="'.HistoryCallType::APPOINTMENT.'" 
+                class="btn btn-sm btn-appointment-call btn-primary m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
+                    <i class="fa fa-phone"></i>
+                </button>';
+//            }
+            $appointmentDateText         = "<span class='span-datetime'>" . optional($appointment->appointment_datetime)->format('d-m-Y H:i') . '</span>';
             if ($appointment->appointment_datetime) {
                 $dateRemain = now()->diffInDays($appointment->appointment_datetime);
 
                 if ($dateRemain == 1) {
-                    $appointmentDateText = "<span class='span-appointment-datetime m--font-danger'>" . optional($appointment->appointment_datetime)->format('d-m-Y H:i') . '</span>';
+                    $appointmentDateText = "<span class='span-datetime m--font-danger'>" . optional($appointment->appointment_datetime)->format('d-m-Y H:i') . '</span>';
                 }
             }
 
