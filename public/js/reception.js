@@ -60,91 +60,85 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 65);
+/******/ 	return __webpack_require__(__webpack_require__.s = 63);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 65:
+/***/ 63:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(66);
+module.exports = __webpack_require__(64);
 
 
 /***/ }),
 
-/***/ 66:
+/***/ 64:
 /***/ (function(module, exports) {
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 $(function () {
-	var $usersForm = $('#users_form');
-	var isConfirm = $usersForm.data('confirm');
+	var userId = $('#txt_user_id').val();
+	var $body = $('body');
 
-	$usersForm.validate({
-		// define validation rules
-		rules: {
-			password: {
-				required: function required(element) {
-					var val = $(element).data('value');
-					return val === '';
-				},
-				pwCheck: function pwCheck(element) {
-					var val = $(element).data('value');
-					return val === '';
-				}
-			},
-			password_confirmation: {
-				required: function required() {
-					return $('#txt_password').val() !== '';
-				},
-				equalTo: '#txt_password'
+	var tableAppointment = $('#table_appointment').DataTable({
+		'serverSide': true,
+		'paging': true,
+		'ajax': $.fn.dataTable.pipeline({
+			url: route('appointments.table'),
+			data: function data(q) {
+				q.filters = JSON.stringify([{ 'name': 'user_id', 'value': userId }]);
+				q.form = 'reception_console';
 			}
-		},
-		submitHandler: isConfirm && function (form, e) {
-			window.blockPage();
-			e.preventDefault();
-			$(form).confirmation(function (result) {
-				if (result && (typeof result === 'undefined' ? 'undefined' : _typeof(result)) === 'object' && result.value) {
-					$(form).submitForm({
-						data: {
-							'isConfirm': isConfirm
-						}
-					}).then(function () {
-						location.href = route('users.index');
-					});
-				} else {
-					window.unblock();
-				}
-			});
-		}
+		}),
+		conditionalPaging: true,
+		'columnDefs': [],
+		sort: false
+	});
+	var tableEventData = $('#table_event_data').DataTable({
+		'serverSide': true,
+		'paging': true,
+		'ajax': $.fn.dataTable.pipeline({
+			url: route('event_datas.table'),
+			data: function data(q) {
+				q.filters = JSON.stringify([{ 'name': 'user_id', 'value': userId }]);
+			}
+		}),
+		conditionalPaging: true,
+		'columnDefs': [],
+		sort: false
 	});
 
-	$('.chk_all_permission').on('click', function () {
-		if ($(this).is(':checked')) {
-			$(this).parents('tr').find('.chk_permission').prop('checked', true);
-		} else {
-			$(this).parents('tr').find('.chk_permission').prop('checked', false);
-		}
-	});
-	$('.chk_permission').on('click', function () {
-		var tr = $(this).parents('tr');
-		if (tr.find('.chk_permission:checked').length >= tr.find('.chk_permission').length) {
-			$(this).parents('tr').find('.chk_all_permission').prop('checked', true);
-		} else {
-			$(this).parents('tr').find('.chk_all_permission').prop('checked', false);
-		}
-	});
+	function fetchLead() {
+		var leadId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+		var isNew = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
 
-	//Check trang edit
-	$('.chk_all_permission').each(function () {
-		var tr = $(this).parents('tr');
-		if (tr.find('.chk_permission:checked').length >= tr.find('.chk_permission').length) {
-			$(this).parents('tr').find('.chk_all_permission').prop('checked', true);
-		} else {
-			$(this).parents('tr').find('.chk_all_permission').prop('checked', false);
-		}
+		return axios.get(route('appointments.list'), {
+			params: {
+				isNew: isNew,
+				leadId: leadId,
+				getLeadFromUser: true
+			}
+		}).then(function (result) {
+			var items = result.data.items;
+			console.log(items);
+			var lead = items[0].lead;
+			var appointmentDatetime = items[0].appointment_datetime;
+			var user = items[0].user;
+
+			$('#span_lead_name').text(lead.name);
+			$('#span_lead_email').text(lead.email);
+			$('#span_lead_phone').text(lead.phone);
+			$('#span_lead_title').text(lead.title);
+
+			$('#span_appointment_datetime').text(appointmentDatetime);
+			$('#span_tele_marketer').text(user.name);
+		});
+	}
+
+	$body.on('click', '.link-lead-name', function () {
+		var leadId = $(this).data('lead-id');
+		fetchLead(leadId, 0);
+		$('#txt_lead_id').val(leadId);
 	});
 });
 

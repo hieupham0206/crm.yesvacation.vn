@@ -45,6 +45,12 @@ class HomeController extends Controller
         return view('tele_marketer_console', compact('lead', 'diffLoginString', 'diffBreakString', 'maxBreakTime'));
     }
 
+    public function reception()
+    {
+        $lead = Lead::find(1);
+        return view('reception_console', ['lead' => $lead]);
+    }
+
     public function lang()
     {
         $lang    = config('app.locale');
