@@ -214,10 +214,15 @@ $(function() {
 	})
 
 	$body.on('change', '#select_state_modal', function() {
-		if (['7', '8'].includes($(this).val())) {
+		if ($(this).val() === '8') {
 			$('#appointment_lead_section').show()
 		} else {
 			$('#appointment_lead_section').hide()
+			if ($(this).val() === '7') {
+				$('#section_datetime').show()
+			} else {
+				$('#section_datetime').hide()
+			}
 		}
 	})
 
