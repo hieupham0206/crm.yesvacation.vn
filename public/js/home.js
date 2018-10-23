@@ -165,8 +165,8 @@ $(function () {
 
 	$('#leads_form').on('submit', function (e) {
 		e.preventDefault();
-		var url = $('#btn_form_change_state').data('url');
-		showFormChangeState({ url: url });
+		var leadId = $('#txt_lead_id').val();
+		showFormChangeState({ url: route('leads.form_change_state', leadId) });
 	});
 
 	$body.on('submit', '#change_state_leads_form', function (e) {

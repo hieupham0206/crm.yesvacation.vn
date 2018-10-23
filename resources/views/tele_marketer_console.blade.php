@@ -55,23 +55,23 @@
                             @endisset
                             <div class="form-group m-form__group row">
                                 <div class="col-sm-12 col-md-4 m-form__group-sub">
-                                    <label for="span_lead_title">{{ $lead->label('title') }}</label>
+                                    <label for="span_lead_title">{{ $lead->label('title') }}: </label>
                                     <span id="span_lead_title">{{ $lead->title }}</span>
                                     <span class="m-form__help"></span>
                                     {!! $errors->first('title', '<div class="form-control-feedback">:message</div>') !!}
                                 </div>
                                 <div class="col-sm-12 col-md-4 m-form__group-sub">
-                                    <label for="span_lead_name">{{ $lead->label('name') }}</label>
+                                    <label for="span_lead_name">{{ $lead->label('name') }}: </label>
                                     <span id="span_lead_name">{{ $lead->name }}</span>
                                 </div>
                                 <div class="col-sm-12 col-md-4 m-form__group-sub">
-                                    <label for="span_lead_birthday">{{ $lead->label('birthday') }}</label>
+                                    <label for="span_lead_birthday">{{ $lead->label('birthday') }}: </label>
                                     <span id="span_lead_birthday">{{ optional($lead->birthday)->format('d-m-Y') }}</span>
                                 </div>
                             </div>
                             <div class="form-group m-form__group row">
                                 <div class="col-sm-12 col-md-8 m-form__group-sub">
-                                    <label for="span_lead_phone">{{ $lead->label('phone') }}</label>
+                                    <label for="span_lead_phone">{{ $lead->label('phone') }}: </label>
                                     <span class="font-weight-bold m--font-danger m--icon-font-size-lg4 ml-3" id="span_lead_phone">{{ $lead->phone }}</span>
                                 </div>
                                 <div class="col-sm-12 col-md-4 m-form__group-sub">
