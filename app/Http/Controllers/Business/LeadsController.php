@@ -449,10 +449,10 @@ class LeadsController extends Controller
                 }
                 $appointment = Appointment::create($appointmentDatas);
 
-//                if ($lead->email) {
-//                    $message = (new AppointmentConfirmation(compact('lead', 'appointment')))->onConnection('database')->onQueue('notification');
-//                    \Mail::to($email)->queue($message);
-//                }
+                if ($lead->email) {
+                    $message = (new AppointmentConfirmation(compact('lead', 'appointment')))->onConnection('database')->onQueue('notification');
+                    \Mail::to($email)->queue($message);
+                }
             }
 
             //state = 7: lưu vào bảng callback
