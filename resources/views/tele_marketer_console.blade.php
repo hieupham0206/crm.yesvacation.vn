@@ -10,7 +10,7 @@
         <input type="hidden" id="txt_lead_id" value="{{ $lead->id }}">
         <div class="row">
             <div class="col-lg-12">
-                <div class="m-portlet">
+                <div class="m-portlet" id="break_section">
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
@@ -18,8 +18,11 @@
                             </div>
                         </div>
                         <div class="m-portlet__head-tools">
-                            <label for="" class="mr-3">Login time: <span id="span_login_time" class="span-time" data-diff-login-time="{{ $diffLoginString }}"></span></label>
-                            <label for="" class="mr-3">Pause time: <span id="span_pause_time" class="span-time" data-diff-break-time="{{ $diffBreakString }}" data-max-break-time="{{ $maxBreakTime }}">00:00:00</span></label>
+                            <label for="" class="mr-3 label-span-time">Login time: <span id="span_login_time" class="span-time" data-diff-login-time="{{ $diffLoginString }}"></span></label>
+                            <label for="" class="mr-3 label-span-time">Pause time:
+                                <span id="span_pause_time" class="span-time" data-diff-break-time="{{ $diffBreakString }}"
+                                      data-max-break-time="{{ $maxBreakTime }}" data-start-break-value="{{ $startBreakValue }}">00:00:00</span>
+                            </label>
                             <button class="btn btn-brand btn-sm m-btn m-btn--icon m-btn--custom mr-2" id="btn_pause" data-url="{{ route('users.form_break') }}">
                                 <span><i class="fa fa-pause"></i><span>@lang('Pause')</span></span>
                             </button>
@@ -40,7 +43,7 @@
                         </div>
                         <div class="m-portlet__head-tools">
                             <span class="m-portlet__head-text">Type call: <span id="span_call_type">Auto</span></span>
-                            <span class="m-portlet__head-text ml-3">Time: <span id="span_call_time" class="span-time">00:00:00</span></span>
+                            <span class="m-portlet__head-text ml-3 span-auto-call-time">Time: <span id="span_call_time" class="span-time">00:00:00</span></span>
                         </div>
                     </div>
                     <form id="leads_form" class="m-form m-form--label-align-right m-form--state" method="post" action="{{ route('leads.update', $lead) }}">
@@ -52,23 +55,23 @@
                             @endisset
                             <div class="form-group m-form__group row">
                                 <div class="col-sm-12 col-md-4 m-form__group-sub">
-                                    <label for="span_lead_title">{{ $lead->label('title') }}</label>
+                                    <label for="span_lead_title">{{ $lead->label('title') }}: </label>
                                     <span id="span_lead_title">{{ $lead->title }}</span>
                                     <span class="m-form__help"></span>
                                     {!! $errors->first('title', '<div class="form-control-feedback">:message</div>') !!}
                                 </div>
                                 <div class="col-sm-12 col-md-4 m-form__group-sub">
-                                    <label for="span_lead_name">{{ $lead->label('name') }}</label>
+                                    <label for="span_lead_name">{{ $lead->label('name') }}: </label>
                                     <span id="span_lead_name">{{ $lead->name }}</span>
                                 </div>
                                 <div class="col-sm-12 col-md-4 m-form__group-sub">
-                                    <label for="span_lead_birthday">{{ $lead->label('birthday') }}</label>
+                                    <label for="span_lead_birthday">{{ $lead->label('birthday') }}: </label>
                                     <span id="span_lead_birthday">{{ optional($lead->birthday)->format('d-m-Y') }}</span>
                                 </div>
                             </div>
                             <div class="form-group m-form__group row">
                                 <div class="col-sm-12 col-md-8 m-form__group-sub">
-                                    <label for="span_lead_phone">{{ $lead->label('phone') }}</label>
+                                    <label for="span_lead_phone">{{ $lead->label('phone') }}: </label>
                                     <span class="font-weight-bold m--font-danger m--icon-font-size-lg4 ml-3" id="span_lead_phone">{{ $lead->phone }}</span>
                                 </div>
                                 <div class="col-sm-12 col-md-4 m-form__group-sub">
@@ -95,6 +98,7 @@
                                         <th>{{ $lead->label('created_at') }}</th>
                                         <th>{{ $lead->label('state') }}</th>
                                         <th>{{ $lead->label('comment') }}</th>
+                                        <th>{{ __('Actions') }}</th>
                                     </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -116,10 +120,10 @@
                             <table class="table table-borderless table-hover nowrap" id="table_history_calls" width="100%">
                                 <thead>
                                 <tr>
-                                    <th>{{ $lead->label('name') }}</th>
-                                    <th>{{ $lead->label('title') }}</th>
-                                    <th>{{ $lead->label('callback_datetime') }}</th>
-                                    <th>@lang('Actions')</th>
+                                    <th>{{ $lead->label('created_at') }}</th>
+                                    <th>{{ $lead->label('state') }}</th>
+                                    <th>{{ $lead->label('comment') }}</th>
+                                    <th>{{ __('Actions') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -142,9 +146,10 @@
                             <table class="table table-borderless table-hover nowrap" id="table_callback" width="100%">
                                 <thead>
                                 <tr>
-                                    <th>{{ $lead->label('name') }}</th>
                                     <th>{{ $lead->label('title') }}</th>
-                                    <th>{{ $lead->label('created_at') }}</th>
+                                    <th>{{ $lead->label('name') }}</th>
+                                    <th>{{ $lead->label('callback_datetime') }}</th>
+                                    <th>{{ $lead->label('comment') }}</th>
                                     <th>{{ $lead->label('actions') }}</th>
                                 </tr>
                                 </thead>
@@ -166,8 +171,8 @@
                             <table class="table table-borderless table-hover nowrap" id="table_appointment" width="100%">
                                 <thead>
                                 <tr>
-                                    <th>{{ $lead->label('name') }}</th>
                                     <th>{{ $lead->label('title') }}</th>
+                                    <th>{{ $lead->label('name') }}</th>
                                     <th>{{ $lead->label('appointment_datetime') }}</th>
                                     <th>{{ $lead->label('comment') }}</th>
                                     <th>{{ $lead->label('actions') }}</th>

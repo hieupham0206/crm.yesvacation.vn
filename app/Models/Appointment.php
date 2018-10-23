@@ -10,7 +10,9 @@ class Appointment extends \App\Models\Base\Appointment
 		'state',
 		'type',
         'appointment_datetime',
-        'code'
+        'code',
+        'spouse_name',
+        'spouse_phone',
 	];
 	public static $logName = 'Appointment';
 

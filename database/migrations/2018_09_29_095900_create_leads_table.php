@@ -27,6 +27,8 @@ class CreateLeadsTable extends Migration
             $table->smallInteger('state')->default(\App\Enums\LeadState::NEW_CUSTOMER)->comment('1: New Customer; 2: DeadNumber; 3: WrongNumber; 4: OtherCity; 5: NoAnswer; 6: NoInterested; 7: CallLater; 8: Appointment, 9: Not Deal Yet; 10: Member');
             $table->timestamp('call_date')->nullable()->comment('Thời gian cuộc gọi cuối cùng');
             $table->text('comment')->nullable();
+            
+            $table->unsignedInteger('user_id')->comment('Đánh dấu lead của user, khi thay doi thi set null nhu cũ')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

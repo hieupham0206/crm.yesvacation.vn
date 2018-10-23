@@ -27,15 +27,15 @@ class AppointmentTable extends DataTable
      */
     public function getData(): array
     {
-        $this->column = $this->getColumn();
-        $appointments = $this->getModels();
-        $modelName    = (new Appointment)->classLabel(true);
+        $this->column    = $this->getColumn();
+        $this->direction = 'asc';
+        $appointments    = $this->getModels();
+        $modelName       = (new Appointment)->classLabel(true);
 
         $canUpdateAppointment = can('update-appointment');
         $canDeleteAppointment = can('delete-appointment');
 
         $form = request()->get('form', 'tele_console');
-
 
         if ($form === 'tele_console') {
             $dataArray = $this->initTableTeleConsole($appointments, $canUpdateAppointment, $canDeleteAppointment, $modelName);
@@ -114,8 +114,8 @@ class AppointmentTable extends DataTable
             }
 
             $dataArray[] = [
-                "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
                 $appointment->lead->title,
+                "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
                 $appointmentDateText,
                 $appointment->lead->comment,
 
@@ -124,13 +124,10 @@ class AppointmentTable extends DataTable
         }
 
         return $dataArray;
-}
+    }
 
     /**
      * @param $appointments
-     * @param $canUpdateAppointment
-     * @param $canDeleteAppointment
-     * @param $modelName
      *
      * @return array
      */

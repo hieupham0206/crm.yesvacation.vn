@@ -3,24 +3,26 @@ $(function() {
 
 	let loginHours = 0, loginMinutes = 0, loginSeconds = 0
 	let callHours = 0, callMinutes = 0, callSeconds = 0
-	let pauseHours = 0, pauseMinutes = 0, pauseSeconds = 0
 	let totalCustomer = 0
+	let wantToBreak = false
 
-	let pauseInterval, callInterval
+	let callInterval
 	let $body = $('body')
 
 	const tableHistoryCall = $('#table_history_calls').DataTable({
 		'serverSide': true,
-		'paging': true,
+		'paging': false,
 		'ajax': $.fn.dataTable.pipeline({
 			url: route('history_calls.table'),
 			data: function(q) {
 				q.filters = JSON.stringify([{'name': 'user_id', 'value': userId}])
+				q.table = 'history_call'
 			},
 		}),
 		conditionalPaging: true,
 		'columnDefs': [],
 		sort: false,
+		'iDisplayLength': 20,
 	})
 	const tableCustomerHistory = $('#table_customer_history').DataTable({
 		'serverSide': true,
@@ -29,6 +31,7 @@ $(function() {
 			url: route('history_calls.table'),
 			data: function(q) {
 				q.filters = JSON.stringify([{'name': 'lead_id', 'value': $('#txt_lead_id').val()}])
+				q.table = 'customer_history'
 			},
 		}),
 		conditionalPaging: true,
@@ -67,30 +70,38 @@ $(function() {
 			url: url, params: {
 				typeCall,
 				callId,
-				table
+				table,
 			}, method: 'get',
 		})
 	}
 
 	$('#leads_form').on('submit', function(e) {
 		e.preventDefault()
-		let url = $('#btn_form_change_state').data('url')
-		showFormChangeState({url: url})
+		let leadId = $('#txt_lead_id').val()
+		showFormChangeState({url: route('leads.form_change_state', leadId)})
+		if ($('#span_call_time').text() === '00:00:00') {
+			callInterval = setInterval(callClock, 1000)
+		}
 	})
 
 	$body.on('submit', '#change_state_leads_form', function(e) {
 		e.preventDefault()
 		mApp.block('#modal_md')
+		let formData = new FormData($(this)[0])
+		formData.append('startCallTime', moment($('#span_call_time').text(), 'HH:mm:ss: A').diff(moment().startOf('day'), 'seconds'))
 
-		$(this).submitForm().then(() => {
+		$(this).submitForm({formData: formData}).then(() => {
 			$(this).resetForm()
 			resetCallClock()
 			waitClock()
-			reloadTable()
 			$('#span_customer_no').text(++totalCustomer)
 
 			$('#modal_md').modal('hide')
 			mApp.unblock('#modal_md')
+
+			if (wantToBreak) {
+				$('#btn_pause').trigger('click')
+			}
 		})
 	})
 
@@ -98,16 +109,18 @@ $(function() {
 		e.preventDefault()
 		mApp.block('#modal_md')
 
-		$(this).submitForm().then(result => {
+		$(this).submitForm({returnEarly: true}).then(result => {
 			$(this).resetForm()
 			$('#btn_pause').hide()
 			$('#btn_resume').show()
-			let target = result.maxTimeBreak
+			let target = result.data.maxTimeBreak
 
-			breakTimer.start({precision: 'seconds', startValues: {seconds: 0}, target: {seconds: parseInt(target)}});
-
+			breakTimer.start({precision: 'seconds', startValues: {seconds: 0}, target: {seconds: parseInt(target)}})
+			$('#break_section').addClass('break-state')
 			$('#modal_md').modal('hide')
 			mApp.unblock('#modal_md')
+		}).finally(() => {
+			window.unblock()
 		})
 	})
 
@@ -213,10 +226,19 @@ $(function() {
 	})
 
 	$body.on('change', '#select_state_modal', function() {
-		if (['7', '8'].includes($(this).val())) {
+		if ($(this).val() === '8') {
 			$('#appointment_lead_section').show()
+			$('#section_datetime').show()
+			$('#comment_section').show()
 		} else {
 			$('#appointment_lead_section').hide()
+			if ($(this).val() === '7') {
+				$('#section_datetime').show()
+				$('#comment_section').hide()
+			} else {
+				$('#section_datetime').hide()
+				$('#comment_section').show()
+			}
 		}
 	})
 
@@ -233,13 +255,21 @@ $(function() {
 		$('#select_state_modal').select2()
 		$('#select_reason_break').select2()
 		$('#select_time').select2()
-		$('#txt_date').datepicker()
+		$('#txt_date').datepicker({
+			startDate: new Date(),
+		})
 	})
 
 	$('#btn_pause').on('click', function() {
 		let url = $(this).data('url')
 
-		$('#modal_md').showModal({url: url, params: {}, method: 'get'})
+		if ($('#span_call_time').text() !== '00:00:00' && ! wantToBreak) {
+			wantToBreak = true
+			// flash('Vui lòng kết thúc cuộc gọi', 'danger')
+			$('#leads_form').trigger('submit')
+		} else {
+			$('#modal_md').showModal({url: url, params: {}, method: 'get'})
+		}
 	})
 
 	function resume(params = {}) {
@@ -250,9 +280,14 @@ $(function() {
 			if (obj.message) {
 				flash(obj.message)
 			}
-			$(this).hide()
+			$('#btn_resume').hide()
 			$('#btn_pause').show()
 			resetPauseClock()
+			$('#break_section').removeClass('break-state')
+			if (wantToBreak) {
+				wantToBreak = false
+				autoCall()
+			}
 		}).catch(e => console.log(e)).finally(() => {
 			unblock()
 		})
@@ -272,23 +307,44 @@ $(function() {
 		}).then(result => {
 			let items = result.data.items
 			let lead = items[0]
+			let birthday = lead.birthday !== '' ? moment(birthday).format('DD-MM-YYYY') : ''
 
 			$('#span_lead_name').text(lead.name)
-			$('#span_lead_email').text(lead.email)
+			$('#span_lead_birthday').text(birthday)
 			$('#span_lead_phone').text(lead.phone)
 			$('#span_lead_title').text(lead.title)
+			$('#txt_lead_id').val(lead.id)
 
+			reloadTable()
 		})
+	}
+
+	function clearLeadInfo() {
+		$('#span_lead_name').text('')
+		$('#span_lead_birthday').text('')
+		$('#span_lead_phone').text('')
+		$('#span_lead_title').text('')
 	}
 
 	let waitTimer = new Timer()
 	waitTimer.addEventListener('started', function() {
 		updateCallTypeText('Waiting')
+		clearLeadInfo()
+		$('#btn_form_change_state').prop('disabled', true)
 	})
+
+	function autoCall() {
+		fetchLead('', 1).then(() => {
+			callInterval = setInterval(callClock, 1000)
+			$('#btn_form_change_state').prop('disabled', false)
+		})
+	}
+
 	waitTimer.addEventListener('stopped', function() {
 		updateCallTypeText('Auto')
-		fetchLead('', 1)
-		callInterval = setInterval(callClock, 1000)
+		if (! wantToBreak) {
+			autoCall()
+		}
 	})
 	waitTimer.addEventListener('secondsUpdated', function() {
 		$('#span_call_time').html(waitTimer.getTimeValues().toString())
@@ -298,11 +354,11 @@ $(function() {
 	})
 
 	let breakTimer = new Timer()
+
 	breakTimer.addEventListener('secondsUpdated', function() {
 		$('#span_pause_time').html(breakTimer.getTimeValues().toString())
 	})
 	breakTimer.addEventListener('targetAchieved', function() {
-		$('#btn_resume').trigger('click')
 		resume().then(() => {
 			flash('Đã quá thời gian nghỉ, vui lòng trở lại làm việc.', 'danger', false)
 		})
@@ -359,27 +415,22 @@ $(function() {
 
 	function initBreakClock() {
 		let diffTime = $('#span_pause_time').data('diff-break-time')
+		let startValues = $('#span_pause_time').data('start-break-value')
 		let maxBreakTime = $('#span_pause_time').data('max-break-time')
 		if (diffTime !== '') {
-			let times = _.split(diffTime, ':')
-
-			pauseHours = times[0]
-			pauseMinutes = times[1]
-			pauseSeconds = times[2]
-
-			breakTimer.start({precision: 'seconds', startValues: {seconds: pauseSeconds}, target: {seconds: maxBreakTime}});
+			breakTimer.start({precision: 'seconds', startValues: {seconds: startValues}, target: {seconds: maxBreakTime + startValues}})
 			$('#btn_pause').hide()
 			$('#btn_resume').show()
 		}
 	}
 
 	function resetPauseClock() {
-		clearInterval(pauseInterval)
-		$('#span_pause_time').text('00:00:00')
+		breakTimer.stop()
 	}
 
 	function resetCallClock() {
 		clearInterval(callInterval)
+		callHours = callMinutes = callSeconds = 0
 		$('#span_call_time').text('00:00:00')
 	}
 

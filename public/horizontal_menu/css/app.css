@@ -730,3 +730,22 @@ input {
   border-left: 0;
 }
 
+.span-time,
+.label-span-time {
+  width: 140px;
+}
+
+.span-auto-call-time {
+  width: 140px;
+  margin-right: -50px;
+}
+
+.break-state {
+  background-color: var(--danger);
+  color: white;
+}
+
+.break-state h3 {
+  color: white !important;
+}
+
