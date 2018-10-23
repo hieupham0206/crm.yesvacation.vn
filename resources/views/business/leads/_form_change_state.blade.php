@@ -19,8 +19,12 @@
                     <select name="state" class="form-control select" id="select_state_modal">
                         <option></option>
                         @foreach ($lead->states as $key => $state)
+                            @if ($key == 1)
+                                @continue
+                            @endif
+
                             @if($typeCall == 3)
-                                @if (\in_array($key, [1,9,10], true))
+                                @if (\in_array($key, [9,10], true))
                                     @continue
                                 @endif
                                 <option value="{{ $key }}" {{ $lead->state == $key || (! $lead->exists && $key === 1) ? ' selected' : '' }}>{{ $state }}</option>

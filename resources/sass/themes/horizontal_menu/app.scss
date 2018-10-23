@@ -19,3 +19,12 @@
 /** PLUGINS **/
 //@import "../../plugins/highcharts";
 @import "../../plugins/bootstrap-fileinput";
+
+.span-time, .label-span-time {
+  width: 140px;
+}
+
+.span-auto-call-time {
+  width: 140px;
+  margin-right: -50px;
+}

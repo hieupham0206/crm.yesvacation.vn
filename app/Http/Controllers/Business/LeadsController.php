@@ -408,6 +408,7 @@ class LeadsController extends Controller
                 'state'     => $newState,
                 'comment'   => $comment,
                 'call_date' => now()->toDateTimeString(),
+                'user_id'   => null,
             ];
 
             if ($lead->email !== $email) {

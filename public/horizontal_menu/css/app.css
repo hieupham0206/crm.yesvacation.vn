@@ -730,3 +730,13 @@ input {
   border-left: 0;
 }
 
+.span-time,
+.label-span-time {
+  width: 140px;
+}
+
+.span-auto-call-time {
+  width: 140px;
+  margin-right: -50px;
+}
+

@@ -16,20 +16,25 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $lead = Lead::getAvailable()->first();
+        /** @var User $user */
+        $user = auth()->user();
+        $lead = Lead::where('user_id', $user->id)->first();
+        $lead = $lead ?? Lead::getAvailable()->first();
         if ($lead) {
-            $lead->update(['call_date' => now()->toDateTimeString()]);
+            $lead->update([
+                'call_date' => now()->toDateTimeString(),
+                'user_id'   => auth()->id(),
+            ]);
         }
 
-        $lead = $lead ?? new Lead();
-        /** @var User $user */
-        $user            = auth()->user();
         $lastLoginTime   = $user->last_login;
         $diffTime        = now()->diffAsCarbonInterval($lastLoginTime);
         $diffLoginString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
 
         $lastBreakTime   = TimeBreak::whereNotNull('start_break')->whereNull('end_break')->whereDate('start_break', Carbon::today())->latest()->first();
+        $firstBreakTime  = TimeBreak::whereDate('start_break', Carbon::today())->oldest()->first();
         $diffBreakString = $maxBreakTime = '';
+
         if ($lastBreakTime) {
             $scheduleTimeSeconds = now()->diffInSeconds($lastBreakTime->start_break);
 
@@ -42,12 +47,19 @@ class HomeController extends Controller
             }
         }
 
+        if ($firstBreakTime) {
+            $diffTime        = now()->diffAsCarbonInterval($firstBreakTime->start_break);
+            $diffBreakString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
+
+        }
+
         return view('tele_marketer_console', compact('lead', 'diffLoginString', 'diffBreakString', 'maxBreakTime'));
     }
 
     public function reception()
     {
         $lead = Lead::find(1);
+
         return view('reception_console', ['lead' => $lead]);
     }
 

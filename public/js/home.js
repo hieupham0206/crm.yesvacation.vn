@@ -101,6 +101,7 @@ $(function () {
 			url: route('history_calls.table'),
 			data: function data(q) {
 				q.filters = JSON.stringify([{ 'name': 'user_id', 'value': userId }]);
+				q.table = 'history_call';
 			}
 		}),
 		conditionalPaging: true,
@@ -114,6 +115,7 @@ $(function () {
 			url: route('history_calls.table'),
 			data: function data(q) {
 				q.filters = JSON.stringify([{ 'name': 'lead_id', 'value': $('#txt_lead_id').val() }]);
+				q.table = 'customer_history';
 			}
 		}),
 		conditionalPaging: true,
@@ -327,7 +329,9 @@ $(function () {
 		$('#select_state_modal').select2();
 		$('#select_reason_break').select2();
 		$('#select_time').select2();
-		$('#txt_date').datepicker();
+		$('#txt_date').datepicker({
+			startDate: new Date()
+		});
 	});
 
 	$('#btn_pause').on('click', function () {
@@ -337,8 +341,6 @@ $(function () {
 	});
 
 	function resume() {
-		var _this4 = this;
-
 		var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 		blockPage();
@@ -348,7 +350,7 @@ $(function () {
 			if (obj.message) {
 				flash(obj.message);
 			}
-			$(_this4).hide();
+			$('#btn_resume').hide();
 			$('#btn_pause').show();
 			resetPauseClock();
 		}).catch(function (e) {
@@ -386,6 +388,7 @@ $(function () {
 	var waitTimer = new Timer();
 	waitTimer.addEventListener('started', function () {
 		updateCallTypeText('Waiting');
+		$('#leads_form').resetForm();
 	});
 	waitTimer.addEventListener('stopped', function () {
 		updateCallTypeText('Auto');
@@ -404,7 +407,6 @@ $(function () {
 		$('#span_pause_time').html(breakTimer.getTimeValues().toString());
 	});
 	breakTimer.addEventListener('targetAchieved', function () {
-		$('#btn_resume').trigger('click');
 		resume().then(function () {
 			flash('Đã quá thời gian nghỉ, vui lòng trở lại làm việc.', 'danger', false);
 		});

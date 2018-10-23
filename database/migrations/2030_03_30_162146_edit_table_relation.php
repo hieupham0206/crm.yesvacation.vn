@@ -30,12 +30,6 @@ class EditTableRelation extends Migration
         Schema::table('event_datas', function (Blueprint $table) {
             $table->foreign('lead_id')->references('id')->on('leads');
         });
-        //Add khóa ngoại bảng event_data_details
-        Schema::table('event_data_details', function (Blueprint $table) {
-//            $table->foreign('lead_id')->references('id')->on('leads');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('event_data_id')->references('id')->on('event_datas');
-        });
         //Add khóa ngoại bảng final_salaries
         Schema::table('final_salaries', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');

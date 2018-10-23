@@ -22,6 +22,7 @@ class CreateCallbacksTable extends Migration
 
             $table->timestamp('callback_datetime')->nullable();
             $table->tinyInteger('state')->default(\App\Enums\Confirmation::NO)->comment('1: Done; -1: Not Yet');
+            $table->timestamp('call_date')->nullable()->comment('Thời gian đã gọi lại');
 
             $table->timestamps();
         });

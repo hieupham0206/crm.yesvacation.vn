@@ -453,6 +453,10 @@ $(function () {
 		});
 	});
 
+	$('.modal').on('hidden.bs.modal', function () {
+		$(this).find('.modal-content').html('');
+	});
+
 	$('body').on('keyup', '.numeric', function () {
 		$(this).val(numeral($(this).val()).format('0,00'));
 	});

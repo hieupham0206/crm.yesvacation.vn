@@ -36,7 +36,6 @@ class AppointmentTable extends DataTable
 
         $form = request()->get('form', 'tele_console');
 
-
         if ($form === 'tele_console') {
             $dataArray = $this->initTableTeleConsole($appointments, $canUpdateAppointment, $canDeleteAppointment, $modelName);
         } elseif ($form === 'reception_console') {
@@ -128,9 +127,6 @@ class AppointmentTable extends DataTable
 
     /**
      * @param $appointments
-     * @param $canUpdateAppointment
-     * @param $canDeleteAppointment
-     * @param $modelName
      *
      * @return array
      */
