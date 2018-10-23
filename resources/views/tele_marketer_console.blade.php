@@ -10,7 +10,7 @@
         <input type="hidden" id="txt_lead_id" value="{{ $lead->id }}">
         <div class="row">
             <div class="col-lg-12">
-                <div class="m-portlet">
+                <div class="m-portlet" id="break_section">
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">

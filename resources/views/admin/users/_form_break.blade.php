@@ -15,7 +15,7 @@
             <div class="form-group row">
                 <div class="col-12 col-md-6 m-form__group-sub">
                     <label for="select_reason_break">{{ $user->label('reason_break') }}</label>
-                    <select name="reason_break_id" class="form-control select" id="select_reason_break">
+                    <select name="reason_break_id" class="form-control select" id="select_reason_break" required>
                         <option></option>
                         @foreach ($reasonBreaks as $reasonBreak)
                             <option value="{{ $reasonBreak->id }}">{{ $reasonBreak->name }}</option>

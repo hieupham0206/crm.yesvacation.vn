@@ -27,9 +27,10 @@ class AppointmentTable extends DataTable
      */
     public function getData(): array
     {
-        $this->column = $this->getColumn();
-        $appointments = $this->getModels();
-        $modelName    = (new Appointment)->classLabel(true);
+        $this->column    = $this->getColumn();
+        $this->direction = 'asc';
+        $appointments    = $this->getModels();
+        $modelName       = (new Appointment)->classLabel(true);
 
         $canUpdateAppointment = can('update-appointment');
         $canDeleteAppointment = can('delete-appointment');
@@ -123,7 +124,7 @@ class AppointmentTable extends DataTable
         }
 
         return $dataArray;
-}
+    }
 
     /**
      * @param $appointments

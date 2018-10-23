@@ -28,3 +28,11 @@
   width: 140px;
   margin-right: -50px;
 }
+
+.break-state {
+  background-color: var(--danger);
+  color: white;
+  h3 {
+    color: white !important
+  }
+}

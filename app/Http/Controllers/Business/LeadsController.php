@@ -377,7 +377,12 @@ class LeadsController extends Controller
         $callId   = request()->get('callId');
         $table    = request()->get('table');
 
-        return view('business.leads._form_change_state', ['lead' => $lead, 'typeCall' => $typeCall, 'callId' => $callId, 'table' => $table]);
+        $appointment = null;
+        if ($table === 'appointments') {
+            $appointment = Appointment::find($callId);
+        }
+
+        return view('business.leads._form_change_state', ['lead' => $lead, 'typeCall' => $typeCall, 'callId' => $callId, 'table' => $table, 'appointment' => $appointment]);
     }
 
     /**
@@ -423,12 +428,15 @@ class LeadsController extends Controller
                 'user_id'      => $userId,
                 'state'        => $lead->state,
                 'comment'      => $comment,
-                'time_of_call' => now()->diffInSeconds($startCallTime),
+                'time_of_call' => $startCallTime,
             ]);
-
+            $dateTime = '';
+            if ($date && $time) {
+                $dateTime = date('Y-m-d H:i:s', strtotime($date . $time));
+            }
             //state = 8: lưu vào bảng appointment
             if ($newState == 8) {
-                $attributes = [
+                $appointmentDatas = [
                     'lead_id'      => $lead->id,
                     'user_id'      => $userId,
                     'spouse_phone' => $spousePhone,
@@ -436,24 +444,27 @@ class LeadsController extends Controller
                     'code'         => str_random(10),
                 ];
 
-                if ($date && $time) {
-                    $appointmentDatetime                = date('Y-m-d H:i:s', strtotime($date . $time));
-                    $attributes['appointment_datetime'] = $appointmentDatetime;
+                if ($dateTime) {
+                    $appointmentDatas['appointment_datetime'] = $dateTime;
                 }
-                $appointment = Appointment::create($attributes);
+                $appointment = Appointment::create($appointmentDatas);
 
-                if ($lead->email) {
-                    $message = (new AppointmentConfirmation(compact('lead', 'appointment')))->onConnection('database')->onQueue('notification');
-                    \Mail::to($email)->queue($message);
-                }
+//                if ($lead->email) {
+//                    $message = (new AppointmentConfirmation(compact('lead', 'appointment')))->onConnection('database')->onQueue('notification');
+//                    \Mail::to($email)->queue($message);
+//                }
             }
 
             //state = 7: lưu vào bảng callback
             if ($newState == 7) {
-                Callback::create([
+                $callbackDatas = [
                     'lead_id' => $lead->id,
                     'user_id' => $userId,
-                ]);
+                ];
+                if ($dateTime) {
+                    $callbackDatas['callback_datetime'] = $dateTime;
+                }
+                Callback::create($callbackDatas);
             }
 
             //nếu gọi callback hoặc appointment => xóa thong tin

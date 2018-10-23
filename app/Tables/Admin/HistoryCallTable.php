@@ -34,6 +34,7 @@ class HistoryCallTable extends DataTable
     public function getData(): array
     {
         $this->column = $this->getColumn();
+        $this->length = 20;
         $historyCalls = $this->getModels();
         $modelName    = (new HistoryCall)->classLabel(true);
 

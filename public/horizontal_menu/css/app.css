@@ -740,3 +740,12 @@ input {
   margin-right: -50px;
 }
 
+.break-state {
+  background-color: var(--danger);
+  color: white;
+}
+
+.break-state h3 {
+  color: white !important;
+}
+
