@@ -27,9 +27,9 @@
                                 @if (\in_array($key, [9,10], true))
                                     @continue
                                 @endif
-                                <option value="{{ $key }}" {{ $lead->state == $key || (! $lead->exists && $key === 1) ? ' selected' : '' }}>{{ $state }}</option>
+                                <option value="{{ $key }}" {{ $lead->state == $key ? ' selected' : '' }}>{{ $state }}</option>
                             @else
-                                <option value="{{ $key }}" {{ $lead->state == $key || (! $lead->exists && $key === 1) ? ' selected' : '' }}>{{ $state }}</option>
+                                <option value="{{ $key }}" {{ $lead->state == $key ? ' selected' : '' }}>{{ $state }}</option>
                             @endif
                         @endforeach
                     </select>
@@ -79,7 +79,7 @@
                     <div class="form-group row">
                         <div class="col-md-12 m-form__group-sub">
                             <label for="txt_appointment_email">{{ $lead->label('email') }}</label>
-                            <input class="form-control" name="email" id="txt_appointment_email"/>
+                            <input class="form-control" name="email" id="txt_appointment_email" value={{ $lead->email }}/>
                         </div>
                     </div>
                 </div>

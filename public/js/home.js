@@ -85,13 +85,9 @@ $(function () {
 	var callHours = 0,
 	    callMinutes = 0,
 	    callSeconds = 0;
-	var pauseHours = 0,
-	    pauseMinutes = 0,
-	    pauseSeconds = 0;
 	var totalCustomer = 0;
 
-	var pauseInterval = void 0,
-	    callInterval = void 0;
+	var callInterval = void 0;
 	var $body = $('body');
 
 	var tableHistoryCall = $('#table_history_calls').DataTable({
@@ -385,15 +381,23 @@ $(function () {
 		});
 	}
 
+	function clearLeadInfo() {
+		$('#span_lead_name').text('');
+		$('#span_lead_email').text('');
+		$('#span_lead_phone').text('');
+		$('#span_lead_title').text('');
+	}
+
 	var waitTimer = new Timer();
 	waitTimer.addEventListener('started', function () {
 		updateCallTypeText('Waiting');
-		$('#leads_form').resetForm();
+		clearLeadInfo();
 	});
 	waitTimer.addEventListener('stopped', function () {
 		updateCallTypeText('Auto');
-		fetchLead('', 1);
-		callInterval = setInterval(callClock, 1000);
+		fetchLead('', 1).then(function () {
+			callInterval = setInterval(callClock, 1000);
+		});
 	});
 	waitTimer.addEventListener('secondsUpdated', function () {
 		$('#span_call_time').html(waitTimer.getTimeValues().toString());
@@ -403,6 +407,7 @@ $(function () {
 	});
 
 	var breakTimer = new Timer();
+
 	breakTimer.addEventListener('secondsUpdated', function () {
 		$('#span_pause_time').html(breakTimer.getTimeValues().toString());
 	});
@@ -463,23 +468,17 @@ $(function () {
 
 	function initBreakClock() {
 		var diffTime = $('#span_pause_time').data('diff-break-time');
+		var startValues = $('#span_pause_time').data('start-break-value');
 		var maxBreakTime = $('#span_pause_time').data('max-break-time');
 		if (diffTime !== '') {
-			var times = _.split(diffTime, ':');
-
-			pauseHours = times[0];
-			pauseMinutes = times[1];
-			pauseSeconds = times[2];
-
-			breakTimer.start({ precision: 'seconds', startValues: { seconds: pauseSeconds }, target: { seconds: maxBreakTime } });
+			breakTimer.start({ precision: 'seconds', startValues: { seconds: startValues }, target: { seconds: maxBreakTime + startValues } });
 			$('#btn_pause').hide();
 			$('#btn_resume').show();
 		}
 	}
 
 	function resetPauseClock() {
-		clearInterval(pauseInterval);
-		$('#span_pause_time').text('00:00:00');
+		breakTimer.stop();
 	}
 
 	function resetCallClock() {

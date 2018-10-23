@@ -32,28 +32,32 @@ class HomeController extends Controller
         $diffLoginString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
 
         $lastBreakTime   = TimeBreak::whereNotNull('start_break')->whereNull('end_break')->whereDate('start_break', Carbon::today())->latest()->first();
-        $firstBreakTime  = TimeBreak::whereDate('start_break', Carbon::today())->oldest()->first();
-        $diffBreakString = $maxBreakTime = '';
+        $diffBreakString = $maxBreakTime = $startBreakValue = '';
 
         if ($lastBreakTime) {
             $scheduleTimeSeconds = now()->diffInSeconds($lastBreakTime->start_break);
+            $maxBreakTime        = $lastBreakTime->reason_break->time_alert * 60;
 
-            $maxBreakTime = $lastBreakTime->reason_break->time_alert * 60;
-            if ($scheduleTimeSeconds > $maxBreakTime) {
-                $lastBreakTime->update(['end_break' => now()->toDateTimeString()]);
+//            if ($scheduleTimeSeconds > $maxBreakTime) {
+//                $lastBreakTime->update(['end_break' => now()->toDateTimeString()]);
+//            } else {
+//                $diffTime        = now()->diffAsCarbonInterval($lastBreakTime->start_break);
+//                $diffBreakString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
+//            }
+
+            $firstBreakTime = TimeBreak::whereDate('start_break', Carbon::today())->oldest()->first();
+
+            if ($firstBreakTime) {
+                $diffTime        = $lastBreakTime->start_break->diffAsCarbonInterval($firstBreakTime->start_break);
+                $diffBreakString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
+                $startBreakValue = $diffTime->totalSeconds;
             } else {
                 $diffTime        = now()->diffAsCarbonInterval($lastBreakTime->start_break);
                 $diffBreakString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
             }
         }
 
-        if ($firstBreakTime) {
-            $diffTime        = now()->diffAsCarbonInterval($firstBreakTime->start_break);
-            $diffBreakString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
-
-        }
-
-        return view('tele_marketer_console', compact('lead', 'diffLoginString', 'diffBreakString', 'maxBreakTime'));
+        return view('tele_marketer_console', compact('lead', 'diffLoginString', 'diffBreakString', 'maxBreakTime', 'startBreakValue'));
     }
 
     public function reception()
