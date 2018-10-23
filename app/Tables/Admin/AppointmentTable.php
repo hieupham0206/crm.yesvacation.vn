@@ -113,8 +113,8 @@ class AppointmentTable extends DataTable
             }
 
             $dataArray[] = [
-                "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
                 $appointment->lead->title,
+                "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
                 $appointmentDateText,
                 $appointment->lead->comment,
 

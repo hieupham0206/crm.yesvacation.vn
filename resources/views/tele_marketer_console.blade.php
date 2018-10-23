@@ -146,9 +146,10 @@
                             <table class="table table-borderless table-hover nowrap" id="table_callback" width="100%">
                                 <thead>
                                 <tr>
-                                    <th>{{ $lead->label('name') }}</th>
                                     <th>{{ $lead->label('title') }}</th>
-                                    <th>{{ $lead->label('created_at') }}</th>
+                                    <th>{{ $lead->label('name') }}</th>
+                                    <th>{{ $lead->label('callback_datetime') }}</th>
+                                    <th>{{ $lead->label('comment') }}</th>
                                     <th>{{ $lead->label('actions') }}</th>
                                 </tr>
                                 </thead>
@@ -170,8 +171,8 @@
                             <table class="table table-borderless table-hover nowrap" id="table_appointment" width="100%">
                                 <thead>
                                 <tr>
-                                    <th>{{ $lead->label('name') }}</th>
                                     <th>{{ $lead->label('title') }}</th>
+                                    <th>{{ $lead->label('name') }}</th>
                                     <th>{{ $lead->label('appointment_datetime') }}</th>
                                     <th>{{ $lead->label('comment') }}</th>
                                     <th>{{ $lead->label('actions') }}</th>
