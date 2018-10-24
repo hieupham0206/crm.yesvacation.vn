@@ -213,6 +213,9 @@ $(function () {
 			$('#break_section').addClass('break-state');
 			$('#modal_md').modal('hide');
 			mApp.unblock('#modal_md');
+
+			//hide tat ca chuc nang
+			$('#work_section').hide();
 		}).finally(function () {
 			window.unblock();
 		});
@@ -377,6 +380,7 @@ $(function () {
 			$('#btn_pause').show();
 			resetPauseClock();
 			$('#break_section').removeClass('break-state');
+			$('#work_section').show();
 			if (wantToBreak) {
 				wantToBreak = false;
 				autoCall();
