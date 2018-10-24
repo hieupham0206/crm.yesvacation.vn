@@ -60,6 +60,11 @@ class HomeController extends Controller
         return view('tele_marketer_console', compact('lead', 'diffLoginString', 'diffBreakString', 'maxBreakTime', 'startBreakValue'));
     }
 
+    public function teleMarketerConsole()
+    {
+
+    }
+
     public function reception()
     {
         $lead = Lead::find(1);

@@ -26,12 +26,22 @@
         "icon": "",
         "parent": "",
         "hide": true
+      },
+      "leads": {
+        "icon": "fa fa-user",
+        "parent": ""
+      },
+      "tele_console": {
+        "icon": "fa fa-user",
+        "parent": "",
+        "route": "home"
+      },
+      "reception": {
+        "icon": "fa fa-user",
+        "parent": "",
+        "route": "reception"
       }
     },
     "icon": "flaticon-cogwheel"
-  },
-  "leads": {
-    "icon": "fa fa-user",
-    "route": "leads.index"
   }
 }

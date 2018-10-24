@@ -215,7 +215,7 @@ $(function () {
 			mApp.unblock('#modal_md');
 
 			//hide tat ca chuc nang
-			$('#work_section').hide();
+			$('.work-section').hide();
 		}).finally(function () {
 			window.unblock();
 		});
@@ -380,7 +380,7 @@ $(function () {
 			$('#btn_pause').show();
 			resetPauseClock();
 			$('#break_section').removeClass('break-state');
-			$('#work_section').show();
+			$('.work-section').show();
 			if (wantToBreak) {
 				wantToBreak = false;
 				autoCall();

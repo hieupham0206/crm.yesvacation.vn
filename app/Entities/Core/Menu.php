@@ -32,14 +32,14 @@ class Menu
                     'name'        => __(ucfirst($moduleKey)),
                     'icon'        => $menuModule['icon'],
                     'menus'       => $modules,
-                    'activeClass' => self::getMenuActiveClass($modules)
+                    'activeClass' => self::getMenuActiveClass($modules),
                 ];
             } else {
                 $menus[] = [
                     'name'        => __(ucfirst($moduleKey)),
                     'icon'        => $menuModule['icon'],
                     'activeClass' => self::getMenuItemActiveClass($moduleKey),
-                    'route'       => route($menuModule['route'])
+                    'route'       => route($menuModule['route']),
                 ];
             }
         }
@@ -141,11 +141,17 @@ class Menu
         $className = studly_case($singularModuleName);
         $labelName = self::getMenuLabel($menuModule, $className);
 
+        if (isset($menuMap['route'])) {
+            $route = \Route::has($menuMap['route']) ? route($menuMap['route']) : 'javascript:void(0)';
+        } else {
+            $route = \Route::has("{$menuModule}.index") ? route("{$menuModule}.index") : 'javascript:void(0)';
+        }
+
         $props = [
             'name'        => $labelName,
-            'route'       => \Route::has("{$menuModule}.index") ? route("{$menuModule}.index") : 'javascript:void(0)',
+            'route'       => $route,
             'activeClass' => self::getMenuItemActiveClass($menuModule),
-            'icon'        => ''
+            'icon'        => '',
         ];
 
         if ( ! $menuMap) {
