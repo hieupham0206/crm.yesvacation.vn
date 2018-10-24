@@ -29,14 +29,14 @@ class Menu
                 $modules = self::getMenu($menuModule['modules']);
 
                 $menus[] = [
-                    'name'        => __(ucfirst($moduleKey)),
+                    'name'        => __(ucfirst(camel2words($moduleKey))),
                     'icon'        => $menuModule['icon'],
                     'menus'       => $modules,
                     'activeClass' => self::getMenuActiveClass($modules),
                 ];
             } else {
                 $menus[] = [
-                    'name'        => __(ucfirst($moduleKey)),
+                    'name'        => __(ucfirst(camel2words($moduleKey))),
                     'icon'        => $menuModule['icon'],
                     'activeClass' => self::getMenuItemActiveClass($moduleKey),
                     'route'       => route($menuModule['route']),
