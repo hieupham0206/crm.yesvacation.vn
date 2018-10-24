@@ -551,6 +551,7 @@ $(function () {
 	initLoginClock();
 	initBreakClock();
 	setInterval(loginClock, 1000);
+	callInterval = setInterval(callClock, 1000);
 });
 
 /***/ })
