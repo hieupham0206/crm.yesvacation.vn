@@ -48,7 +48,7 @@ class Role extends Eloquent
     ];
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     protected $guard_name = 'web';
@@ -69,7 +69,7 @@ class Role extends Eloquent
             $datas[]     = [
                 'name'    => __(ucwords($key)),
                 'icon'    => $permissionConfig['icon'] ?? '',
-                'modules' => $moduleDatas
+                'modules' => $moduleDatas,
             ];
         }
 
@@ -105,5 +105,13 @@ class Role extends Eloquent
         }
 
         return $datas;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return $this->getDescriptionEvent($eventName);
     }
 }

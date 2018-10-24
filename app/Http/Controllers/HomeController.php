@@ -18,14 +18,7 @@ class HomeController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        $lead = Lead::where('user_id', $user->id)->first();
-        $lead = $lead ?? Lead::getAvailable()->first();
-        if ($lead) {
-            $lead->update([
-                'call_date' => now()->toDateTimeString(),
-                'user_id'   => auth()->id(),
-            ]);
-        }
+        $lead = new Lead();
 
         $lastLoginTime   = $user->last_login;
         $diffTime        = now()->diffAsCarbonInterval($lastLoginTime);
@@ -35,25 +28,30 @@ class HomeController extends Controller
         $diffBreakString = $maxBreakTime = $startBreakValue = '';
 
         if ($lastBreakTime) {
-            $scheduleTimeSeconds = now()->diffInSeconds($lastBreakTime->start_break);
-            $maxBreakTime        = $lastBreakTime->reason_break->time_alert * 60;
+            $maxBreakTime    = $lastBreakTime->reason_break->time_alert * 60;
+            $totalTimeBreak  = TimeBreak::whereDate('start_break', Carbon::today())->get()->sum(function (TimeBreak $timeBreak) {
+                if ($timeBreak->end_break) {
+                    return $timeBreak->end_break->diffInSeconds($timeBreak->start_break);
+                }
 
-//            if ($scheduleTimeSeconds > $maxBreakTime) {
-//                $lastBreakTime->update(['end_break' => now()->toDateTimeString()]);
-//            } else {
-//                $diffTime        = now()->diffAsCarbonInterval($lastBreakTime->start_break);
-//                $diffBreakString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
-//            }
+                return now()->diffInSeconds($timeBreak->start_break);
+            });
+            $diffBreakString = gmdate('H:i:s', $totalTimeBreak);
 
-            $firstBreakTime = TimeBreak::whereDate('start_break', Carbon::today())->oldest()->first();
-
-            if ($firstBreakTime) {
-                $diffTime        = $lastBreakTime->start_break->diffAsCarbonInterval($firstBreakTime->start_break);
-                $diffBreakString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
-                $startBreakValue = $diffTime->totalSeconds;
+            if ($diffBreakString) {
+                $startBreakValue = $totalTimeBreak;
             } else {
                 $diffTime        = now()->diffAsCarbonInterval($lastBreakTime->start_break);
                 $diffBreakString = "{$diffTime->h}:{$diffTime->i}:{$diffTime->s}";
+            }
+        } else {
+            $lead = Lead::where('user_id', $user->id)->first();
+            $lead = $lead ?? Lead::getAvailable()->first();
+            if ($lead) {
+                $lead->update([
+                    'call_date' => now()->toDateTimeString(),
+                    'user_id'   => auth()->id(),
+                ]);
             }
         }
 

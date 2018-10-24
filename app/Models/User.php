@@ -239,4 +239,12 @@ class User extends Authenticatable
                     ->withPivot('id', 'type')
                     ->withTimestamps();
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return $this->getDescriptionEvent($eventName);
+    }
 }

@@ -422,9 +422,12 @@ $(function() {
 		let startValues = $('#span_pause_time').data('start-break-value')
 		let maxBreakTime = $('#span_pause_time').data('max-break-time')
 		if (diffTime !== '') {
+			wantToBreak = true
 			breakTimer.start({precision: 'seconds', startValues: {seconds: startValues}, target: {seconds: maxBreakTime + startValues}})
 			$('#btn_pause').hide()
 			$('#btn_resume').show()
+			$('#break_section').addClass('break-state')
+			$('.work-section').hide()
 		}
 	}
 
@@ -457,5 +460,7 @@ $(function() {
 	initLoginClock()
 	initBreakClock()
 	setInterval(loginClock, 1000)
-	callInterval = setInterval(callClock, 1000)
+	if ($('#txt_lead_id').val() !== '') {
+		callInterval = setInterval(callClock, 1000)
+	}
 })

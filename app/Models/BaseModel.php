@@ -59,4 +59,12 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
      * @var array
      */
     public $filters = [];
+
+    /**
+     * @inheritdoc
+     */
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return $this->getDescriptionEvent($eventName);
+    }
 }
