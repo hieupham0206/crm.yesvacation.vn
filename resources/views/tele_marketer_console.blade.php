@@ -96,6 +96,7 @@
                                     <table class="table table-borderless table-hover nowrap" id="table_customer_history" width="100%">
                                         <thead>
                                         <tr>
+                                            <th>{{ $lead->label('name') }}</th>
                                             <th>{{ $lead->label('created_at') }}</th>
                                             <th>{{ $lead->label('state') }}</th>
                                             <th>{{ $lead->label('comment') }}</th>

@@ -41,13 +41,13 @@ class HistoryCallTable extends DataTable
 //        $canUpdateHistoryCall = can('update-historyCall');
         $canDeleteHistoryCall = can('delete-historyCall');
 
-        $dataArray = $this->initTableHistoryCall($historyCalls, $canDeleteHistoryCall, $modelName);
-//        $table = request()->get('table');
-//        if ($table === 'history_call') {
-//            $dataArray = $this->initTableHistoryCall($historyCalls, $canDeleteHistoryCall, $modelName);
-//        } else {
-//            $dataArray = $this->initTableCustomerHistory($historyCalls, $canDeleteHistoryCall, $modelName);
-//        }
+//        $dataArray = $this->initTableHistoryCall($historyCalls, $canDeleteHistoryCall, $modelName);
+        $table = request()->get('table');
+        if ($table === 'history_call') {
+            $dataArray = $this->initTableHistoryCall($historyCalls, $canDeleteHistoryCall, $modelName);
+        } else {
+            $dataArray = $this->initTableCustomerHistory($historyCalls, $canDeleteHistoryCall, $modelName);
+        }
 
         return $dataArray;
     }
@@ -96,6 +96,7 @@ class HistoryCallTable extends DataTable
                 </button>';
 
             $dataArray[] = [
+                $historyCall->lead->name,
                 $historyCall->created_at,
                 $historyCall->lead->state_text,
                 $historyCall->comment,
