@@ -53,7 +53,7 @@ abstract class DataTable
         }
 
         $this->isFilterNotEmpty = collect($this->filters)->filter(function ($filter) {
-            return $filter !== '';
+            return ! isValueEmpty($filter);
         })->isNotEmpty();
     }
 

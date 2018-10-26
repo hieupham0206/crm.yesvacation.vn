@@ -53,13 +53,13 @@
                                 @method('put')
                             @endisset
                             <div class="form-group m-form__group row">
-                                <div class="col-sm-12 col-md-4 m-form__group-sub">
+                                <div class="col-sm-12 col-md-3 m-form__group-sub">
                                     <label for="span_lead_title">{{ $lead->label('title') }}: </label>
                                     <span id="span_lead_title">{{ $lead->title }}</span>
                                     <span class="m-form__help"></span>
                                     {!! $errors->first('title', '<div class="form-control-feedback">:message</div>') !!}
                                 </div>
-                                <div class="col-sm-12 col-md-4 m-form__group-sub">
+                                <div class="col-sm-12 col-md-5 m-form__group-sub">
                                     <label for="span_lead_name">{{ $lead->label('name') }}: </label>
                                     <span id="span_lead_name">{{ $lead->name }}</span>
                                 </div>
@@ -81,7 +81,7 @@
                             </div>
                         </div>
                     </form>
-                    <div class="m-portlet">
+                    <div class="m-portlet m-portlet--primary m-portlet--head-solid-bg">
                         <div class="m-portlet__head">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
@@ -133,7 +133,7 @@
                 </div>
             </div>
             <div class="col-xl-6 col-lg-12 work-section">
-                <div class="m-portlet ">
+                <div class="m-portlet m-portlet--brand m-portlet--head-solid-bg">
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
@@ -158,7 +158,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="m-portlet">
+                <div class="m-portlet m-portlet--info m-portlet--head-solid-bg">
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">

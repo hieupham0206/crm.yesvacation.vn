@@ -20,7 +20,7 @@ class CreateEventDatasTable extends Migration
             $table->unsignedInteger('appointment_id');
             $table->unsignedInteger('lead_id')->comment('Tương ứng với lead_id bên appointment');
 
-            $table->string('voucher_code', 100)->nullable();
+            $table->string('code', 100)->nullable();
 
             $table->timestamp('time_in')->nullable();
             $table->timestamp('time_out')->nullable();

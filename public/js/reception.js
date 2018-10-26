@@ -78,7 +78,11 @@ module.exports = __webpack_require__(64);
 
 $(function () {
 	var userId = $('#txt_user_id').val();
-	var $body = $('body');
+	var $body = $('body'),
+	    $btnShowUp = $('#btn_show_up'),
+	    $btnNotShowUp = $('#btn_not_show_up'),
+	    $btnChangeToMember = $('#btn_change_to_member'),
+	    $btnSearch = $('#btn_search');
 
 	var tableAppointment = $('#table_appointment').DataTable({
 		'serverSide': true,
@@ -86,13 +90,13 @@ $(function () {
 		'ajax': $.fn.dataTable.pipeline({
 			url: route('appointments.table'),
 			data: function data(q) {
-				q.filters = JSON.stringify([{ 'name': 'user_id', 'value': userId }]);
+				q.filters = JSON.stringify([{ 'name': 'code', 'value': $('#txt_voucher_code').val() }]);
 				q.form = 'reception_console';
 			}
 		}),
 		conditionalPaging: true,
-		'columnDefs': [],
-		sort: false
+		'columnDefs': []
+		// sort: false,
 	});
 	var tableEventData = $('#table_event_data').DataTable({
 		'serverSide': true,
@@ -100,7 +104,7 @@ $(function () {
 		'ajax': $.fn.dataTable.pipeline({
 			url: route('event_datas.table'),
 			data: function data(q) {
-				q.filters = JSON.stringify([{ 'name': 'user_id', 'value': userId }]);
+				q.filters = JSON.stringify([{ 'name': 'code', 'value': $('#txt_voucher_code').val() }]);
 			}
 		}),
 		conditionalPaging: true,
@@ -120,7 +124,7 @@ $(function () {
 			}
 		}).then(function (result) {
 			var items = result.data.items;
-			console.log(items);
+
 			var lead = items[0].lead;
 			var appointmentDatetime = items[0].appointment_datetime;
 			var user = items[0].user;
@@ -129,16 +133,77 @@ $(function () {
 			$('#span_lead_email').text(lead.email);
 			$('#span_lead_phone').text(lead.phone);
 			$('#span_lead_title').text(lead.title);
+			$('#txt_lead_id').val(lead.id);
 
 			$('#span_appointment_datetime').text(appointmentDatetime);
-			$('#span_tele_marketer').text(user.name);
+			$('#span_tele_marketer').text(user.username);
 		});
+	}
+
+	function toggleFormEventData() {
+		var disabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+		$('#event_data_form').find('input, textarea').prop('disabled', disabled);
+	}
+
+	function clearFormEventData() {
+		$('#event_data_form').resetForm();
 	}
 
 	$body.on('click', '.link-lead-name', function () {
 		var leadId = $(this).data('lead-id');
 		fetchLead(leadId, 0);
 		$('#txt_lead_id').val(leadId);
+	});
+
+	$btnShowUp.on('click', function () {
+		toggleFormEventData(false);
+	});
+
+	$btnNotShowUp.on('click', function () {
+		toggleFormEventData();
+		clearFormEventData();
+	});
+
+	$btnChangeToMember.on('click', function () {
+		//todo:  nếu LEAD đồng ý mua hàng, chuyển toàn bộ thông tin LEAD sang thành MEMBER và đổi LEAD.Status thành MEMBER
+
+		var eventDataFormData = new FormData($('#event_data_form')[0]);
+		var leadDatas = $('#leads_form').serializeArray();
+		var _iteratorNormalCompletion = true;
+		var _didIteratorError = false;
+		var _iteratorError = undefined;
+
+		try {
+			for (var _iterator = leadDatas[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+				var leadData = _step.value;
+
+				eventDataFormData.append(leadData.name, leadData.value);
+			}
+		} catch (err) {
+			_didIteratorError = true;
+			_iteratorError = err;
+		} finally {
+			try {
+				if (!_iteratorNormalCompletion && _iterator.return) {
+					_iterator.return();
+				}
+			} finally {
+				if (_didIteratorError) {
+					throw _iteratorError;
+				}
+			}
+		}
+
+		$('#event_data_form').submitForm({ url: route('event_datas.store') }).then(function () {
+			tableAppointment.reload();
+			tableEventData.reload();
+		});
+	});
+
+	$btnSearch.on('click', function () {
+		tableAppointment.reload();
+		tableEventData.reload();
 	});
 });
 

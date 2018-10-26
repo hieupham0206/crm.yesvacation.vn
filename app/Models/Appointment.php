@@ -4,17 +4,17 @@ namespace App\Models;
 
 class Appointment extends \App\Models\Base\Appointment
 {
-	protected $fillable = [
-		'user_id',
-		'lead_id',
-		'state',
-		'type',
+    protected $fillable = [
+        'user_id',
+        'lead_id',
+        'state',
+        'type',
         'appointment_datetime',
         'code',
         'spouse_name',
         'spouse_phone',
-	];
-	public static $logName = 'Appointment';
+    ];
+    public static $logName = 'Appointment';
 
     protected static $logOnlyDirty = true;
 
@@ -23,7 +23,8 @@ class Appointment extends \App\Models\Base\Appointment
     public $labels = [];
 
     public $filters = [
-        'user_id' => '='
+        'user_id' => '=',
+        'code'    => 'like',
     ];
 
     /**
@@ -36,9 +37,9 @@ class Appointment extends \App\Models\Base\Appointment
      * Column dùng để hiển thị cho model (Default là name)
      * @var string
      */
-     public $displayAttribute = 'name';
+    public $displayAttribute = 'name';
 
-	public function getDescriptionForEvent(string $eventName): string
+    public function getDescriptionForEvent(string $eventName): string
     {
         return parent::getDescriptionEvent($eventName);
     }

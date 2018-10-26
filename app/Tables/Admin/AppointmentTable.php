@@ -5,6 +5,7 @@ namespace App\Tables\Admin;
 use App\Enums\HistoryCallType;
 use App\Models\Appointment;
 use App\Tables\DataTable;
+use Carbon\Carbon;
 
 class AppointmentTable extends DataTable
 {
@@ -29,18 +30,19 @@ class AppointmentTable extends DataTable
     {
         $this->column    = $this->getColumn();
         $this->direction = 'asc';
-        $appointments    = $this->getModels();
         $modelName       = (new Appointment)->classLabel(true);
 
         $canUpdateAppointment = can('update-appointment');
         $canDeleteAppointment = can('delete-appointment');
 
         $form = request()->get('form', 'tele_console');
-
         if ($form === 'tele_console') {
-            $dataArray = $this->initTableTeleConsole($appointments, $canUpdateAppointment, $canDeleteAppointment, $modelName);
+            $appointments = $this->getModels();
+            $dataArray    = $this->initTableTeleConsole($appointments, $canUpdateAppointment, $canDeleteAppointment, $modelName);
         } elseif ($form === 'reception_console') {
-            $dataArray = $this->initTableReceptionConsole($appointments);
+            $this->filters['today'] = true;
+            $appointments           = $this->getModels();
+            $dataArray              = $this->initTableReceptionConsole($appointments);
         }
 
         return $dataArray ?? [];
@@ -51,12 +53,18 @@ class AppointmentTable extends DataTable
      */
     public function getModels()
     {
-        $appointments = Appointment::query();
+        $appointments = Appointment::query()->with(['lead']);
 
         $this->totalFilteredRecords = $this->totalRecords = $appointments->count();
 
         if ($this->isFilterNotEmpty) {
             $appointments->filters($this->filters);
+
+            $this->totalFilteredRecords = $appointments->count();
+        }
+
+        if (isset($this->filters['today'])) {
+            $appointments->whereDate('appointment_datetime', Carbon::today());
 
             $this->totalFilteredRecords = $appointments->count();
         }
@@ -151,7 +159,7 @@ class AppointmentTable extends DataTable
                 "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
                 $appointment->lead->phone,
                 $appointment->code,
-                $appointment->user->name,
+                $appointment->user->username,
                 $appointment->lead->comment,
 
 //                $btnCall . $btnEdit . $btnDelete,

@@ -5,12 +5,15 @@ namespace App\Models;
 class EventData extends \App\Models\Base\EventData
 {
 	protected $fillable = [
+		'appointment_id',
 		'lead_id',
-		'appointment_datetime',
+		'code',
 		'time_in',
 		'time_out',
 		'show_up',
-		'deal'
+		'deal',
+		'rep_id',
+		'to_id',
 	];
 	public static $logName = 'EventData';
 
@@ -20,7 +23,9 @@ class EventData extends \App\Models\Base\EventData
 
     public $labels = [];
 
-    public $filters = [];
+    public $filters = [
+        'code' => 'like'
+    ];
 
     /**
      * Route của model dùng cho Linkable trait

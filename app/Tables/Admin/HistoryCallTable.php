@@ -96,7 +96,6 @@ class HistoryCallTable extends DataTable
                 </button>';
 
             $dataArray[] = [
-                $historyCall->lead->name,
                 $historyCall->created_at,
                 $historyCall->lead->state_text,
                 $historyCall->comment,
@@ -133,8 +132,8 @@ class HistoryCallTable extends DataTable
 
             $dataArray[] = [
                 "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$historyCall->lead_id}'>{$historyCall->lead->name}</a>",
-                $historyCall->lead->title,
                 $historyCall->created_at,
+                $historyCall->lead->state_text,
                 $historyCall->comment,
                 $btnCall . $btnDelete,
 //                '<a href="' . route('history_calls.show', $historyCall, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('View') . '">
