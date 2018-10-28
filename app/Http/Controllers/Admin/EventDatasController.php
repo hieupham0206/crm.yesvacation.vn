@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Confirmation;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\EventData;
@@ -222,7 +223,7 @@ class EventDatasController extends Controller
             $lead   = Lead::find($leadId);
 
             if ($state !== null && $eventData->update(['deal' => $state])) {
-                if ($state == -1) {
+                if ($state == Confirmation::NO) {
                     $lead->update(['state' => 9]);
                 } else {
                     $lead->update(['state' => 10]);
