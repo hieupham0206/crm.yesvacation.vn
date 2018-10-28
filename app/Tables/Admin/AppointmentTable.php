@@ -40,9 +40,10 @@ class AppointmentTable extends DataTable
             $appointments = $this->getModels();
             $dataArray    = $this->initTableTeleConsole($appointments, $canUpdateAppointment, $canDeleteAppointment, $modelName);
         } elseif ($form === 'reception_console') {
-            $this->filters['today'] = true;
-            $appointments           = $this->getModels();
-            $dataArray              = $this->initTableReceptionConsole($appointments);
+            $this->filters['today']           = true;
+            $this->filters['not_show_up_yet'] = true;
+            $appointments                     = $this->getModels();
+            $dataArray                        = $this->initTableReceptionConsole($appointments);
         }
 
         return $dataArray ?? [];
@@ -65,6 +66,12 @@ class AppointmentTable extends DataTable
 
         if (isset($this->filters['today'])) {
             $appointments->whereDate('appointment_datetime', Carbon::today());
+
+            $this->totalFilteredRecords = $appointments->count();
+        }
+
+        if (isset($this->filters['not_show_up_yet'])) {
+            $appointments->where('show_up', -1);
 
             $this->totalFilteredRecords = $appointments->count();
         }
@@ -123,7 +130,7 @@ class AppointmentTable extends DataTable
 
             $dataArray[] = [
                 $appointment->lead->title,
-                "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
+                "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-appointment-id='{$appointment->id}' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
                 $appointmentDateText,
                 $appointment->lead->comment,
 
@@ -156,7 +163,7 @@ class AppointmentTable extends DataTable
             $dataArray[] = [
                 $appointmentDateText,
                 $appointment->lead->title,
-                "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
+                "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-appointment-id='{$appointment->id}' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
                 $appointment->lead->phone,
                 $appointment->code,
                 $appointment->user->username,

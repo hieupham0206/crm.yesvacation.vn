@@ -13,6 +13,7 @@ class Appointment extends \App\Models\Base\Appointment
         'code',
         'spouse_name',
         'spouse_phone',
+        'show_up'
     ];
     public static $logName = 'Appointment';
 

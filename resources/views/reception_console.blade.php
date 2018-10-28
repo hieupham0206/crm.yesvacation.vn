@@ -7,9 +7,7 @@
 @section('content')
     <div class="m-content my-3">
         <input type="hidden" id="txt_user_id" value="{{ auth()->id() }}">
-        <input type="hidden" id="txt_lead_id" value="">
         <div class="row">
-
             <div class="col-lg-12">
                 <div class="m-portlet" id="break_section">
                     <div class="m-portlet__head">
@@ -22,6 +20,9 @@
                             </div>
                             <button class="btn btn-brand btn-sm m-btn m-btn--icon m-btn--custom ml-3" id="btn_search">
                                 <span> <i class="fa fa-search"></i> <span>@lang('Search')</span> </span>
+                            </button>
+                            <button class="btn btn-brand btn-sm m-btn m-btn--icon m-btn--custom ml-3" id="btn_new_lead">
+                                <span> <i class="fa fa-plus"></i> <span>@lang('New Customer')</span> </span>
                             </button>
                         </div>
                         {{--<div class="m-portlet__head-tools">--}}
@@ -84,6 +85,7 @@
                                     <th>{{ $lead->label('note') }}</th>
                                     <th>{{ $lead->label('TO') }}</th>
                                     <th>{{ $lead->label('REP') }}</th>
+                                    <th>@lang('Actions')</th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -106,6 +108,7 @@
                             <form id="leads_form" class="m-form m-form--label-align-right m-form--state" method="post" action="{{ route('leads.update', $lead) }}">
                                 <div class="m-portlet__body">
                                     <input type="hidden" name="lead_id" id="txt_lead_id">
+                                    <input type="hidden" name="appointment_id" id="txt_appointment_id">
                                     @csrf
                                     @isset($method)
                                         @method('put')
@@ -189,7 +192,7 @@
                                     </div>
                                     <div class="form-group m-form__group row">
                                         <div class="col-sm-12 col-md-8 m-form__group-sub">
-                                            <button class="btn btn-success m-btn m-btn--icon m-btn--custom" id="btn_change_to_member" data-url="{{ route('leads.form_change_state', $lead) }}">
+                                            <button class="btn btn-success m-btn m-btn--icon m-btn--custom" id="btn_change_to_event_data" data-url="{{ route('leads.form_change_state', $lead) }}">
                                                 <span><i class="fa fa-check"></i><span>@lang('OK')</span></span>
                                             </button>
                                         </div>

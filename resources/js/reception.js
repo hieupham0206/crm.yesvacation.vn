@@ -3,8 +3,9 @@ $(function() {
 	let $body = $('body'),
 		$btnShowUp = $('#btn_show_up'),
 		$btnNotShowUp = $('#btn_not_show_up'),
-		$btnChangeToMember = $('#btn_change_to_member'),
-		$btnSearch = $('#btn_search')
+		$btnChangeToEventData = $('#btn_change_to_event_data'),
+		$btnSearch = $('#btn_search'),
+		$btnNewLead = $('#btn_new_lead')
 
 	const tableAppointment = $('#table_appointment').DataTable({
 		'serverSide': true,
@@ -34,7 +35,8 @@ $(function() {
 		sort: false,
 	})
 
-	function fetchLead(leadId = '', isNew = 1) {
+	function fetchLead(leadId = '', isNew = 1, appointmentId = '') {
+		blockPage()
 		return axios.get(route('appointments.list'), {
 			params: {
 				isNew: isNew,
@@ -53,10 +55,14 @@ $(function() {
 			$('#span_lead_phone').text(lead.phone)
 			$('#span_lead_title').text(lead.title)
 			$('#txt_lead_id').val(lead.id)
+			console.log(appointmentId)
+			$('#txt_appointment_id').val(appointmentId)
 
 			$('#span_appointment_datetime').text(appointmentDatetime)
 			$('#span_tele_marketer').text(user.username)
 
+		}).finally(() => {
+			unblock()
 		})
 	}
 
@@ -68,10 +74,47 @@ $(function() {
 		$('#event_data_form').resetForm()
 	}
 
+	$('#modal_lg').on('show.bs.modal', function() {
+		$('.select').select2()
+
+		$('#select_province').select2Ajax()
+		$(this).find('#txt_phone').alphanum({
+			allowMinus: false,
+			allowLatin: false,
+			allowOtherCharSets: false,
+			maxLength: 11
+		})
+	})
+
 	$body.on('click', '.link-lead-name', function() {
 		let leadId = $(this).data('lead-id')
-		fetchLead(leadId, 0)
+		let appointmentId = $(this).data('appointment-id')
+		fetchLead(leadId, 0, appointmentId)
 		$('#txt_lead_id').val(leadId)
+	})
+
+	$body.on('click', '.btn-change-event-status', function() {
+		let message = $(this).data('message')
+		tableEventData.actionEdit({
+			btnEdit: $(this),
+			params: {
+				state: $(this).data('state'),
+			},
+			message: message,
+		})
+	})
+
+	$body.on('submit', '#new_leads_form', function(e) {
+		e.preventDefault()
+
+		let formData = new FormData($(this)[0])
+		formData.append('form', 'reception')
+
+		$(this).submitForm({url: route('leads.store'), formData: formData}).then(() => {
+			$('#modal_lg').modal('hide')
+			tableAppointment.reload()
+			tableEventData.reload()
+		})
 	})
 
 	$btnShowUp.on('click', function() {
@@ -83,8 +126,9 @@ $(function() {
 		clearFormEventData()
 	})
 
-	$btnChangeToMember.on('click', function() {
-		//todo:  nếu LEAD đồng ý mua hàng, chuyển toàn bộ thông tin LEAD sang thành MEMBER và đổi LEAD.Status thành MEMBER
+	$('#event_data_form').on('submit', function(e) {
+		e.preventDefault()
+		//todo:  Sau khi [LEAD] Show Up, Reception có thể điền thêm các thông tin để hoàn tất thủ tục như: <Voucher>; <TO>; <REP>; <Note>. Sau khi chuyển qua EVENT DATA, tất cả các thông tin bên APPOINTMENT sẽ bị ẩn đi.
 
 		let eventDataFormData = new FormData($('#event_data_form')[0])
 		let leadDatas = $('#leads_form').serializeArray()
@@ -92,7 +136,7 @@ $(function() {
 			eventDataFormData.append(leadData.name, leadData.value)
 		}
 
-		$('#event_data_form').submitForm({url: route('event_datas.store')}).then(() => {
+		$('#event_data_form').submitForm({url: route('event_datas.store'), formData: eventDataFormData}).then(() => {
 			tableAppointment.reload()
 			tableEventData.reload()
 		})
@@ -101,5 +145,10 @@ $(function() {
 	$btnSearch.on('click', function() {
 		tableAppointment.reload()
 		tableEventData.reload()
+	})
+
+	$btnNewLead.on('click', function() {
+		//todo: form tạo new customer
+		$('#modal_lg').showModal({url: route('leads.form_new_lead'), method: 'get'})
 	})
 })

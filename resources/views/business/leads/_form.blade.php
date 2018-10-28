@@ -36,17 +36,17 @@
                 <span class="m-form__help"></span>
                 {!! $errors->first('birthday', '<div class="form-control-feedback">:message</div>') !!}
             </div>
-            {{--<div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('gender') ? 'has-danger' : ''}}">--}}
-                {{--<label for="select_gender">{{ $lead->label('gender') }}</label>--}}
-                {{--<select name="gender" class="form-control select" id="select_gender">--}}
-                    {{--<option></option>--}}
-                    {{--@foreach ($lead->genders as $key => $gender)--}}
-                        {{--<option value="{{ $key }}" {{ $lead->gender == $key ? ' selected' : '' }}>{{ $gender }}</option>--}}
-                    {{--@endforeach--}}
-                {{--</select>--}}
-                {{--<span class="m-form__help"></span>--}}
-                {{--{!! $errors->first('gender', '<div class="form-control-feedback">:message</div>') !!}--}}
-            {{--</div>--}}
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('state') ? 'has-danger' : ''}}">
+                <label for="select_province">{{ $lead->label('province') }}</label>
+                <select name="province_id" class="form-control select2-ajax" id="select_province" data-url="{{ route('leads.provinces.table') }}">
+                    <option></option>
+                    @if ($lead->province_id)
+                        <option value="{{ $lead->province_id }}" selected>{{ $lead->province->name }}</option>
+                    @endif
+                </select>
+                <span class="m-form__help"></span>
+                {!! $errors->first('province', '<div class="form-control-feedback">:message</div>') !!}
+            </div>
         </div>
         <div class="form-group m-form__group row">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('address') ? 'has-danger' : ''}}">

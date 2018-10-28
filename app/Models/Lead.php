@@ -71,6 +71,7 @@ class Lead extends \App\Models\Base\Lead
     public $labels = [
         'name'     => 'Họ tên',
         'birthday' => 'Ngày sinh',
+        'province' => 'Thành phố',
     ];
     public $filters = [
         'name'    => 'like',

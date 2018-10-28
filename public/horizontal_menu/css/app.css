@@ -749,3 +749,11 @@ input {
   color: white !important;
 }
 
+#leads_form {
+  font-size: 20px;
+}
+
+#leads_form label {
+  font-size: 20px;
+}
+

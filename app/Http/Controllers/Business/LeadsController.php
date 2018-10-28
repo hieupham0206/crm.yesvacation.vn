@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\AppointmentConfirmation;
 use App\Models\Appointment;
 use App\Models\Callback;
+use App\Models\EventData;
 use App\Models\HistoryCall;
 use App\Models\Lead;
 use App\Models\Province;
@@ -13,6 +14,7 @@ use App\Tables\Business\LeadTable;
 use App\Tables\TableFacade;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -69,7 +71,33 @@ class LeadsController extends Controller
             'phone' => 'unique:leads',
         ]);
         $requestData = $request->all();
-        Lead::create($requestData);
+
+        try {
+            DB::beginTransaction();
+
+            $lead = Lead::create($requestData);
+
+            if (isset($requestData['form']) && $requestData['form'] === 'reception') {
+                $requestData['lead_id']              = $lead->id;
+                $requestData['user_id']              = auth()->id();
+                $requestData['show_up']              = 1;
+                $requestData['appointment_datetime'] = now()->toDateTimeString();
+
+                $appointment = Appointment::create($requestData);
+
+                $requestData['appointment_id'] = $appointment->id;
+
+                EventData::create($requestData);
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 500);
+        }
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -217,6 +245,33 @@ class LeadsController extends Controller
         return response()->json([
             'total_count' => $totalCount,
             'items'       => $leads->toArray(),
+        ]);
+    }
+
+    /**
+     * Lấy danh sách User theo dạng json
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function provinces()
+    {
+        $query      = request()->get('query', '');
+        $page       = request()->get('page', 1);
+        $excludeIds = request()->get('excludeIds', []);
+        $offset     = ($page - 1) * 10;
+        $provinces  = Province::query()->select(['id', 'name']);
+
+        $provinces->andFilterWhere([
+            ['id', '!=', $excludeIds],
+            ['name', 'like', $query],
+        ]);
+
+        $totalCount = $provinces->count();
+        $provinces  = $provinces->offset($offset)->limit(10)->get();
+
+        return response()->json([
+            'total_count' => $totalCount,
+            'items'       => $provinces->toArray(),
         ]);
     }
 
@@ -383,6 +438,15 @@ class LeadsController extends Controller
         }
 
         return view('business.leads._form_change_state', ['lead' => $lead, 'typeCall' => $typeCall, 'callId' => $callId, 'table' => $table, 'appointment' => $appointment]);
+    }
+
+    public function formNewLead()
+    {
+        $lead = new Lead();
+
+        return view('business.leads._form_new_lead_in_reception', [
+            'lead' => $lead,
+        ]);
     }
 
     /**

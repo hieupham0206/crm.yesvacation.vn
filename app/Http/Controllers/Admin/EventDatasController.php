@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use App\Models\EventData;
+use App\Models\Lead;
 use App\Tables\Admin\EventDataTable;
 use App\Tables\TableFacade;
 use Illuminate\Http\Request;
@@ -58,11 +60,18 @@ class EventDatasController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-        ]);
+//        $this->validate($request, [
+//            'name' => 'required',
+//        ]);
         $requestData = $request->all();
         $eventData   = EventData::create($requestData);
+
+        $appointmentId = $request->get('appointment_id');
+        if ($appointmentId) {
+            Appointment::find($appointmentId)->update([
+                'show_up' => 1,
+            ]);
+        }
 
         if ($request->wantsJson()) {
             return $this->asJson([
@@ -112,9 +121,9 @@ class EventDatasController extends Controller
      */
     public function update(Request $request, EventData $eventData)
     {
-        $this->validate($request, [
-            'name' => 'required',
-        ]);
+//        $this->validate($request, [
+//            'name' => 'required',
+//        ]);
         $requestData = $request->all();
         $eventData->update($requestData);
 
@@ -196,5 +205,41 @@ class EventDatasController extends Controller
             'total_count' => $totalCount,
             'items'       => $eventDatas->toArray(),
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param EventData $eventData
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changeState(Request $request, EventData $eventData)
+    {
+        $state = $request->post('state');
+
+        try {
+            $leadId = $eventData->lead_id;
+            $lead   = Lead::find($leadId);
+
+            if ($state !== null && $eventData->update(['deal' => $state])) {
+                if ($state == -1) {
+                    $lead->update(['state' => 9]);
+                } else {
+                    $lead->update(['state' => 10]);
+                }
+
+                return response()->json([
+                    'message' => __('Data edited successfully'),
+                ]);
+            }
+
+            return response()->json([
+                'message' => __('Data edited unsuccessfully'),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => "Error: {$e->getMessage()}",
+            ], $e->getCode());
+        }
     }
 }

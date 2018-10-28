@@ -46,22 +46,34 @@ class EventDataTable extends DataTable
         /** @var EventData[] $eventDatas */
         foreach ($eventDatas as $eventData) {
             $btnEdit = $btnDelete = '';
+            $btnDeal = '
+				<button type="button" data-state="1" data-message="" data-title="Chốt deal khách hàng ' . $eventData->lead->name . ' !!!" 
+				data-url="' . route('event_datas.change_state', $eventData->id, false) . '" class="btn btn-sm btn-success btn-change-event-status m-btn m-btn--icon m-btn--icon-only m-btn--pill">
+							<i class="fa fa-check"></i>
+						</button>
+			';
+            $btnNotDeal = '
+				<button type="button" data-state="-1" data-message="" data-title="Hủy deal khách hàng ' . $eventData->lead->name . ' !!!" 
+				data-url="' . route('event_datas.change_state', $eventData->id, false) . '" class="btn btn-sm btn-danger btn-change-event-status m-btn m-btn--icon m-btn--icon-only m-btn--pill">
+							<i class="fa fa-trash"></i>
+						</button>
+			';
 
-            if ($canUpdateEventData) {
-                $btnEdit = ' <a href="' . route('event_datas.edit', $eventData, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Edit') . '">
-					<i class="fa fa-edit"></i>
-				</a>';
-            }
-
-            if ($canDeleteEventData) {
-                $btnDelete = ' <button type="button" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $eventData->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
-                data-url="' . route('event_datas.destroy', $eventData, false) . '" title="' . __('Delete') . '">
-                    <i class="fa fa-trash"></i>
-                </button>';
-            }
+//            if ($canUpdateEventData) {
+//                $btnEdit = ' <a href="' . route('event_datas.edit', $eventData, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Edit') . '">
+//					<i class="fa fa-edit"></i>
+//				</a>';
+//            }
+//
+//            if ($canDeleteEventData) {
+//                $btnDelete = ' <button type="button" data-title="' . __('Delete') . ' ' . $modelName . ' ' . $eventData->name . ' !!!" class="btn btn-sm btn-danger btn-delete m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+//                data-url="' . route('event_datas.destroy', $eventData, false) . '" title="' . __('Delete') . '">
+//                    <i class="fa fa-trash"></i>
+//                </button>';
+//            }
 
             $dataArray[] = [
-                '<label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand"><input type="checkbox" value="' . $eventData->id . '"><span></span></label>',
+//                '<label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand"><input type="checkbox" value="' . $eventData->id . '"><span></span></label>',
                 $eventData->created_at,
                 $eventData->lead->title,
                 $eventData->lead->name,
@@ -70,10 +82,7 @@ class EventDataTable extends DataTable
                 $eventData->note,
                 $eventData->to,
                 $eventData->rep,
-
-                '<a href="' . route('event_datas.show', $eventData, false) . '" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('View') . '">
-					<i class="fa fa-eye"></i>
-				</a>' . $btnEdit . $btnDelete,
+                $btnDeal . $btnNotDeal
             ];
         }
 
@@ -85,7 +94,7 @@ class EventDataTable extends DataTable
      */
     public function getModels()
     {
-        $eventDatas = EventData::query();
+        $eventDatas = EventData::query()->with('lead');
 
         $this->totalFilteredRecords = $this->totalRecords = $eventDatas->count();
 

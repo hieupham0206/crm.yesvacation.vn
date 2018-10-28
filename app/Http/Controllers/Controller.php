@@ -21,4 +21,9 @@ class Controller extends BaseController
         $this->middleware(['rolepermission:update-' . $this->name], ['only' => ['edit', 'update']]);
         $this->middleware(['rolepermission:delete-' . $this->name], ['only' => ['destroy']]);
     }
+
+    public function asJson(array $params = [], $code = 200)
+    {
+        return response()->json($params, $code);
+    }
 }

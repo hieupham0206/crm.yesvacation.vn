@@ -20,3 +20,5 @@ Route::get('/translation_managers/index', 'TranslationManagersController@index')
 Route::post('/translation_managers/lists/table', 'TranslationManagersController@table')->name('translation_managers.table');
 Route::post('/translation_managers/edit/detail', 'TranslationManagersController@edit')->name('translation_managers.edit_detail');
 Route::put('/translation_managers/update/detail', 'TranslationManagersController@update')->name('translation_managers.update_detail');
+
+Route::post('/event-datas/change-state/{eventData}', 'EventDatasController@changeState')->name('event_datas.change_state');

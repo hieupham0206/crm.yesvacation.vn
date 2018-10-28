@@ -12,8 +12,9 @@ class EventData extends \App\Models\Base\EventData
 		'time_out',
 		'show_up',
 		'deal',
-		'rep_id',
-		'to_id',
+		'to',
+		'rep',
+		'note',
 	];
 	public static $logName = 'EventData';
 
