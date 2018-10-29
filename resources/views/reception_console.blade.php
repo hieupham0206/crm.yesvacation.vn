@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div class="m-portlet__body">
-                        <div class="m-scrollable m-scroller ps ps--active-y" data-scrollable="true" data-height="412" data-scrollbar-shown="true">
+                        <div class="m-scrollable m-scroller ps ps--active-y" data-scrollable="true" data-height="300" data-scrollbar-shown="true">
                             <table class="table table-borderless table-hover nowrap" id="table_appointment" width="100%">
                                 <thead>
                                 <tr>
@@ -73,7 +73,7 @@
                         </div>
                     </div>
                     <div class="m-portlet__body">
-                        <div class="m-scrollable m-scroller ps ps--active-y" data-scrollable="true" data-height="200" data-scrollbar-shown="true">
+                        <div class="m-scrollable m-scroller ps ps--active-y" data-scrollable="true" data-height="300" data-scrollbar-shown="true">
                             <table class="table table-borderless table-hover nowrap" id="table_event_data" width="100%">
                                 <thead>
                                 <tr>
