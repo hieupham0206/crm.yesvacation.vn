@@ -250,6 +250,7 @@ $(function () {
 		var typeCall = $(this).data('type-call');
 		var callId = $(this).data('id');
 
+		fetchLead(leadId, 0);
 		showFormChangeState({ typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: 'appointments' });
 		updateCallTypeText('Appointment Call');
 	});
@@ -259,6 +260,7 @@ $(function () {
 		var typeCall = $(this).data('type-call');
 		var callId = $(this).data('id');
 
+		fetchLead(leadId, 0);
 		showFormChangeState({ typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: 'callbacks' });
 		updateCallTypeText('Callback Call');
 	});
@@ -267,6 +269,7 @@ $(function () {
 		var leadId = $(this).data('lead-id');
 		var typeCall = $(this).data('type-call');
 
+		fetchLead(leadId, 0);
 		showFormChangeState({ typeCall: typeCall, url: route('leads.form_change_state', leadId) });
 		updateCallTypeText('History Call');
 	});

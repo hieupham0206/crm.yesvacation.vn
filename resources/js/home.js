@@ -156,9 +156,9 @@ $(function() {
 		let typeCall = $(this).data('type-call')
 		let callId = $(this).data('id')
 
+		fetchLead(leadId, 0)
 		showFormChangeState({typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: 'appointments'})
 		updateCallTypeText('Appointment Call')
-
 	})
 
 	$body.on('click', '.btn-callback-call', function() {
@@ -166,6 +166,7 @@ $(function() {
 		let typeCall = $(this).data('type-call')
 		let callId = $(this).data('id')
 
+		fetchLead(leadId, 0)
 		showFormChangeState({typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: 'callbacks'})
 		updateCallTypeText('Callback Call')
 	})
@@ -174,6 +175,7 @@ $(function() {
 		let leadId = $(this).data('lead-id')
 		let typeCall = $(this).data('type-call')
 
+		fetchLead(leadId, 0)
 		showFormChangeState({typeCall: typeCall, url: route('leads.form_change_state', leadId)})
 		updateCallTypeText('History Call')
 	})
