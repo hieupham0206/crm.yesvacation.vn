@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="col-xl-6 col-lg-12">
-                <div class="m-portlet">
+                <div class="m-portlet m-portlet--info m-portlet--head-solid-bg">
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
@@ -64,7 +64,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="m-portlet ">
+                <div class="m-portlet m-portlet--primary m-portlet--head-solid-bg">
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
