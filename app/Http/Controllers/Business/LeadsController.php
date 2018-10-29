@@ -466,9 +466,10 @@ class LeadsController extends Controller
         $time          = $request->time;
         $startCallTime = $request->startCallTime;
 
-        $typeCall = $request->get('typeCall', 1);
-        $callId   = $request->get('call_id', 1);
-        $table    = $request->get('table', 1);
+        $typeCall   = $request->get('typeCall', 1);
+        $callId     = $request->get('call_id', 1);
+        $provinceId = $request->get('province_id');
+        $table      = $request->get('table', 1);
 
         if ($newState) {
             $userId = auth()->id();
@@ -482,6 +483,9 @@ class LeadsController extends Controller
 
             if ($lead->email !== $email) {
                 $leadDatas['email'] = $email;
+            }
+            if ($provinceId) {
+                $leadDatas['province_id'] = $provinceId;
             }
             $lead->update($leadDatas);
 

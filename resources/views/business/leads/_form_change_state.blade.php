@@ -67,6 +67,15 @@
                     </div>
                 </div>
             </div>
+            <div class="form-group row" id="province_section" style="display: none">
+                <div class="col-md-12 m-form__group-sub">
+                    <label for="select_province">{{ $lead->label('province') }}</label>
+                    <select name="province_id" class="form-control" id="select_province" data-url="{{ route('leads.provinces.table') }}">
+                        <option></option>
+                    </select>
+                    <span class="m-form__help"></span>
+                </div>
+            </div>
             <div class="form-group row" id="comment_section" style="display: none">
                 <div class="col-md-12 m-form__group-sub">
                     <label for="textarea_comment">{{ $lead->label('comment') }}</label>

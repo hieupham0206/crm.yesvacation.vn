@@ -242,6 +242,13 @@ $(function() {
 				$('#section_datetime').hide()
 				$('#comment_section').show()
 			}
+
+			if ($(this).val() === '4') {
+				$('#province_section').show()
+				$('#select_province').select2Ajax()
+			} else {
+				$('#province_section').hide()
+			}
 		}
 	})
 
