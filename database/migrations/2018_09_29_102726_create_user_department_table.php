@@ -17,7 +17,7 @@ class CreateUserDepartmentTable extends Migration
 
             $table->unsignedInteger('department_id');
             $table->unsignedInteger('user_id');
-            $table->tinyInteger('type')->default(1)->comment(' 1: Employee; 2: Supervisor');
+            $table->tinyInteger('position')->default(1)->comment(' 1: TeleMarketer; 2: Leader; 3: Manager');
 
             $table->timestamps();
         });

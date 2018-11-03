@@ -7,7 +7,7 @@ class UserDepartment extends \App\Models\Base\UserDepartment
 	protected $fillable = [
 		'department_id',
 		'user_id',
-		'type'
+		'position'
 	];
 	public static $logName = 'UserDepartment';
 

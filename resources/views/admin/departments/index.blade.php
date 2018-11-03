@@ -1,8 +1,6 @@
 @php /** @var \App\Models\department $department */
 $breadcrumbs = ['breadcrumb' => 'departments.index'];
-@endphp
-
-@extends("$layout.app")
+@endphp@extends("$layout.app")
 
 @push('scripts')
     <script src="{{ asset('js/admin/departments/index.js') }}"></script>
@@ -18,11 +16,12 @@ $breadcrumbs = ['breadcrumb' => 'departments.index'];
                 @include('layouts.partials.search', ['form' => view('admin.departments._search')->with('department', $department)])
                 <table class="table table-borderless table-hover nowrap" id="table_departments" width="100%">
                     <thead>
-                        <tr>
-                            <th width="5%"><label class="m-checkbox m-checkbox--all m-checkbox--solid m-checkbox--brand"><input type="checkbox"><span></span></label></th>
-                            <th>{{ $department->label('name') }}</th><th>{{ $department->label('province id') }}</th>
-                            <th>@lang('Actions')</th>
-                        </tr>
+                    <tr>
+                        <th width="5%"><label class="m-checkbox m-checkbox--all m-checkbox--solid m-checkbox--brand"><input type="checkbox"><span></span></label></th>
+                        <th>{{ $department->label('name') }}</th>
+                        <th>{{ $department->label('province') }}</th>
+                        <th>@lang('Actions')</th>
+                    </tr>
                     </thead>
                     <tbody></tbody>
                 </table>

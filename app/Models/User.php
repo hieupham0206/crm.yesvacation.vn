@@ -236,7 +236,7 @@ class User extends Authenticatable
     public function departments()
     {
         return $this->belongsToMany(\App\Models\Department::class, 'user_department')
-                    ->withPivot('id', 'type')
+                    ->withPivot('id', 'position')
                     ->withTimestamps();
     }
 

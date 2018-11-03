@@ -4,17 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Department;
-use App\Tables\TableFacade;
 use App\Tables\Admin\DepartmentTable;
+use App\Tables\TableFacade;
 use Illuminate\Http\Request;
 
 class DepartmentsController extends Controller
 {
-     /**
-      * Tên dùng để phân quyền
-      * @var string
-      */
-	 protected $name = 'department';
+    /**
+     * Tên dùng để phân quyền
+     * @var string
+     */
+    protected $name = 'department';
 
     /**
      * Hiển thị trang danh sách Department.
@@ -23,15 +23,16 @@ class DepartmentsController extends Controller
      */
     public function index()
     {
-        return view( 'admin.departments.index' )->with('department', new Department);
+        return view('admin.departments.index')->with('department', new Department);
     }
 
     /**
      * Lấy danh sách Department cho trang table ở trang index
      * @return string
      */
-    public function table() {
-    	return ( new TableFacade( new DepartmentTable() ) )->getDataTable();
+    public function table()
+    {
+        return (new TableFacade(new DepartmentTable()))->getDataTable();
     }
 
     /**
@@ -48,23 +49,32 @@ class DepartmentsController extends Controller
      * Lưu Department mới.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
         $this->validate($request, [
-			'name' => 'required'
-		]);
+            'name' => 'required',
+        ]);
         $requestData = $request->all();
-        Department::create($requestData);
+        $department  = Department::create($requestData);
 
-        return redirect(route('departments.index'))->with('message', __( 'Data created successfully' ));
+        if ($request->has('UserDepartment')) {
+            $userIds = collect($requestData['UserDepartment']['user_id'])->flatten()->toArray();
+
+            $department->users()->attach($userIds);
+        }
+
+        return redirect(route('departments.index'))->with('message', __('Data created successfully'));
     }
 
     /**
      * Trang xem chi tiết Department.
      *
      * @param  Department $department
+     *
      * @return \Illuminate\View\View
      */
     public function show(Department $department)
@@ -76,11 +86,14 @@ class DepartmentsController extends Controller
      * Trang cập nhật Department.
      *
      * @param  Department $department
+     *
      * @return \Illuminate\View\View
      */
     public function edit(Department $department)
     {
-        return view('admin.departments.edit', compact('department'));
+        $userDepartments = $department->users;
+
+        return view('admin.departments.edit', compact('department', 'userDepartments'));
     }
 
     /**
@@ -88,38 +101,54 @@ class DepartmentsController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param  Department $department
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, Department $department)
     {
         $this->validate($request, [
-			'name' => 'required'
-		]);
+            'name' => 'required',
+        ]);
         $requestData = $request->all();
         $department->update($requestData);
 
-        return redirect(route('departments.index'))->with('message', __( 'Data edited successfully' ));
+        $department->users()->detach();
+        if ($request->has('UserDepartment')) {
+            $userIds   = collect($requestData['UserDepartment']['user_id'])->flatten()->toArray();
+            $positions = collect($requestData['UserDepartment']['position'])->flatten()->toArray();
+
+            foreach ($userIds as $key => $userId) {
+                $department->users()->attach($userId, [
+                    'position' => $positions[$key],
+                ]);
+            }
+
+        }
+
+        return redirect(route('departments.index'))->with('message', __('Data edited successfully'));
     }
 
     /**
      * Xóa Department.
      *
      * @param Department $department
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy(Department $department)
     {
         try {
-        	  $department->delete();
-        } catch ( \Exception $e ) {
-            return response()->json( [
-                'message' => "Error: {$e->getMessage()}"
-            ], $e->getCode() );
+            $department->delete();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => "Error: {$e->getMessage()}",
+            ], $e->getCode());
         }
 
-        return response()->json( [
-            'message' => __('Data deleted successfully')
-        ] );
+        return response()->json([
+            'message' => __('Data deleted successfully'),
+        ]);
     }
 
     /**
@@ -128,19 +157,20 @@ class DepartmentsController extends Controller
      * @return mixed|\Symfony\Component\HttpFoundation\ParameterBag
      * @throws \Exception
      */
-    public function destroys() {
+    public function destroys()
+    {
         try {
-            $ids = \request()->get( 'ids' );
-            Department::destroy( $ids );
-        } catch ( \Exception $e ) {
-            return response()->json( [
-                'message' => "Error: {$e->getMessage()}"
-            ], $e->getCode() );
+            $ids = \request()->get('ids');
+            Department::destroy($ids);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => "Error: {$e->getMessage()}",
+            ], $e->getCode());
         }
 
-        return response()->json( [
-            'message' => __( 'Data deleted successfully' )
-        ] );
+        return response()->json([
+            'message' => __('Data deleted successfully'),
+        ]);
     }
 
     /**
@@ -148,24 +178,25 @@ class DepartmentsController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function departments() {
-        $query  = request()->get( 'query', '' );
-        $page   = request()->get( 'page', 1 );
-        $excludeIds = request()->get( 'excludeIds', [] );
-        $offset = ( $page - 1 ) * 10;
-        $departments  = Department::query()->select( [ 'id', 'name' ] );
+    public function departments()
+    {
+        $query       = request()->get('query', '');
+        $page        = request()->get('page', 1);
+        $excludeIds  = request()->get('excludeIds', []);
+        $offset      = ($page - 1) * 10;
+        $departments = Department::query()->select(['id', 'name']);
 
-        $departments->andFilterWhere( [
-            [ 'name', 'like', $query ],
-            ['id', '!=', $excludeIds]
+        $departments->andFilterWhere([
+            ['name', 'like', $query],
+            ['id', '!=', $excludeIds],
         ]);
 
-        $totalCount = $departments->count();
-        $departments      = $departments->offset($offset)->limit(10)->get();
+        $totalCount  = $departments->count();
+        $departments = $departments->offset($offset)->limit(10)->get();
 
-        return response()->json( [
+        return response()->json([
             'total_count' => $totalCount,
             'items'       => $departments->toArray(),
-        ] );
+        ]);
     }
 }

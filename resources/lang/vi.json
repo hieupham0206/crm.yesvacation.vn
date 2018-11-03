@@ -140,5 +140,8 @@
   "Mr": "Anh",
   "Mrs": "Chị",
   "Mr.": "Chú",
-  "Ms": "Cô"
+  "Ms": "Cô",
+
+  "Province": "Tinh/Thành phố",
+  "Department": "Phòng ban"
 }
