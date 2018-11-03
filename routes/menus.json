@@ -37,7 +37,7 @@
   },
   "tele_marketer_console": {
     "icon": "fa fa-user",
-    "route": "home"
+    "route": "tele_console"
   },
   "reception": {
     "icon": "fa fa-user",

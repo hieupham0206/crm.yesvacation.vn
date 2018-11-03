@@ -8,6 +8,7 @@ Route::post('/login-otp', 'Auth\LoginController@loginOtp')->name('login_otp');
 //home route
 Route::get('/', 'HomeController@index')->middleware(['auth', 'active'])->name('home');
 Route::get('/reception', 'HomeController@reception')->middleware(['auth', 'active'])->name('reception');
+Route::get('/tele-marketer-console', 'HomeController@teleMarketerConsole')->middleware(['auth', 'active'])->name('tele_console');
 
 //language route
 Route::get('/js/lang.js', 'HomeController@lang')->name('lang');

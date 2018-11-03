@@ -16,6 +16,11 @@ class HomeController extends Controller
      */
     public function index()
     {
+        return view('home');
+    }
+
+    public function teleMarketerConsole()
+    {
         /** @var User $user */
         $user = auth()->user();
         $lead = new Lead();
@@ -56,11 +61,6 @@ class HomeController extends Controller
         }
 
         return view('tele_marketer_console', compact('lead', 'diffLoginString', 'diffBreakString', 'maxBreakTime', 'startBreakValue'));
-    }
-
-    public function teleMarketerConsole()
-    {
-
     }
 
     public function reception()

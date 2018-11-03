@@ -1,7 +1,7 @@
 @extends("$layout.app")@section('title', __('Telemaketer Console'))
 
 @push('scripts')
-    <script src="{{ asset('js/home.js') }}"></script>
+    <script src="{{ asset('js/tele_console.js') }}"></script>
 @endpush
 
 @section('content')

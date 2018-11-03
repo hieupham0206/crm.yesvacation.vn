@@ -48,7 +48,9 @@ mix.combine([
 	`public/${theme}/css/merged.css`)
 
 mix.js(`${resourcePath}/js/app/bootstrap.js`, 'public/js').js(`${resourcePath}/js/app/app.js`, 'public/js').
-	js(`${resourcePath}/js/auth/otp.js`, 'public/js/auth').js(`${resourcePath}/js/home.js`, 'public/js').js(`${resourcePath}/js/reception.js`, 'public/js').
+	js(`${resourcePath}/js/auth/otp.js`, 'public/js/auth').js(`${resourcePath}/js/home.js`, 'public/js')
+.js(`${resourcePath}/js/reception.js`, 'public/js')
+.js(`${resourcePath}/js/tele_console.js`, 'public/js').
 	sass(`${resourcePath}/sass/themes/${theme}/app.scss`, `public/${theme}/css`).
 	sass(`${resourcePath}/sass/login.scss`, 'public/css')
 
