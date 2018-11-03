@@ -512,7 +512,7 @@ $(function () {
 	}
 
 	function waitClock() {
-		waitTimer.start({ countdown: true, startValues: { seconds: 5 } });
+		waitTimer.start({ countdown: true, startValues: { seconds: 1 } });
 		$('#span_call_time').html(waitTimer.getTimeValues().toString());
 	}
 
