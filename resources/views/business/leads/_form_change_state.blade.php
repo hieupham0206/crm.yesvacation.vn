@@ -18,7 +18,8 @@
                     <label for="select_state_modal">{{ $lead->label('state') }}</label>
                     <select name="state" class="form-control select" id="select_state_modal">
                         <option></option>
-                        @foreach ($lead->states as $key => $state)
+                        <option value="8" {{ $lead->state == 8 ? ' selected' : '' }}>{{ __('Appointment') }}</option>
+                        @foreach ($leadStates as $key => $state)
                             @if ($key == 1)
                                 @continue
                             @endif

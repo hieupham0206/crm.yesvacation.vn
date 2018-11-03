@@ -437,7 +437,10 @@ class LeadsController extends Controller
             $appointment = Appointment::find($callId);
         }
 
-        return view('business.leads._form_change_state', ['lead' => $lead, 'typeCall' => $typeCall, 'callId' => $callId, 'table' => $table, 'appointment' => $appointment]);
+        $leadStates = $lead->states;
+        unset($leadStates[8]);
+
+        return view('business.leads._form_change_state', ['lead' => $lead, 'typeCall' => $typeCall, 'callId' => $callId, 'table' => $table, 'appointment' => $appointment, 'leadStates' => $leadStates]);
     }
 
     public function formNewLead()
