@@ -20,10 +20,6 @@
                         <option></option>
                         <option value="8" {{ $lead->state == 8 ? ' selected' : '' }}>{{ __('Appointment') }}</option>
                         @foreach ($leadStates as $key => $state)
-                            @if ($key == 1)
-                                @continue
-                            @endif
-
                             @if($typeCall == 3)
                                 @if (\in_array($key, [9,10], true))
                                     @continue

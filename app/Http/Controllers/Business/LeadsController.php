@@ -438,7 +438,9 @@ class LeadsController extends Controller
         }
 
         $leadStates = $lead->states;
-        unset($leadStates[8]);
+        unset($leadStates[8], $leadStates[1]);
+
+        $leadStates = collect($leadStates)->sortKeysDesc();
 
         return view('business.leads._form_change_state', ['lead' => $lead, 'typeCall' => $typeCall, 'callId' => $callId, 'table' => $table, 'appointment' => $appointment, 'leadStates' => $leadStates]);
     }
