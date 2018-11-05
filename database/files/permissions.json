@@ -1,64 +1,75 @@
 {
-    "admin": {
-        "modules": {
-            "user": {
-                "actions": [
-                    "view",
-                    "create",
-                    "update",
-                    "delete"
-                ]
-            },
-            "role": {
-                "actions": [
-                    "view",
-                    "create",
-                    "update",
-                    "delete"
-                ]
-            },
-            "permission": {
-                "actions": [
-                    "view",
-                    "update"
-                ],
-                "hide": "true"
-            },
-            "log": {
-                "actions": [
-                    "view"
-                ]
-            },
-            "event": {
-                "actions": [
-                    "view",
-                    "create",
-                    "update",
-                    "delete"
-                ],
-                "hide": "true"
-            },
-            "department": {
-                "actions": [
-                    "view",
-                    "create",
-                    "update",
-                    "delete"
-                ]
-            }
-        },
-        "icon": "flaticon-cogwheel"
+  "admin": {
+    "modules": {
+      "user": {
+        "actions": [
+          "view",
+          "create",
+          "update",
+          "delete"
+        ]
+      },
+      "role": {
+        "actions": [
+          "view",
+          "create",
+          "update",
+          "delete"
+        ]
+      },
+      "permission": {
+        "actions": [
+          "view",
+          "update"
+        ],
+        "hide": "true"
+      },
+      "log": {
+        "actions": [
+          "view"
+        ]
+      },
+      "event": {
+        "actions": [
+          "view",
+          "create",
+          "update",
+          "delete"
+        ],
+        "hide": "true"
+      },
+      "department": {
+        "actions": [
+          "view",
+          "create",
+          "update",
+          "delete"
+        ]
+      },
+      "tele-marketer-console": {
+        "actions": [
+          "view"
+        ]
+      },
+      "reception": {
+        "actions": [
+          "view"
+        ]
+      }
     },
-    "business": {
-        "modules": {
-            "lead": {
-                "actions": [
-                    "view",
-                    "create",
-                    "update",
-                    "delete"
-                ]
-            }
-        }
-    }
+    "icon": "flaticon-cogwheel"
+  },
+  "business": {
+    "modules": {
+      "lead": {
+        "actions": [
+          "view",
+          "create",
+          "update",
+          "delete"
+        ]
+      }
+    },
+    "icon": "flaticon-suitcase"
+  }
 }

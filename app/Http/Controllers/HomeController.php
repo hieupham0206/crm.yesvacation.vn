@@ -9,6 +9,13 @@ use Illuminate\Support\Carbon;
 
 class HomeController extends Controller
 {
+    /** @noinspection PhpMissingParentConstructorInspection */
+    public function __construct()
+    {
+        $this->middleware(['rolepermission:view-tele-marketer-console'], ['only' => ['teleMarketerConsole']]);
+        $this->middleware(['rolepermission:view-reception'], ['only' => ['reception']]);
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -93,10 +100,5 @@ class HomeController extends Controller
         }
 
         return view('layouts.partials.quicksearch_result')->with('results', $results);
-    }
-
-    /** @noinspection PhpMissingParentConstructorInspection */
-    public function __construct()
-    {
     }
 }
