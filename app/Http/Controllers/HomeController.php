@@ -23,6 +23,17 @@ class HomeController extends Controller
      */
     public function index()
     {
+        /** @var User $user */
+        $user = auth()->user();
+
+        if ($user->hasRole('TELE MARKETER')) {
+            return redirect(route('tele_console'));
+        }
+
+        if ($user->hasRole('RECEPTION')) {
+            return redirect(route('reception'));
+        }
+
         return view('home');
     }
 
