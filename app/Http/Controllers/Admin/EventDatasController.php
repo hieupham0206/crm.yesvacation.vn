@@ -70,7 +70,7 @@ class EventDatasController extends Controller
         $appointmentId = $request->get('appointment_id');
         if ($appointmentId) {
             Appointment::find($appointmentId)->update([
-                'show_up' => 1,
+                'is_show_up' => Confirmation::YES,
             ]);
         }
 

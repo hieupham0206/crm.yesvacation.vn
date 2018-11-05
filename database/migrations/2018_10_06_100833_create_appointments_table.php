@@ -25,9 +25,11 @@ class CreateAppointmentsTable extends Migration
             $table->string('spouse_phone')->nullable();
             $table->timestamp('appointment_datetime')->nullable();
 
-            $table->tinyInteger('type')->default(1)->comment('1: Email; 2: SMS ; 3: Both; 4: InState');
-            $table->tinyInteger('state')->default(\App\Enums\Confirmation::NO)->comment('1: Confirm; -1: Not');
-            $table->tinyInteger('show_up')->default(-1)->comment('-1: Không; 1: Có');
+//            $table->tinyInteger('type')->default(1)->comment('1: Email; 2: SMS ; 3: Both; 4: InState');
+
+            $table->tinyInteger('state')->default(\App\Enums\Confirmation::YES)->comment('-1: Hủy; 1: Sử dụng;');
+            $table->tinyInteger('is_show_up')->default(\App\Enums\Confirmation::NO)->comment('-1: Không; 1: Có');
+            $table->tinyInteger('is_queue')->default(\App\Enums\Confirmation::NO)->comment('-1: Không; 1: Có');
 
             $table->timestamps();
         });

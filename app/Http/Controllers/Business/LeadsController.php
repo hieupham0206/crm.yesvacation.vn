@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Business;
 
+use App\Enums\Confirmation;
 use App\Http\Controllers\Controller;
 use App\Mail\AppointmentConfirmation;
 use App\Models\Appointment;
@@ -80,7 +81,7 @@ class LeadsController extends Controller
             if (isset($requestData['form']) && $requestData['form'] === 'reception') {
                 $requestData['lead_id']              = $lead->id;
                 $requestData['user_id']              = auth()->id();
-                $requestData['show_up']              = 1;
+                $requestData['is_show_up']           = Confirmation::YES;
                 $requestData['appointment_datetime'] = now()->toDateTimeString();
 
                 $appointment = Appointment::create($requestData);

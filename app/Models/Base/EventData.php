@@ -34,7 +34,7 @@ class EventData extends Eloquent
 
 	protected $casts = [
 		'lead_id' => 'int',
-		'show_up' => 'int',
+		'is_show_up' => 'int',
 		'deal' => 'int'
 	];
 

@@ -41,8 +41,15 @@
                     <label for="select_time">{{ $lead->label('time') }}</label>
                     <select name="time" id="select_time">
                         <option value="10:00">10 AM</option>
+                        <option value="10:00">11 AM</option>
+                        <option value="10:00">12 AM</option>
+                        <option value="15:00">1 PM</option>
+                        <option value="15:00">2 PM</option>
                         <option value="15:00">3 PM</option>
+                        <option value="15:00">4 PM</option>
+                        <option value="15:00">5 PM</option>
                         <option value="18:00">6 PM</option>
+                        <option value="18:00">7 PM</option>
                     </select>
                 </div>
             </div>

@@ -2,6 +2,7 @@
 
 namespace App\Tables\Admin;
 
+use App\Enums\Confirmation;
 use App\Enums\HistoryCallType;
 use App\Models\Appointment;
 use App\Tables\DataTable;
@@ -71,7 +72,7 @@ class AppointmentTable extends DataTable
         }
 
         if (isset($this->filters['not_show_up_yet'])) {
-            $appointments->where('show_up', -1);
+            $appointments->where('is_show_up', Confirmation::NO);
 
             $this->totalFilteredRecords = $appointments->count();
         }
