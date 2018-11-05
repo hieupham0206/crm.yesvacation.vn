@@ -463,14 +463,13 @@ class LeadsController extends Controller
      */
     public function changeState(Lead $lead, Request $request)
     {
-        $newState      = $request->state;
-        $comment       = $request->comment;
-        $spouseName    = $request->spouse_name;
-        $spousePhone   = $request->spouse_phone;
-        $email         = $request->email;
-        $date          = $request->date;
-        $time          = $request->time;
-        $startCallTime = $request->startCallTime;
+        $newState    = $request->state;
+        $comment     = $request->comment;
+        $spouseName  = $request->spouse_name;
+        $spousePhone = $request->spouse_phone;
+        $email       = $request->email;
+        $date        = $request->date;
+        $time        = $request->time;
 
         $typeCall   = $request->get('typeCall', 1);
         $callId     = $request->get('call_id', 1);
@@ -494,16 +493,6 @@ class LeadsController extends Controller
                 $leadDatas['province_id'] = $provinceId;
             }
             $lead->update($leadDatas);
-
-            //lưu bảng history_calls
-            HistoryCall::create([
-                'type'         => $typeCall,
-                'lead_id'      => $lead->id,
-                'user_id'      => $userId,
-                'state'        => $lead->state,
-                'comment'      => $comment,
-                'time_of_call' => $startCallTime,
-            ]);
             $dateTime = '';
             if ($date && $time) {
                 $dateTime = date('Y-m-d H:i:s', strtotime($date . $time));
@@ -540,6 +529,19 @@ class LeadsController extends Controller
                 }
                 Callback::create($callbackDatas);
             }
+
+            $startCallTime = session('startCallTime');
+            $diffInSeconds = now()->diffInSeconds($startCallTime);
+            //lưu bảng history_calls
+            HistoryCall::create([
+                'type'         => $typeCall,
+                'lead_id'      => $lead->id,
+                'user_id'      => $userId,
+                'state'        => $lead->state,
+                'comment'      => $comment,
+                'time_of_call' => $diffInSeconds,
+            ]);
+            session(['startCallTime' => now()->addSecond()]);
 
             //nếu gọi callback hoặc appointment => xóa thong tin
             if ($table) {

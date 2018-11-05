@@ -42,7 +42,7 @@
                         </div>
                         <div class="m-portlet__head-tools">
                             <span class="m-portlet__head-text">Type call: <span id="span_call_type">Auto</span></span>
-                            <span class="m-portlet__head-text ml-3 span-auto-call-time">Time: <span id="span_call_time" class="span-time">00:00:00</span></span>
+                            <span class="m-portlet__head-text ml-3 span-auto-call-time">Time: <span id="span_call_time" class="span-time">{{ $startCallTime }}</span></span>
                         </div>
                     </div>
                     <form id="leads_form" class="m-form m-form--label-align-right m-form--state" method="post" action="{{ route('leads.update', $lead) }}">

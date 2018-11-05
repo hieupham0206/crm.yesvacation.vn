@@ -414,11 +414,6 @@ $(function() {
 		$('#span_call_time').text(harold(callHours) + ':' + harold(callMinutes) + ':' + harold(callSeconds))
 	}
 
-	function waitClock() {
-		waitTimer.start({countdown: true, startValues: {seconds: 1}})
-		$('#span_call_time').html(waitTimer.getTimeValues().toString())
-	}
-
 	function initLoginClock() {
 		let diffTime = $('#span_login_time').data('diff-login-time')
 		let times = _.split(diffTime, ':')
@@ -426,6 +421,21 @@ $(function() {
 		loginHours = times[0]
 		loginMinutes = times[1]
 		loginSeconds = times[2]
+	}
+
+	function waitClock() {
+		waitTimer.start({countdown: true, startValues: {seconds: 1}})
+		$('#span_call_time').html(waitTimer.getTimeValues().toString())
+	}
+
+	function initCallClock() {
+		let diffTime = $('#span_call_time').text()
+		console.log(diffTime)
+		let times = _.split(diffTime, ':')
+
+		callHours = numeral(times[0]).value()
+		callMinutes = numeral(times[1]).value()
+		callSeconds = numeral(times[2]).value()
 	}
 
 	function initBreakClock() {
@@ -469,6 +479,7 @@ $(function() {
 	}
 
 	initLoginClock()
+	initCallClock()
 	initBreakClock()
 	setInterval(loginClock, 1000)
 	if ($('#txt_lead_id').val() !== '') {

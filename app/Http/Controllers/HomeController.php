@@ -39,6 +39,14 @@ class HomeController extends Controller
 
     public function teleMarketerConsole()
     {
+        //note: check thoi gian gọi hiện tại
+        $startCallTime = session('startCallTime');
+        if (! $startCallTime) {
+            $startCallTime = '00:00:00';
+            session(['startCallTime' => now()]);
+        } else {
+            $startCallTime = gmdate('H:i:s', now()->diffInSeconds($startCallTime));
+        }
         /** @var User $user */
         $user = auth()->user();
         $lead = new Lead();
@@ -78,7 +86,7 @@ class HomeController extends Controller
             }
         }
 
-        return view('tele_marketer_console', compact('lead', 'diffLoginString', 'diffBreakString', 'maxBreakTime', 'startBreakValue'));
+        return view('tele_marketer_console', compact('lead', 'diffLoginString', 'diffBreakString', 'maxBreakTime', 'startBreakValue', 'startCallTime'));
     }
 
     public function reception()
