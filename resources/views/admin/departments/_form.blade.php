@@ -26,18 +26,18 @@
         </div>
         <div class="form-group m-form__group row">
             <div class="col-lg-3">
-                <label for="select_user">{{ $department->label('user') }}</label>
-                <select class="form-control" id="select_user" data-url="{{ route('users.list') }}">
-                    <option></option>
-                </select>
-            </div>
-            <div class="col-lg-3">
                 <label for="select_position">{{ $department->label('position') }}</label>
                 <select class="form-control select" id="select_position">
                     <option></option>
-                    @foreach ($department->positions as $key => $position)
-                        <option value="{{ $key }}">{{ $position }}</option>
+                    @foreach ($department->roles as $key => $role)
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
                     @endforeach
+                </select>
+            </div>
+            <div class="col-lg-3">
+                <label for="select_user">{{ $department->label('user') }}</label>
+                <select class="form-control" id="select_user" data-url="{{ route('users.list') }}" disabled>
+                    <option></option>
                 </select>
             </div>
             <div class="col-lg-1">

@@ -60,20 +60,20 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 79);
+/******/ 	return __webpack_require__(__webpack_require__.s = 81);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 79:
+/***/ 81:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(80);
+module.exports = __webpack_require__(82);
 
 
 /***/ }),
 
-/***/ 80:
+/***/ 82:
 /***/ (function(module, exports) {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -116,8 +116,13 @@ $(function () {
 		url: route('users.list'),
 		data: function data(q) {
 			q.excludeIds = [1].concat(_toConsumableArray($('.txt-user-id').getValues({ parse: 'int' })));
+			q.roleId = $('#select_position').val();
 		},
 		column: 'username'
+	});
+
+	$selectPosition.on('change', function () {
+		$selectUser.val('').trigger('change').prop('disabled', $(this).val() === '');
 	});
 
 	$btnAddUser.on('click', function () {
@@ -144,6 +149,8 @@ $(function () {
 		var userId = $selectUser.val();
 
 		tableUserDepartment.row.add([username + ('<input type="hidden" name="UserDepartment[id][{{ $key }}][]" value="">\n\t\t\t<input type="hidden" name="UserDepartment[user_id][{{ $key }}][]" value="' + userId + '" class="txt-user-id">'), positionText + ('<input type="hidden" name="UserDepartment[position][{{ $key }}][]" value="' + positionValue + '" class="txt-position">'), '<button type="button" class="btn-delete-user btn btn-sm btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--outline-2x m-btn--pill" title="Delete"><i class="la la-trash"></i></button>']).draw(false);
+
+		$selectUser.val('').trigger('change');
 	});
 
 	$('body').on('click', '.btn-delete-user', function () {

@@ -14,13 +14,18 @@ class UserSeeder extends \Illuminate\Database\Seeder
             'email'          => 'hieu.pham@cloudteam.vn',
             'password'       => \Hash::make(123456),
             'remember_token' => str_random(10),
-            'use_otp'        => 0
+            'use_otp'        => 0,
         ]);
 
         if ($user) {
             $user->assignRole('Admin');
         }
 
-        factory(\App\Models\User::class, 15)->create();
+        $roles = \App\Models\Role::whereKeyNot(1)->get();
+        factory(\App\Models\User::class, 15)->create()->each(function ($user) use ($roles) {
+            $role = $roles->random();
+
+            $user->assignRole($role->name);
+        });
     }
 }

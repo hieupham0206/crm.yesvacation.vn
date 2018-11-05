@@ -3,6 +3,7 @@
     "/horizontal_menu/css/app.css": "/horizontal_menu/css/app.css",
     "/css/login.css": "/css/login.css",
     "/js/app.js": "/js/app.js",
+    "/js/tele_console.js": "/js/tele_console.js",
     "/js/reception.js": "/js/reception.js",
     "/js/home.js": "/js/home.js",
     "/js/department/events/index.js": "/js/department/events/index.js",
@@ -18,7 +19,5 @@
     "/js/admin/roles/form.js": "/js/admin/roles/form.js",
     "/js/admin/departments/index.js": "/js/admin/departments/index.js",
     "/js/admin/departments/form.js": "/js/admin/departments/form.js",
-    "/js/admin/activity_logs/index.js": "/js/admin/activity_logs/index.js",
-    "/horizontal_menu/js/merged.js": "/horizontal_menu/js/merged.js",
-    "/horizontal_menu/css/merged.css": "/horizontal_menu/css/merged.css"
+    "/js/admin/activity_logs/index.js": "/js/admin/activity_logs/index.js"
 }

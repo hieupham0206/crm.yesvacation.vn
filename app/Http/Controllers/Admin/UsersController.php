@@ -275,6 +275,7 @@ class UsersController extends Controller
     {
         $query      = request()->get('query', '');
         $page       = request()->get('page', 1);
+        $roleId     = request()->get('roleId');
         $excludeIds = request()->get('excludeIds', []);
         $offset     = ($page - 1) * 10;
         $users      = User::query()->select(['id', 'username']);
@@ -283,6 +284,12 @@ class UsersController extends Controller
             ['id', '!=', $excludeIds],
             ['username', 'like', $query],
         ]);
+
+        if ($roleId) {
+            $users->whereHas('roles', function($role) use ($roleId) {
+                $role->whereKey($roleId);
+            });
+        }
 
         $totalCount = $users->count();
         $users      = $users->offset($offset)->limit(10)->get();

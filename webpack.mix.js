@@ -34,18 +34,18 @@ mix.webpackConfig({
 	],
 })
 
-mix.combine([
-		`${resourcePath}/themes/vendors/vendors.bundle.js`,
-		`${resourcePath}/plugins/datatables/datatables.bundle.js`,
-		`${resourcePath}/themes/${theme}/base/scripts.bundle.js`,
-	],
-	`public/${theme}/js/merged.js`)
-mix.combine([
-		`${resourcePath}/themes/vendors/vendors.bundle.css`,
-		`${resourcePath}/plugins/datatables/datatables.bundle.css`,
-		`${resourcePath}/themes/${theme}/base/style.bundle.css`,
-	],
-	`public/${theme}/css/merged.css`)
+// mix.combine([
+// 		`${resourcePath}/themes/vendors/vendors.bundle.js`,
+// 		`${resourcePath}/plugins/datatables/datatables.bundle.js`,
+// 		`${resourcePath}/themes/${theme}/base/scripts.bundle.js`,
+// 	],
+// 	`public/${theme}/js/merged.js`)
+// mix.combine([
+// 		`${resourcePath}/themes/vendors/vendors.bundle.css`,
+// 		`${resourcePath}/plugins/datatables/datatables.bundle.css`,
+// 		`${resourcePath}/themes/${theme}/base/style.bundle.css`,
+// 	],
+// 	`public/${theme}/css/merged.css`)
 
 mix.js(`${resourcePath}/js/app/bootstrap.js`, 'public/js').js(`${resourcePath}/js/app/app.js`, 'public/js').
 	js(`${resourcePath}/js/auth/otp.js`, 'public/js/auth').js(`${resourcePath}/js/home.js`, 'public/js')
@@ -74,13 +74,13 @@ for (let namespace of Object.keys(routesObj)) {
 	}
 }
 
-mix.browserSync({
-	proxy: 'http://127.0.0.1:8002',
-	host: '192.168.68.26',
-	open: 'external',
-	browser: [],
-	reloadDelay: 2000,
-	injectChanges: false, // Don't try to inject, just do a page refresh
-	ghostMode: true,
-	notify: false,
-})
+// mix.browserSync({
+// 	proxy: 'http://127.0.0.1:8002',
+// 	host: '192.168.68.26',
+// 	open: 'external',
+// 	browser: [],
+// 	reloadDelay: 2000,
+// 	injectChanges: false, // Don't try to inject, just do a page refresh
+// 	ghostMode: true,
+// 	notify: false,
+// })

@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\UserPosition;
-
 class Department extends \App\Models\Base\Department
 {
     protected $fillable = [
@@ -40,8 +38,8 @@ class Department extends \App\Models\Base\Department
         return parent::getDescriptionEvent($eventName);
     }
 
-    public function getPositionsAttribute()
+    public function getRolesAttribute()
     {
-        return UserPosition::toSelectArray();
+        return Role::find([4, 5, 6]);
     }
 }

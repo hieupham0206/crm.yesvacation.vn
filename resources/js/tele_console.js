@@ -100,7 +100,9 @@ $(function() {
 			mApp.unblock('#modal_md')
 
 			if (wantToBreak) {
-				$('#btn_pause').trigger('click')
+				setTimeout(() => {
+					$('#btn_pause').trigger('click')
+				}, 0)
 			}
 		})
 	})

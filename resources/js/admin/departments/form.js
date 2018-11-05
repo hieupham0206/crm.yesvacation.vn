@@ -36,8 +36,13 @@ $(function() {
 		url: route('users.list'),
 		data: function(q) {
 			q.excludeIds = [1, ...$('.txt-user-id').getValues({parse: 'int'})]
+			q.roleId = $('#select_position').val()
 		},
 		column: 'username'
+	})
+
+	$selectPosition.on('change', function() {
+		$selectUser.val('').trigger('change').prop('disabled', $(this).val() === '')
 	})
 
 	$btnAddUser.on('click', function() {
@@ -70,6 +75,8 @@ $(function() {
 			positionText + `<input type="hidden" name="UserDepartment[position][{{ $key }}][]" value="${positionValue}" class="txt-position">`,
 			`<button type="button" class="btn-delete-user btn btn-sm btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--outline-2x m-btn--pill" title="Delete"><i class="la la-trash"></i></button>`,
 		]).draw(false)
+
+		$selectUser.val('').trigger('change')
 	})
 
 	$('body').on('click', '.btn-delete-user', function() {
