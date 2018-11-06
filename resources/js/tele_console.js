@@ -95,6 +95,7 @@ $(function() {
 			resetCallClock()
 			$('#span_customer_no').text(++totalCustomer)
 
+			$('#section_appointment_feature').hide()
 			$('#modal_md').modal('hide')
 			mApp.unblock('#modal_md')
 
@@ -103,6 +104,9 @@ $(function() {
 					$('#btn_pause').trigger('click')
 				}, 0)
 			} else if (wantToReCall) {
+				if (btnIdOfRecall.includes('appointment')) {
+					$('#section_appointment_feature').show()
+				}
 				$(`#${btnIdOfRecall}`).trigger('click')
 				callInterval = setInterval(callClock, 1000)
 			} else {
@@ -167,6 +171,9 @@ $(function() {
 			btnIdOfRecall = $(this).attr('id')
 			$('#leads_form').trigger('submit')
 		} else {
+			if (callTypeText === 'Appointment Call') {
+				$('#section_appointment_feature').show()
+			}
 			fetchLead(leadId, 0)
 			showFormChangeState({typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: table})
 			updateCallTypeText(callTypeText)
@@ -174,14 +181,20 @@ $(function() {
 	}
 
 	$body.on('click', '.btn-callback-call', function() {
+		$('#section_appointment_feature').hide()
 		recall.call(this, 'callbacks', 'Callback Call')
 	})
 
 	$body.on('click', '.btn-appointment-call', function() {
+		let callId = $(this).data('id')
+
+		$('#txt_appointment_id').val(callId)
+
 		recall.call(this, 'appointments', 'Appointment Call')
 	})
 
 	$body.on('click', '.btn-history-call', function() {
+		$('#section_appointment_feature').hide()
 		recall.call(this, 'history_calls', 'History Call')
 	})
 
@@ -265,6 +278,41 @@ $(function() {
 		} else {
 			$('#textarea_reason').val('')
 			$('#another_reason_section').hide()
+		}
+	})
+
+	$('#btn_cancel_appointment').on('click', function() {
+		let appointmentId = $('#txt_appointment_id').val()
+		if (appointmentId !== '') {
+			let url = route('appointments.cancel', appointmentId)
+
+			blockPage()
+			axios.post(url, {}).then(result => {
+				let obj = result['data']
+				if (obj.message) {
+					flash(obj.message)
+				}
+				tableAppointment.reload()
+			}).catch(e => console.log(e)).finally(() => {
+				unblock()
+			})
+		}
+	})
+	$('#btn_resend_appointment_email').on('click', function() {
+		let appointmentId = $('#txt_appointment_id').val()
+		let leadId = $('#txt_lead_id').val()
+		if (appointmentId !== '') {
+			let url = route('leads.resend_email', {lead: leadId, appointment: appointmentId})
+
+			blockPage()
+			axios.post(url, {}).then(result => {
+				let obj = result['data']
+				if (obj.message) {
+					flash(obj.message)
+				}
+			}).catch(e => console.log(e)).finally(() => {
+				unblock()
+			})
 		}
 	})
 

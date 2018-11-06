@@ -55,7 +55,7 @@ class AppointmentTable extends DataTable
      */
     public function getModels()
     {
-        $appointments = Appointment::query()->with(['lead']);
+        $appointments = Appointment::query()->with(['lead'])->where('state', Confirmation::YES);
 
         $this->totalFilteredRecords = $this->totalRecords = $appointments->count();
 
@@ -132,7 +132,8 @@ class AppointmentTable extends DataTable
 
             $dataArray[] = [
                 $appointment->lead->title,
-                "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-appointment-id='{$appointment->id}' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
+//                "<a class='link-lead-name m-link m--font-brand' href='javascript:void(0)' data-appointment-id='{$appointment->id}' data-lead-id='{$appointment->lead_id}'>{$appointment->lead->name}</a>",
+                $appointment->lead->name,
                 $appointmentDateText,
                 $appointment->lead->comment,
 

@@ -12,3 +12,4 @@ Route::get('/provinces/lists/table', 'LeadsController@provinces')->name('leads.p
 
 Route::get('/leads/reception/form-new-lead', 'LeadsController@formNewLead')->name('leads.form_new_lead');
 
+Route::post('/leads/resend-email/{lead}/{appointment}', 'LeadsController@resendEmail')->name('leads.resend_email');

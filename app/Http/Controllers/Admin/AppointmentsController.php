@@ -180,4 +180,13 @@ class AppointmentsController extends Controller
             'items'       => $appointments->toArray(),
         ]);
     }
+
+    public function cancel(Appointment $appointment)
+    {
+        $appointment->update(['state' => -1]);
+
+        return response()->json([
+            'message' => __('Data edited successfully'),
+        ]);
+    }
 }

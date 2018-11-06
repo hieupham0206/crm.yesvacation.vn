@@ -8,6 +8,7 @@
     <div class="m-content my-3">
         <input type="hidden" id="txt_user_id" value="{{ auth()->id() }}">
         <input type="hidden" id="txt_lead_id" value="{{ $lead->id }}">
+        <input type="hidden" id="txt_appointment_id">
         <div class="row">
             <div class="col-lg-12">
                 <div class="m-portlet" id="break_section">
@@ -77,6 +78,24 @@
                                     <button class="btn btn-brand m-btn m-btn--icon m-btn--custom" id="btn_form_change_state" data-url="{{ route('leads.form_change_state', $lead) }}">
                                         <span><i class="fa fa-save"></i><span>@lang('New Customer')</span></span>
                                     </button>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row" id="section_appointment_feature" style="display: none;">
+                                <div class="col-md-12 m-form__group-sub">
+                                    <div class="btn-group m-btn-group" role="group" aria-label="...">
+                                        <button type="button" class="btn btn-info m-btn m-btn--icon m-btn--custom" id="btn_resend_appointment_email">
+                                            <span><i class="fa fa-envelope"></i><span>Email</span></span>
+                                        </button>
+                                        <button type="button" class="btn btn-info m-btn m-btn--icon m-btn--custom" id="btn_reappointment">
+                                            <span><i class="fa fa-redo"></i><span>Reappointment</span></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger m-btn m-btn--icon m-btn--custom" id="btn_cancel_appointment">
+                                            <span><i class="fa fa-ban"></i><span>Cancel Appointment</span></span>
+                                        </button>
+                                        <button type="submit" class="btn btn-brand m-btn m-btn--icon m-btn--custom" id="btn_appointment_confirm">
+                                            <span><i class="fa fa-check"></i><span>Confirm</span></span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -12,9 +12,9 @@ namespace App\Models;
  * @property string|null $spouse_name
  * @property string|null $spouse_phone
  * @property \Illuminate\Support\Carbon|null $appointment_datetime
- * @property int $state -1: Hủy; 1: Sử dụng;
+ * @property int $state      -1: Hủy; 1: Sử dụng;
  * @property int $is_show_up -1: Không; 1: Có
- * @property int $is_queue -1: Không; 1: Có
+ * @property int $is_queue   -1: Không; 1: Có
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Activity[] $activity
@@ -53,7 +53,9 @@ class Appointment extends \App\Models\Base\Appointment
         'code',
         'spouse_name',
         'spouse_phone',
-        'is_show_up'
+        'is_show_up',
+        'is_queue',
+        'state',
     ];
     public static $logName = 'Appointment';
 
@@ -64,8 +66,11 @@ class Appointment extends \App\Models\Base\Appointment
     public $labels = [];
 
     public $filters = [
-        'user_id' => '=',
-        'code'    => 'like',
+        'user_id'    => '=',
+        'code'       => 'like',
+        'is_show_up' => '=',
+        'is_queue'   => '=',
+        'state'      => '=',
     ];
 
     /**

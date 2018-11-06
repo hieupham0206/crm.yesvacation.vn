@@ -593,4 +593,20 @@ class LeadsController extends Controller
             'message' => __('Data edited successfully'),
         ]);
     }
+
+    public function resendEmail(Lead $lead, Appointment $appointment)
+    {
+        if ($lead->email) {
+            $message = (new AppointmentConfirmation(compact('lead', 'appointment')))->onConnection('database')->onQueue('notification');
+            \Mail::to($lead->email)->queue($message);
+
+            return response()->json([
+                'message' => 'Đã gửi lại email',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Không thể gửi mail',
+        ], 500);
+    }
 }

@@ -22,3 +22,5 @@ Route::post('/translation_managers/edit/detail', 'TranslationManagersController@
 Route::put('/translation_managers/update/detail', 'TranslationManagersController@update')->name('translation_managers.update_detail');
 
 Route::post('/event-datas/change-state/{eventData}', 'EventDatasController@changeState')->name('event_datas.change_state');
+
+Route::post('/appointments/cancel/{appointment}', 'AppointmentsController@cancel')->name('appointments.cancel');
