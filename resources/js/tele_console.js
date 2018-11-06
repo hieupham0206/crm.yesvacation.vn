@@ -4,7 +4,7 @@ $(function() {
 	let loginHours = 0, loginMinutes = 0, loginSeconds = 0
 	let callHours = 0, callMinutes = 0, callSeconds = 0
 	let totalCustomer = 0
-	let wantToBreak = false
+	let wantToBreak = false, wantToReCall = false, btnIdOfRecall
 
 	let callInterval
 	let $body = $('body')
@@ -93,7 +93,6 @@ $(function() {
 		$(this).submitForm({formData: formData}).then(() => {
 			$(this).resetForm()
 			resetCallClock()
-			waitClock()
 			$('#span_customer_no').text(++totalCustomer)
 
 			$('#modal_md').modal('hide')
@@ -103,6 +102,11 @@ $(function() {
 				setTimeout(() => {
 					$('#btn_pause').trigger('click')
 				}, 0)
+			} else if (wantToReCall) {
+				$(`#${btnIdOfRecall}`).trigger('click')
+				callInterval = setInterval(callClock, 1000)
+			} else {
+				waitClock()
 			}
 		})
 	})
@@ -153,33 +157,32 @@ $(function() {
 		reloadLeadRelatedTable()
 	})
 
-	$body.on('click', '.btn-appointment-call', function() {
+	function recall(table, callTypeText) {
 		let leadId = $(this).data('lead-id')
 		let typeCall = $(this).data('type-call')
 		let callId = $(this).data('id')
 
-		fetchLead(leadId, 0)
-		showFormChangeState({typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: 'appointments'})
-		updateCallTypeText('Appointment Call')
-	})
+		if ($('#span_call_time').text() !== '00:00:00' && !wantToReCall) {
+			wantToReCall = true
+			btnIdOfRecall = $(this).attr('id')
+			$('#leads_form').trigger('submit')
+		} else {
+			fetchLead(leadId, 0)
+			showFormChangeState({typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: table})
+			updateCallTypeText(callTypeText)
+		}
+	}
 
 	$body.on('click', '.btn-callback-call', function() {
-		let leadId = $(this).data('lead-id')
-		let typeCall = $(this).data('type-call')
-		let callId = $(this).data('id')
+		recall.call(this, 'callbacks', 'Callback Call')
+	})
 
-		fetchLead(leadId, 0)
-		showFormChangeState({typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: 'callbacks'})
-		updateCallTypeText('Callback Call')
+	$body.on('click', '.btn-appointment-call', function() {
+		recall.call(this, 'appointments', 'Appointment Call')
 	})
 
 	$body.on('click', '.btn-history-call', function() {
-		let leadId = $(this).data('lead-id')
-		let typeCall = $(this).data('type-call')
-
-		fetchLead(leadId, 0)
-		showFormChangeState({typeCall: typeCall, url: route('leads.form_change_state', leadId)})
-		updateCallTypeText('History Call')
+		recall.call(this, 'history_calls', 'History Call')
 	})
 
 	$body.on('click', '.btn-edit-datetime', function() {
@@ -277,9 +280,8 @@ $(function() {
 	$('#btn_pause').on('click', function() {
 		let url = $(this).data('url')
 
-		if ($('#span_call_time').text() !== '00:00:00' && ! wantToBreak) {
+		if ($('#span_call_time').text() !== '00:00:00' && !wantToBreak) {
 			wantToBreak = true
-			// flash('Vui lòng kết thúc cuộc gọi', 'danger')
 			$('#leads_form').trigger('submit')
 		} else {
 			$('#modal_md').showModal({url: url, params: {}, method: 'get'})
@@ -341,13 +343,6 @@ $(function() {
 		$('#span_lead_title').text('')
 	}
 
-	let waitTimer = new Timer()
-	waitTimer.addEventListener('started', function() {
-		updateCallTypeText('Waiting')
-		clearLeadInfo()
-		$('#btn_form_change_state').prop('disabled', true)
-	})
-
 	function autoCall() {
 		fetchLead('', 1).then(() => {
 			callInterval = setInterval(callClock, 1000)
@@ -355,9 +350,15 @@ $(function() {
 		})
 	}
 
+	let waitTimer = new Timer()
+	waitTimer.addEventListener('started', function() {
+		updateCallTypeText('Waiting')
+		clearLeadInfo()
+		$('#btn_form_change_state').prop('disabled', true)
+	})
 	waitTimer.addEventListener('stopped', function() {
 		updateCallTypeText('Auto')
-		if (! wantToBreak) {
+		if (!wantToBreak) {
 			autoCall()
 		}
 	})
@@ -369,7 +370,6 @@ $(function() {
 	})
 
 	let breakTimer = new Timer()
-
 	breakTimer.addEventListener('secondsUpdated', function() {
 		$('#span_pause_time').html(breakTimer.getTimeValues().toString())
 	})
@@ -430,7 +430,6 @@ $(function() {
 
 	function initCallClock() {
 		let diffTime = $('#span_call_time').text()
-		console.log(diffTime)
 		let times = _.split(diffTime, ':')
 
 		callHours = numeral(times[0]).value()

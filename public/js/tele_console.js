@@ -86,7 +86,9 @@ $(function () {
 	    callMinutes = 0,
 	    callSeconds = 0;
 	var totalCustomer = 0;
-	var wantToBreak = false;
+	var wantToBreak = false,
+	    wantToReCall = false,
+	    btnIdOfRecall = void 0;
 
 	var callInterval = void 0;
 	var $body = $('body');
@@ -185,7 +187,6 @@ $(function () {
 		$(this).submitForm({ formData: formData }).then(function () {
 			$(_this).resetForm();
 			resetCallClock();
-			waitClock();
 			$('#span_customer_no').text(++totalCustomer);
 
 			$('#modal_md').modal('hide');
@@ -195,6 +196,11 @@ $(function () {
 				setTimeout(function () {
 					$('#btn_pause').trigger('click');
 				}, 0);
+			} else if (wantToReCall) {
+				$('#' + btnIdOfRecall).trigger('click');
+				callInterval = setInterval(callClock, 1000);
+			} else {
+				waitClock();
 			}
 		});
 	});
@@ -247,33 +253,32 @@ $(function () {
 		reloadLeadRelatedTable();
 	});
 
-	$body.on('click', '.btn-appointment-call', function () {
+	function recall(table, callTypeText) {
 		var leadId = $(this).data('lead-id');
 		var typeCall = $(this).data('type-call');
 		var callId = $(this).data('id');
 
-		fetchLead(leadId, 0);
-		showFormChangeState({ typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: 'appointments' });
-		updateCallTypeText('Appointment Call');
-	});
+		if ($('#span_call_time').text() !== '00:00:00' && !wantToReCall) {
+			wantToReCall = true;
+			btnIdOfRecall = $(this).attr('id');
+			$('#leads_form').trigger('submit');
+		} else {
+			fetchLead(leadId, 0);
+			showFormChangeState({ typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: table });
+			updateCallTypeText(callTypeText);
+		}
+	}
 
 	$body.on('click', '.btn-callback-call', function () {
-		var leadId = $(this).data('lead-id');
-		var typeCall = $(this).data('type-call');
-		var callId = $(this).data('id');
+		recall.call(this, 'callbacks', 'Callback Call');
+	});
 
-		fetchLead(leadId, 0);
-		showFormChangeState({ typeCall: typeCall, url: route('leads.form_change_state', leadId), callId: callId, table: 'callbacks' });
-		updateCallTypeText('Callback Call');
+	$body.on('click', '.btn-appointment-call', function () {
+		recall.call(this, 'appointments', 'Appointment Call');
 	});
 
 	$body.on('click', '.btn-history-call', function () {
-		var leadId = $(this).data('lead-id');
-		var typeCall = $(this).data('type-call');
-
-		fetchLead(leadId, 0);
-		showFormChangeState({ typeCall: typeCall, url: route('leads.form_change_state', leadId) });
-		updateCallTypeText('History Call');
+		recall.call(this, 'history_calls', 'History Call');
 	});
 
 	$body.on('click', '.btn-edit-datetime', function () {
@@ -371,7 +376,6 @@ $(function () {
 
 		if ($('#span_call_time').text() !== '00:00:00' && !wantToBreak) {
 			wantToBreak = true;
-			// flash('Vui lòng kết thúc cuộc gọi', 'danger')
 			$('#leads_form').trigger('submit');
 		} else {
 			$('#modal_md').showModal({ url: url, params: {}, method: 'get' });
@@ -440,13 +444,6 @@ $(function () {
 		$('#span_lead_title').text('');
 	}
 
-	var waitTimer = new Timer();
-	waitTimer.addEventListener('started', function () {
-		updateCallTypeText('Waiting');
-		clearLeadInfo();
-		$('#btn_form_change_state').prop('disabled', true);
-	});
-
 	function autoCall() {
 		fetchLead('', 1).then(function () {
 			callInterval = setInterval(callClock, 1000);
@@ -454,6 +451,12 @@ $(function () {
 		});
 	}
 
+	var waitTimer = new Timer();
+	waitTimer.addEventListener('started', function () {
+		updateCallTypeText('Waiting');
+		clearLeadInfo();
+		$('#btn_form_change_state').prop('disabled', true);
+	});
 	waitTimer.addEventListener('stopped', function () {
 		updateCallTypeText('Auto');
 		if (!wantToBreak) {
@@ -468,7 +471,6 @@ $(function () {
 	});
 
 	var breakTimer = new Timer();
-
 	breakTimer.addEventListener('secondsUpdated', function () {
 		$('#span_pause_time').html(breakTimer.getTimeValues().toString());
 	});
@@ -529,7 +531,6 @@ $(function () {
 
 	function initCallClock() {
 		var diffTime = $('#span_call_time').text();
-		console.log(diffTime);
 		var times = _.split(diffTime, ':');
 
 		callHours = numeral(times[0]).value();

@@ -41,12 +41,25 @@ class PermissionSeeder extends Seeder
         Permission::truncate();
         Schema::enableForeignKeyConstraints();
         Permission::insert($permissions);
+
+        $this->givePermissionToRole('RECEPTION', [
+            [
+                'name'    => 'reception',
+                'actions' => ['view'],
+            ],
+        ]);
+        $this->givePermissionToRole('TELE MARKETER', [
+            [
+                'name'    => 'tele-marketer-console',
+                'actions' => ['view'],
+            ],
+        ]);
     }
 
     private function givePermissionToRole($roleName, $permissions)
     {
         /** @var \App\Models\Role $role */
-        $role            = Role::whereName($roleName)->first();
+        $role            = \App\Models\Role::whereName($roleName)->first();
         $permissionDatas = [];
         foreach ($permissions as $permission) {
             $permissionArrs = $permission;

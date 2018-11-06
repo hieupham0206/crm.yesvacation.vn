@@ -42,5 +42,9 @@
   "reception": {
     "icon": "fa fa-user",
     "route": "reception"
+  },
+  "departmentrs": {
+    "icon": "fa fa-building",
+    "route": "departments.index"
   }
 }

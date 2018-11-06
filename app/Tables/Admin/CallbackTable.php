@@ -66,7 +66,7 @@ class CallbackTable extends DataTable
             }
 
 //            if ($canDeleteCallback) {
-            $btnCall = ' <button type="button" data-id="' . $callBack->id . '" data-lead-id="' . $callBack->lead_id . ' !!!" data-type-call="' . HistoryCallType::CALLBACK . '" 
+            $btnCall = ' <button id="btn_callback_call_' . $callBack->id . '_' . $callBack->lead_id . '" type="button" data-id="' . $callBack->id . '" data-lead-id="' . $callBack->lead_id . '" data-type-call="' . HistoryCallType::CALLBACK . '" 
                 class="btn btn-sm btn-callback-call btn-primary m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
                     <i class="fa fa-phone"></i>
                 </button>';
