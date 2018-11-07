@@ -96,6 +96,7 @@ $(function() {
 			$('#span_customer_no').text(++totalCustomer)
 
 			$('#section_appointment_feature').hide()
+			$('#txt_appointment_id').val('')
 			$('#modal_md').modal('hide')
 			mApp.unblock('#modal_md')
 
@@ -314,6 +315,10 @@ $(function() {
 				unblock()
 			})
 		}
+	})
+	$('#btn_reappointment').on('click', function() {
+		let leadId = $('#txt_lead_id').val()
+		showFormChangeState({url: route('leads.form_change_state', leadId), typeCall: 4})
 	})
 
 	$('#modal_md').on('show.bs.modal', function() {

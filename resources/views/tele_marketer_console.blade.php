@@ -8,7 +8,6 @@
     <div class="m-content my-3">
         <input type="hidden" id="txt_user_id" value="{{ auth()->id() }}">
         <input type="hidden" id="txt_lead_id" value="{{ $lead->id }}">
-        <input type="hidden" id="txt_appointment_id">
         <div class="row">
             <div class="col-lg-12">
                 <div class="m-portlet" id="break_section">
@@ -48,6 +47,7 @@
                     </div>
                     <form id="leads_form" class="m-form m-form--label-align-right m-form--state" method="post" action="{{ route('leads.update', $lead) }}">
                         <div class="m-portlet__body">
+                            <input type="hidden" id="txt_appointment_id" name="appointment_id">
                             {{--<div class="m-scrollable m-scroller ps ps--active-y" data-scrollable="true" data-height="300" data-scrollbar-shown="true">--}}
                             @csrf
                             @isset($method)

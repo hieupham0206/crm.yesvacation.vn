@@ -472,9 +472,11 @@ class LeadsController extends Controller
         $time        = $request->time;
 
         $typeCall   = $request->get('typeCall', 1);
-        $callId     = $request->get('call_id', 1);
         $provinceId = $request->get('province_id');
-        $table      = $request->get('table', 1);
+
+        //dùng de xóa thông tin cac bảng gọi lại
+        $callId = $request->get('call_id', 1);
+        $table  = $request->get('table', 1);
 
         if ($newState) {
             $userId = auth()->id();
@@ -499,6 +501,14 @@ class LeadsController extends Controller
             }
             //state = 8: lưu vào bảng appointment
             if ($newState == 8) {
+                //note: chức năng reappointment
+                $appoinmentId = $request->get('appointment_id', null);
+
+                if ($appoinmentId) {
+                    $oldAppointment = Appointment::find($appoinmentId);
+                    $oldAppointment->update(['state' => -1]);
+                }
+
                 $appointmentDatas = [
                     'lead_id'      => $lead->id,
                     'user_id'      => $userId,
@@ -544,13 +554,13 @@ class LeadsController extends Controller
             session(['startCallTime' => now()->addSecond()]);
 
             //nếu gọi callback hoặc appointment => xóa thong tin
-            if ($table) {
-                if ($table === 'callbacks') {
-                    Callback::destroy([$callId]);
-                } elseif ($table === 'appoinments') {
-                    Appointment::destroy([$callId]);
-                }
-            }
+//            if ($table) {
+//                if ($table === 'callbacks') {
+//                    Callback::destroy([$callId]);
+//                } elseif ($table === 'appoinments') {
+//                    Appointment::destroy([$callId]);
+//                }
+//            }
 
             return response()->json([
                 'message' => __('Data edited successfully'),
