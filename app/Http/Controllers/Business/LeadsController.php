@@ -439,7 +439,7 @@ class LeadsController extends Controller
         }
 
         $leadStates = $lead->states;
-        unset($leadStates[8], $leadStates[1]);
+        unset($leadStates[8], $leadStates[1], $leadStates[9], $leadStates[10]);
 
         $leadStates = collect($leadStates)->sortKeysDesc();
 
