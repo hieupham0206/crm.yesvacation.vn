@@ -76,6 +76,16 @@ $(function() {
 		$('#event_data_form').resetForm()
 	}
 
+	function toggleShowUpSection(isShow = false) {
+		if (isShow) {
+			$btnShowUp.prop('disabled', false)
+			$btnNotShowUp.prop('disabled', false)
+		} else {
+			$btnShowUp.prop('disabled', true)
+			$btnNotShowUp.prop('disabled', true)
+		}
+	}
+
 	$('#modal_lg').on('show.bs.modal', function() {
 		$('.select').select2()
 
@@ -91,7 +101,9 @@ $(function() {
 	$body.on('click', '.link-lead-name', function() {
 		let leadId = $(this).data('lead-id')
 		let appointmentId = $(this).data('appointment-id')
-		fetchLead(leadId, 0, appointmentId)
+		fetchLead(leadId, 0, appointmentId).then(() => {
+			toggleShowUpSection(true)
+		})
 		$('#txt_lead_id').val(leadId)
 	})
 

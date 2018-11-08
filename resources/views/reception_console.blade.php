@@ -139,10 +139,10 @@
                                     </div>
                                     <div class="form-group m-form__group row">
                                         <div class="col-sm-12 col-md-8 m-form__group-sub">
-                                            <button type="button" class="btn btn-success m-btn m-btn--icon m-btn--custom" id="btn_show_up" data-url="{{ route('leads.form_change_state', $lead) }}">
+                                            <button type="button" class="btn btn-success m-btn m-btn--icon m-btn--custom" id="btn_show_up" data-url="{{ route('leads.form_change_state', $lead) }}" disabled>
                                                 <span><i class="fa fa-check"></i><span>@lang('Show up')</span></span>
                                             </button>
-                                            <button type="button" class="btn btn-danger m-btn m-btn--icon m-btn--custom" id="btn_not_show_up" data-url="{{ route('leads.form_change_state', $lead) }}">
+                                            <button type="button" class="btn btn-danger m-btn m-btn--icon m-btn--custom" id="btn_not_show_up" data-url="{{ route('leads.form_change_state', $lead) }}" disabled>
                                                 <span><i class="fa fa-ban"></i><span>@lang('Not')</span></span>
                                             </button>
                                         </div>

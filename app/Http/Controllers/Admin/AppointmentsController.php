@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\EventData;
 use App\Tables\Admin\AppointmentTable;
 use App\Tables\TableFacade;
 use Illuminate\Http\Request;
@@ -194,7 +195,7 @@ class AppointmentsController extends Controller
     {
         $doQueue = request()->get('notQueue', false);
 
-        $appointment->update(['is_queue' => $doQueue ? 1 : -1]);
+        $appointment->update(['is_queue' => $doQueue ? -1 : 1]);
 
         if ($doQueue == 1) {
             //note: lưu event data

@@ -429,6 +429,7 @@ $(function() {
 		fetchLead('', 1).then(() => {
 			callInterval = setInterval(callClock, 1000)
 			$('#btn_form_change_state').prop('disabled', false)
+			reloadTable()
 		})
 	}
 

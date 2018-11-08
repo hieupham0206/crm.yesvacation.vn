@@ -24,6 +24,6 @@ Route::put('/translation_managers/update/detail', 'TranslationManagersController
 Route::post('/event-datas/change-state/{eventData}', 'EventDatasController@changeState')->name('event_datas.change_state');
 
 Route::post('/appointments/cancel/{appointment}', 'AppointmentsController@cancel')->name('appointments.cancel');
-Route::post('/appointments/not-show-up/{appointment}', 'AppointmentsController@notShowUp')->name('appointments.not_show_up');
+Route::post('/appointments/lead/not-show-up/{appointment}', 'AppointmentsController@notShowUp')->name('appointments.not_show_up');
 Route::post('/appointments/do-queue/{appointment}', 'AppointmentsController@doQueue')->name('appointments.do_queue');
-Route::get('/appointments/form-change-appointment/', 'AppointmentsController@formChangeAppointment')->name('appointments.form_change_appointment');
+Route::get('/appointments/form/change-appointment', 'AppointmentsController@formChangeAppointment')->name('appointments.form_change_appointment');

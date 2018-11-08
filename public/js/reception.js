@@ -159,6 +159,18 @@ $(function () {
 		$('#event_data_form').resetForm();
 	}
 
+	function toggleShowUpSection() {
+		var isShow = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+		if (isShow) {
+			$btnShowUp.prop('disabled', false);
+			$btnNotShowUp.prop('disabled', false);
+		} else {
+			$btnShowUp.prop('disabled', true);
+			$btnNotShowUp.prop('disabled', true);
+		}
+	}
+
 	$('#modal_lg').on('show.bs.modal', function () {
 		$('.select').select2();
 
@@ -174,7 +186,9 @@ $(function () {
 	$body.on('click', '.link-lead-name', function () {
 		var leadId = $(this).data('lead-id');
 		var appointmentId = $(this).data('appointment-id');
-		fetchLead(leadId, 0, appointmentId);
+		fetchLead(leadId, 0, appointmentId).then(function () {
+			toggleShowUpSection(true);
+		});
 		$('#txt_lead_id').val(leadId);
 	});
 
