@@ -14,7 +14,6 @@
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
                                 {{--<h3 class="m-portlet__head-text">Customer No: <span id="span_customer_no">0</span></h3>--}}
-
                                 <label for="span_appointment_datetime">{{ $lead->label('code') }}</label>
                                 <input type="text" name="voucher_code" id="txt_voucher_code" class="form-control m-input ml-3" placeholder="{{ __('Enter value') }}" autocomplete="off">
                             </div>
@@ -26,12 +25,12 @@
                             </button>
                         </div>
                         {{--<div class="m-portlet__head-tools">--}}
-                            {{--<button class="btn btn-brand btn-sm m-btn m-btn--icon m-btn--custom mr-2" id="btn_pause" data-url="{{ route('users.form_break') }}">--}}
-                                {{--<span><i class="fa fa-pause"></i><span>@lang('Pause')</span></span>--}}
-                            {{--</button>--}}
-                            {{--<button class="btn btn-brand btn-sm m-btn m-btn--icon m-btn--custom" id="btn_resume" data-url="{{ route('users.resume') }}" style="display: none">--}}
-                                {{--<span><i class="fa fa-play"></i><span>@lang('Resume')</span></span>--}}
-                            {{--</button>--}}
+                        {{--<button class="btn btn-brand btn-sm m-btn m-btn--icon m-btn--custom mr-2" id="btn_pause" data-url="{{ route('users.form_break') }}">--}}
+                        {{--<span><i class="fa fa-pause"></i><span>@lang('Pause')</span></span>--}}
+                        {{--</button>--}}
+                        {{--<button class="btn btn-brand btn-sm m-btn m-btn--icon m-btn--custom" id="btn_resume" data-url="{{ route('users.resume') }}" style="display: none">--}}
+                        {{--<span><i class="fa fa-play"></i><span>@lang('Resume')</span></span>--}}
+                        {{--</button>--}}
                         {{--</div>--}}
                     </div>
                 </div>
@@ -148,19 +147,22 @@
                                             </button>
                                         </div>
                                     </div>
+                                    <div class="form-group m-form__group row" id="queue_section" style="display: none">
+                                        <div class="col-sm-12 col-md-8 m-form__group-sub">
+                                            <button type="button" class="btn btn-success m-btn m-btn--icon m-btn--custom" id="btn_queue">
+                                                <span><i class="fa fa-check"></i><span>@lang('Queue')</span></span>
+                                            </button>
+                                            <button type="button" class="btn btn-danger m-btn m-btn--icon m-btn--custom" id="btn_not_queue">
+                                                <span><i class="fa fa-ban"></i><span>@lang('Not queue')</span></span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="m-portlet ">
-                    {{--<div class="m-portlet__head">--}}
-                        {{--<div class="m-portlet__head-caption">--}}
-                            {{--<div class="m-portlet__head-title">--}}
-                                {{--<h3 class="m-portlet__head-text">Customer Info</h3>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
+                <div class="m-portlet" id="event_data_section" style="display: none">
                     <div class="m-portlet__body">
                         <div class="m-scrollable m-scroller ps ps--active-y" data-scrollable="true" data-height="300" data-scrollbar-shown="true">
                             <form id="event_data_form" class="m-form m-form--label-align-right m-form--state" method="post" action="{{ route('leads.update', $lead) }}">

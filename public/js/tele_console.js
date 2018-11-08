@@ -182,7 +182,6 @@ $(function () {
 		e.preventDefault();
 		mApp.block('#modal_md');
 		var formData = new FormData($(this)[0]);
-		formData.append('startCallTime', moment($('#span_call_time').text(), 'HH:mm:ss: A').diff(moment().startOf('day'), 'seconds'));
 
 		$(this).submitForm({ formData: formData }).then(function () {
 			$(_this).resetForm();
@@ -204,6 +203,7 @@ $(function () {
 				}
 				$('#' + btnIdOfRecall).trigger('click');
 				callInterval = setInterval(callClock, 1000);
+				wantToReCall = false;
 			} else {
 				waitClock();
 			}
@@ -414,9 +414,42 @@ $(function () {
 			});
 		}
 	});
+
 	$('#btn_reappointment').on('click', function () {
 		var leadId = $('#txt_lead_id').val();
-		showFormChangeState({ url: route('leads.form_change_state', leadId), typeCall: 4 });
+		var url = route('appointments.cancel', $('#txt_appointment_id').val());
+
+		blockPage();
+		axios.post(url, {}).then(function (result) {
+			var obj = result['data'];
+			if (obj.message) {
+				flash(obj.message);
+			}
+			showFormChangeState({ url: route('leads.form_change_state', leadId), typeCall: 4 });
+		}).catch(function (e) {
+			return console.log(e);
+		}).finally(function () {
+			unblock();
+		});
+	});
+
+	$('#btn_appointment_confirm').on('click', function () {
+		var leadId = $('#txt_lead_id').val();
+
+		var url = route('leads.change_state', leadId);
+
+		blockPage();
+		axios.post(url, {}).then(function (result) {
+			var obj = result['data'];
+			if (obj.message) {
+				flash(obj.message);
+			}
+			autoCall();
+		}).catch(function (e) {
+			return console.log(e);
+		}).finally(function () {
+			unblock();
+		});
 	});
 
 	$('#modal_md').on('show.bs.modal', function () {

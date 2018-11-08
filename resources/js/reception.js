@@ -3,6 +3,8 @@ $(function() {
 	let $body = $('body'),
 		$btnShowUp = $('#btn_show_up'),
 		$btnNotShowUp = $('#btn_not_show_up'),
+		$btnQueue = $('#btn_queue'),
+		$btnNotQueue = $('#btn_not_queue'),
 		$btnChangeToEventData = $('#btn_change_to_event_data'),
 		$btnSearch = $('#btn_search'),
 		$btnNewLead = $('#btn_new_lead')
@@ -118,12 +120,84 @@ $(function() {
 	})
 
 	$btnShowUp.on('click', function() {
-		toggleFormEventData(false)
+		// toggleFormEventData(false)
+		$('#queue_section').show()
 	})
 
 	$btnNotShowUp.on('click', function() {
-		toggleFormEventData()
-		clearFormEventData()
+		$('#queue_section').hide()
+		let url = route('appointments.not_show_up', $('#txt_appointment_id').val())
+
+		axios.post(url, {
+			notQueue: true
+		}).then(result => {
+			let obj = result['data']
+			flash(obj.message)
+		}).catch(e => console.log(e)).finally(() => {
+			unblock()
+		})
+	})
+
+	$btnQueue.on('click', function() {
+		let url = route('appointments.do_queue', $('#txt_appointment_id').val())
+
+		axios.post(url, {}).then(result => {
+			let obj = result['data']
+			flash(obj.message)
+		}).catch(e => console.log(e)).finally(() => {
+			unblock()
+		})
+	})
+
+	$btnNotQueue.on('click', function() {
+		let url = route('appointments.do_queue', $('#txt_appointment_id').val())
+
+		axios.post(url, {
+			notQueue: true
+		}).then(result => {
+			url = route('appointments.form_change_appointment')
+			$('#modal_md').showModal({
+				url: url, method: 'get',
+			})
+		}).catch(e => console.log(e)).finally(() => {
+			unblock()
+		})
+	})
+
+	$('body').on('click', '#btn_reappointment', function() {
+		let leadId = $('#txt_lead_id').val()
+		let url = route('appointments.cancel', $('#txt_appointment_id').val())
+
+		blockPage()
+		axios.post(url, {}).then(result => {
+			let obj = result['data']
+			if (obj.message) {
+				flash(obj.message)
+			}
+			$('#modal_md').showModal({
+				url: route('leads.form_change_state', leadId), params: {
+					typeCall: 4,
+					callId: '',
+				}, method: 'get',
+			})
+		}).catch(e => console.log(e)).finally(() => {
+			unblock()
+		})
+	})
+	$('body').on('click', '#btn_cancel_appointment', function() {
+		let url = route('appointments.cancel', $('#txt_appointment_id').val())
+
+		blockPage()
+		axios.post(url, {}).then(result => {
+			let obj = result['data']
+			if (obj.message) {
+				flash(obj.message)
+			}
+			$('#modal_md').modal('hide')
+			tableAppointment.reload()
+		}).catch(e => console.log(e)).finally(() => {
+			unblock()
+		})
 	})
 
 	$('#event_data_form').on('submit', function(e) {

@@ -41,10 +41,11 @@ class AppointmentTable extends DataTable
             $appointments = $this->getModels();
             $dataArray    = $this->initTableTeleConsole($appointments, $canUpdateAppointment, $canDeleteAppointment, $modelName);
         } elseif ($form === 'reception_console') {
-            $this->filters['today']           = true;
-            $this->filters['not_show_up_yet'] = true;
-            $appointments                     = $this->getModels();
-            $dataArray                        = $this->initTableReceptionConsole($appointments);
+            $this->filters['today']         = true;
+            $this->filters['is_show_up']    = Confirmation::NO;
+            $this->filters['is_not_cancel'] = true;
+            $appointments                   = $this->getModels();
+            $dataArray                      = $this->initTableReceptionConsole($appointments);
         }
 
         return $dataArray ?? [];
@@ -71,8 +72,8 @@ class AppointmentTable extends DataTable
             $this->totalFilteredRecords = $appointments->count();
         }
 
-        if (isset($this->filters['not_show_up_yet'])) {
-            $appointments->where('is_show_up', Confirmation::NO);
+        if (isset($this->filters['is_not_cancel'])) {
+            $appointments->where('state', '!=', Confirmation::NO);
 
             $this->totalFilteredRecords = $appointments->count();
         }

@@ -87,12 +87,12 @@
                                             <span><i class="fa fa-envelope"></i><span>Email</span></span>
                                         </button>
                                         <button type="button" class="btn btn-info m-btn m-btn--icon m-btn--custom" id="btn_reappointment">
-                                            <span><i class="fa fa-redo"></i><span>Reappointment</span></span>
+                                            <span><i class="fa fa-redo"></i><span>Re-App</span></span>
                                         </button>
                                         <button type="button" class="btn btn-danger m-btn m-btn--icon m-btn--custom" id="btn_cancel_appointment">
-                                            <span><i class="fa fa-ban"></i><span>Cancel Appointment</span></span>
+                                            <span><i class="fa fa-ban"></i><span>Cancel-App</span></span>
                                         </button>
-                                        <button type="submit" class="btn btn-brand m-btn m-btn--icon m-btn--custom" id="btn_appointment_confirm">
+                                        <button type="button" class="btn btn-brand m-btn m-btn--icon m-btn--custom" id="btn_appointment_confirm">
                                             <span><i class="fa fa-check"></i><span>Confirm</span></span>
                                         </button>
                                     </div>

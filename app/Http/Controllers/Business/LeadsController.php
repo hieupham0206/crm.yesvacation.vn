@@ -619,4 +619,27 @@ class LeadsController extends Controller
             'message' => 'Không thể gửi mail',
         ], 500);
     }
+
+    public function saveHistoryCall(Lead $lead, Request $request)
+    {
+        $typeCall = $request->get('typeCall', 1);
+        $userId   = auth()->id();
+
+        $startCallTime = session('startCallTime');
+        $diffInSeconds = now()->diffInSeconds($startCallTime);
+        //lưu bảng history_calls
+        HistoryCall::create([
+            'type'         => $typeCall,
+            'lead_id'      => $lead->id,
+            'user_id'      => $userId,
+            'state'        => $lead->state,
+            'comment'      => '',
+            'time_of_call' => $diffInSeconds,
+        ]);
+        session(['startCallTime' => now()->addSecond()]);
+
+        return response()->json([
+            'message' => __('Data edited successfully'),
+        ]);
+    }
 }

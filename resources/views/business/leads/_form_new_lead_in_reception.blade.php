@@ -62,20 +62,20 @@
                         <input class="form-control" name="spouse_phone" id="txt_spouse_phone" value=""/>
                     </div>
                 </div>
+                {{--<div class="form-group m-form__group row">--}}
+                    {{--<div class="col-sm-12 col-md-6 m-form__group-sub">--}}
+                        {{--<label for="txt_to">{{ $lead->label('TO') }}</label>--}}
+                        {{--<input class="form-control" name="to" type="text" id="txt_to" value="" placeholder="{{ __('Enter value') }}">--}}
+                    {{--</div>--}}
+                    {{--<div class="col-sm-12 col-md-6 m-form__group-sub">--}}
+                        {{--<label for="txt_rep">{{ $lead->label('REP') }}</label>--}}
+                        {{--<input class="form-control" name="rep" type="text" id="txt_rep" value="" placeholder="{{ __('Enter value') }}">--}}
+                    {{--</div>--}}
+                {{--</div>--}}
                 <div class="form-group m-form__group row">
                     <div class="col-sm-12 col-md-6 m-form__group-sub">
                         <label for="txt_voucher">{{ $lead->label('Voucher') }}</label>
                         <input class="form-control" name="voucher" type="text" id="txt_voucher" value="" placeholder="{{ __('Enter value') }}">
-                    </div>
-                    <div class="col-sm-12 col-md-6 m-form__group-sub">
-                        <label for="txt_to">{{ $lead->label('TO') }}</label>
-                        <input class="form-control" name="to" type="text" id="txt_to" value="" placeholder="{{ __('Enter value') }}">
-                    </div>
-                </div>
-                <div class="form-group m-form__group row">
-                    <div class="col-sm-12 col-md-6 m-form__group-sub">
-                        <label for="txt_rep">{{ $lead->label('REP') }}</label>
-                        <input class="form-control" name="rep" type="text" id="txt_rep" value="" placeholder="{{ __('Enter value') }}">
                     </div>
                     <div class="col-sm-12 col-md-6 m-form__group-sub">
                         <label for="txt_note">{{ $lead->label('Note') }}</label>

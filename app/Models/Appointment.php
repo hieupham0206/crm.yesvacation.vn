@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Confirmation;
+
 /**
  * App\Models\Appointment
  *
@@ -88,5 +90,15 @@ class Appointment extends \App\Models\Base\Appointment
     public function getDescriptionForEvent(string $eventName): string
     {
         return parent::getDescriptionEvent($eventName);
+    }
+
+    public function cancel()
+    {
+        return $this->update(['state' => Confirmation::NO]);
+    }
+
+    public function notShowUp()
+    {
+        return $this->update(['is_show_up' => Confirmation::NO]);
     }
 }

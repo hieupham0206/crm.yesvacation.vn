@@ -161,7 +161,7 @@ class AppointmentsController extends Controller
     {
         $query        = request()->get('query', '');
         $page         = request()->get('page', 1);
-        $leadId         = request()->get('leadId', '');
+        $leadId       = request()->get('leadId', '');
         $excludeIds   = request()->get('excludeIds', []);
         $offset       = ($page - 1) * 10;
         $appointments = Appointment::query()->with(['lead', 'user']);
@@ -169,7 +169,7 @@ class AppointmentsController extends Controller
         $appointments->andFilterWhere([
             ['name', 'like', $query],
             ['id', '!=', $excludeIds],
-            ['lead_id', '=', $leadId]
+            ['lead_id', '=', $leadId],
         ]);
 
         $totalCount   = $appointments->count();
@@ -183,10 +183,45 @@ class AppointmentsController extends Controller
 
     public function cancel(Appointment $appointment)
     {
-        $appointment->update(['state' => -1]);
+        $appointment->cancel();
 
         return response()->json([
             'message' => __('Data edited successfully'),
         ]);
+    }
+
+    public function doQueue(Appointment $appointment)
+    {
+        $doQueue = request()->get('notQueue', false);
+
+        $appointment->update(['is_queue' => $doQueue ? 1 : -1]);
+
+        if ($doQueue == 1) {
+            //note: lưu event data
+            $requestData['appointment_id'] = $appointment->id;
+
+            EventData::create([
+                'appointment_id' => $appointment->id,
+                'lead_id'        => $appointment->lead_id,
+            ]);
+        }
+
+        return response()->json([
+            'message' => __('Data edited successfully'),
+        ]);
+    }
+
+    public function notShowUp(Appointment $appointment)
+    {
+        $appointment->notShowUp();
+
+        return response()->json([
+            'message' => __('Data edited successfully'),
+        ]);
+    }
+
+    public function formChangeAppointment()
+    {
+        return view('admin.appointments._form_change_appointment');
     }
 }

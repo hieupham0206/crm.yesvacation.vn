@@ -13,3 +13,4 @@ Route::get('/provinces/lists/table', 'LeadsController@provinces')->name('leads.p
 Route::get('/leads/reception/form-new-lead', 'LeadsController@formNewLead')->name('leads.form_new_lead');
 
 Route::post('/leads/resend-email/{lead}/{appointment}', 'LeadsController@resendEmail')->name('leads.resend_email');
+Route::post('/leads/save-history-call/{lead}', 'LeadsController@saveHistoryCall')->name('leads.save_history_call');
