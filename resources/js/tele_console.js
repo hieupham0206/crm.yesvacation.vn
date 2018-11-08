@@ -336,7 +336,7 @@ $(function() {
 	$('#btn_appointment_confirm').on('click', function() {
 		let leadId = $('#txt_lead_id').val()
 
-		let url = route('leads.change_state', leadId)
+		let url = route('leads.save_history_call', leadId)
 
 		blockPage()
 		axios.post(url, {}).then(result => {
@@ -344,7 +344,9 @@ $(function() {
 			if (obj.message) {
 				flash(obj.message)
 			}
-			autoCall()
+			$('#section_appointment_feature').hide()
+			resetCallClock()
+			waitClock()
 		}).catch(e => console.log(e)).finally(() => {
 			unblock()
 		})

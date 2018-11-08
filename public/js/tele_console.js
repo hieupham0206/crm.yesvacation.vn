@@ -436,7 +436,7 @@ $(function () {
 	$('#btn_appointment_confirm').on('click', function () {
 		var leadId = $('#txt_lead_id').val();
 
-		var url = route('leads.change_state', leadId);
+		var url = route('leads.save_history_call', leadId);
 
 		blockPage();
 		axios.post(url, {}).then(function (result) {
@@ -444,7 +444,9 @@ $(function () {
 			if (obj.message) {
 				flash(obj.message);
 			}
-			autoCall();
+			$('#section_appointment_feature').hide();
+			resetCallClock();
+			waitClock();
 		}).catch(function (e) {
 			return console.log(e);
 		}).finally(function () {
