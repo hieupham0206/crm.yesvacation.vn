@@ -83,7 +83,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 $(function () {
 	var $btnAddUser = $('#btn_add_user'),
 	    $selectUser = $('#select_user'),
-	    $selectPosition = $('#select_position');
+	    $selectLeader = $('#select_leader'),
+	    $selectManager = $('#select_mananger');
 
 	$('#departments_form').validate({
 		submitHandler: $(this).data('confirm') ? function (form, e) {
@@ -112,43 +113,48 @@ $(function () {
 		'columnDefs': [{ 'targets': [-1], 'orderable': false, 'width': '5%' }]
 	});
 
+	if ($selectLeader.length > 0) {
+		$selectLeader.select2Ajax({
+			url: route('users.list'),
+			data: function data(q) {
+				q.roleId = 5;
+			},
+			column: 'username'
+		});
+	}
+
+	if ($selectManager.length > 0) {
+		$selectManager.select2Ajax({
+			url: route('users.list'),
+			data: function data(q) {
+				q.roleId = 4;
+			},
+			column: 'username',
+			allowClear: true
+		});
+	}
+
 	$selectUser.select2Ajax({
 		url: route('users.list'),
 		data: function data(q) {
 			q.excludeIds = [1].concat(_toConsumableArray($('.txt-user-id').getValues({ parse: 'int' })));
-			q.roleId = $('#select_position').val();
+			q.roleId = 6;
 		},
-		column: 'username'
-	});
-
-	$selectPosition.on('change', function () {
-		$selectUser.val('').trigger('change').prop('disabled', $(this).val() === '');
+		column: 'username',
+		allowClear: true
 	});
 
 	$btnAddUser.on('click', function () {
-		//todo: validation
 		if ($selectUser.val() === '') {
 			flash('Vui lòng chọn user', 'danger');
-			return;
-		}
-		if ($selectPosition.val() === '') {
-			flash('Vui lòng chọn vị trí', 'danger');
-			return;
-		}
-
-		var currentPositions = $('.txt-position').getValues({ parse: 'int' });
-		var positionValue = $selectPosition.val();
-		var positionText = $selectPosition.select2('data')[0]['text'];
-
-		if (positionValue === '2' && currentPositions.includes(+positionValue)) {
-			flash('Vui lòng chọn lại vị trí khác', 'danger');
 			return;
 		}
 
 		var username = $selectUser.select2('data')[0]['username'];
 		var userId = $selectUser.val();
+		var idx = tableUserDepartment.data().count();
 
-		tableUserDepartment.row.add([username + ('<input type="hidden" name="UserDepartment[id][{{ $key }}][]" value="">\n\t\t\t<input type="hidden" name="UserDepartment[user_id][{{ $key }}][]" value="' + userId + '" class="txt-user-id">'), positionText + ('<input type="hidden" name="UserDepartment[position][{{ $key }}][]" value="' + positionValue + '" class="txt-position">'), '<button type="button" class="btn-delete-user btn btn-sm btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--outline-2x m-btn--pill" title="Delete"><i class="la la-trash"></i></button>']).draw(false);
+		tableUserDepartment.row.add([username + ('<input type="hidden" name="UserDepartment[user_id][' + idx + '][]" value="' + userId + '" class="txt-user-id">'), 'Tele Marketer <input type="hidden" name="UserDepartment[position][' + idx + '][]" value="1" class="txt-position">', '<button type="button" class="btn-delete-user btn btn-sm btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--outline-2x m-btn--pill" title="Delete"><i class="la la-trash"></i></button>']).draw(false);
 
 		$selectUser.val('').trigger('change');
 	});

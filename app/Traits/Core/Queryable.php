@@ -119,7 +119,7 @@ trait Queryable
      *
      * @return void
      */
-    private function addCondition($configs, $boolean = 'and')
+    private function addCondition($configs, $boolean = 'and'): void
     {
         [$column, $operator, $value] = $configs;
 

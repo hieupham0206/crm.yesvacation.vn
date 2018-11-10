@@ -12,6 +12,14 @@
             <label for="txt_phone">{{ $user->label('phone') }}</label>
             <input class="form-control" name="phone" id="txt_phone">
         </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub">
+            <div class="form-group">
+                <label for="select_role">{{ $user->label('Role') }}</label>
+                <select name="role_id" id="select_role" class="form-control select2-ajax" data-url="{{ route('roles.list') }}">
+                    <option></option>
+                </select>
+            </div>
+        </div>
         <div class="col-12 col-md-3 m-form__group-sub">
             <label for="select_state">{{ $user->label('state') }}:</label>
             <select name="state" class="form-control select" id="select_state">

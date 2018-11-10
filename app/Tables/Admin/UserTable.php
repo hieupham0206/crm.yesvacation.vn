@@ -108,6 +108,11 @@ class UserTable extends DataTable
         if ($this->isFilterNotEmpty) {
             $users->filters($this->filters);
 
+            $roleId = $this->filters['role_id'];
+            if (isValueNotEmpty($roleId)) {
+                $users->role($roleId);
+            }
+
             $this->totalFilteredRecords = $users->count();
         }
 

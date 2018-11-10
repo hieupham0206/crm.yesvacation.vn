@@ -59,12 +59,14 @@ class DepartmentsController extends Controller
             'name' => 'required',
         ]);
         $requestData = $request->all();
+//        dd($requestData);
         $department  = Department::create($requestData);
 
         if ($request->has('UserDepartment')) {
             $userIds = collect($requestData['UserDepartment']['user_id'])->flatten()->toArray();
+//            $positions = collect($requestData['UserDepartment']['position'])->flatten()->toArray();
 
-            $department->users()->attach($userIds);
+            $department->users()->attach($userIds, []);
         }
 
         return redirect(route('departments.index'))->with('message', __('Data created successfully'));
@@ -92,8 +94,14 @@ class DepartmentsController extends Controller
     public function edit(Department $department)
     {
         $userDepartments = $department->users;
+        $hasLeader = $userDepartments->filter(function($user) {
+            return $user->hasRole(5);
+        })->isNotEmpty();
+        $hasManager = $userDepartments->filter(function($user) {
+            return $user->hasRole(4);
+        })->isNotEmpty();
 
-        return view('admin.departments.edit', compact('department', 'userDepartments'));
+        return view('admin.departments.edit', compact('department', 'userDepartments', 'hasLeader', 'hasManager'));
     }
 
     /**

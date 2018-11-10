@@ -1,31 +1,4 @@
 <?php
-if ( ! function_exists('dateranges')) {
-    /**
-     * @param $start
-     * @param $end
-     * @param string $format
-     *
-     * @return array
-     * @throws Exception
-     */
-    function dateranges($start, $end, $format = 'd-m-Y')
-    {
-        $array    = array();
-        $interval = new DateInterval('P1D');
-
-        $realEnd = new DateTime($end);
-        $realEnd->add($interval);
-
-        $period = new DatePeriod(new DateTime($start), $interval, $realEnd);
-
-        foreach ($period as $date) {
-            $array[] = $date->format($format);
-        }
-
-        return $array;
-    }
-}
-
 if ( ! function_exists('camel2words')) {
     /**
      * For example, 'PostTag' will be converted to 'Post Tag'.
@@ -43,6 +16,25 @@ if ( ! function_exists('camel2words')) {
         ], ' ', preg_replace('/(?<![A-Z])[A-Z]/', ' \0', $name))));
 
         return $label;
+    }
+}
+
+if ( ! function_exists('variablize')) {
+    /**
+     * Same as camelize but first char is in lowercase.
+     * Converts a word like "send_email" to "sendEmail". It
+     * will remove non alphanumeric character from the word, so
+     * "who's online" will be converted to "whoSOnline"
+     *
+     * @param string $word to lowerCamelCase
+     *
+     * @return string
+     */
+    function variablize($word)
+    {
+        $word = studly_case($word);
+
+        return strtolower($word[0]) . substr($word, 1);
     }
 }
 
@@ -138,9 +130,24 @@ if ( ! function_exists('isValueEmpty')) {
     }
 }
 
+if ( ! function_exists('isValueNotEmpty')) {
+    /**-
+     * Phủ định của isValueEmpty
+     *
+     * @param mixed $value
+     *
+     * @return boolean if the value is empty
+     */
+    function isValueNotEmpty($value)
+    {
+        return ! isValueEmpty($value);
+    }
+}
+
 if ( ! function_exists('setEnvValue')) {
     /**
      * Thay đổi giá trị config trong file .env
+     *
      * @param $envKey
      * @param $envValue
      */
@@ -156,5 +163,21 @@ if ( ! function_exists('setEnvValue')) {
         $fopen = fopen($envFile, 'wb');
         fwrite($fopen, $str);
         fclose($fopen);
+    }
+}
+
+if ( ! function_exists('version')) {
+    /**
+     * Load asset có cache version
+     *
+     * @param $url
+     *
+     * @return string
+     */
+    function version($url)
+    {
+        $timestamp = \Illuminate\Support\Facades\Cache::get('asset_version');
+
+        return asset($url . "?v={$timestamp}");
     }
 }

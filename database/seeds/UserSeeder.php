@@ -21,7 +21,7 @@ class UserSeeder extends \Illuminate\Database\Seeder
             $user->assignRole('Admin');
         }
 
-        $roles = \App\Models\Role::whereKeyNot(1)->get();
+        $roles = \App\Models\Role::whereKeyNot(1)->where('id', '<', 7)->get();
         factory(\App\Models\User::class, 15)->create()->each(function ($user) use ($roles) {
             $role = $roles->random();
 

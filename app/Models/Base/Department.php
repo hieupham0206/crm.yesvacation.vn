@@ -41,7 +41,7 @@ class Department extends Eloquent
 	public function users()
 	{
 		return $this->belongsToMany(\App\Models\User::class, 'user_department')
-					->withPivot('id')
+					->withPivot('id', 'position')->with('roles')
 					->withTimestamps();
 	}
 }

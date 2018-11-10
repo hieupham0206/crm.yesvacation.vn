@@ -281,14 +281,16 @@ class UsersController extends Controller
         $users      = User::query()->select(['id', 'username']);
 
         $users->andFilterWhere([
-            ['id', '!=', $excludeIds],
+//            ['id', '!=', $excludeIds],
             ['username', 'like', $query],
         ]);
 
         if ($roleId) {
-            $users->whereHas('roles', function($role) use ($roleId) {
-                $role->whereKey($roleId);
-            });
+            $users->role($roleId);
+        }
+
+        if ($excludeIds) {
+            $users->whereNotIn('id', $excludeIds);
         }
 
         $totalCount = $users->count();

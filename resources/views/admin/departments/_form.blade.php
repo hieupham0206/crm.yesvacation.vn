@@ -26,17 +26,8 @@
         </div>
         <div class="form-group m-form__group row">
             <div class="col-lg-3">
-                <label for="select_position">{{ $department->label('position') }}</label>
-                <select class="form-control select" id="select_position">
-                    <option></option>
-                    @foreach ($department->roles as $key => $role)
-                        <option value="{{ $role->id }}">{{ $role->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-lg-3">
                 <label for="select_user">{{ $department->label('user') }}</label>
-                <select class="form-control" id="select_user" data-url="{{ route('users.list') }}" disabled>
+                <select class="form-control" id="select_user" data-url="{{ route('users.list') }}">
                     <option></option>
                 </select>
             </div>
@@ -55,7 +46,40 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @isset($userDepartments)
+                    @if($department->exists && isset($userDepartments))
+                        @unless ($hasLeader)
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="UserDepartment[position][1111][]" value="2" class="txt-position">
+                                    <select title="" class="form-control" name="UserDepartment[user_id][1111][]" id="select_leader" data-url="{{ route('users.list') }}">
+                                        <option></option>
+                                    </select>
+                                </td>
+                                <td>TELE LEADER</td>
+                                <td>
+                                    <button type="button" class="btn-delete-user btn btn-sm btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--outline-2x m-btn--pill" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        @endunless
+                        @unless ($hasManager)
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="UserDepartment[position][1112][]" value="3" class="txt-position">
+                                    <select title="" class="form-control" name="UserDepartment[user_id][1112][]" id="select_mananger" data-url="{{ route('users.list') }}">
+                                        <option></option>
+                                    </select>
+                                </td>
+                                <td>TELE MANAGER</td>
+                                <td>
+                                    <button type="button" class="btn-delete-user btn btn-sm btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--outline-2x m-btn--pill" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        @endunless
+
                         @foreach ($userDepartments as $key => $userDepartment)
                             @php
                                 $pivot = $userDepartment->departments->first()->pivot
@@ -66,7 +90,7 @@
                                     <input type="hidden" name="UserDepartment[position][{{ $key }}][]" value="{{ $pivot->position }}" class="txt-position">
                                     {{ $userDepartment->username }}
                                 </td>
-                                <td>{{ \App\Enums\UserPosition::getDescription($pivot->position) }}</td>
+                                <td>{{ $userDepartment->roles[0]->name }}</td>
                                 <td>
                                     <button type="button" class="btn-delete-user btn btn-sm btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--outline-2x m-btn--pill" title="Delete">
                                         <i class="la la-trash"></i>
@@ -74,7 +98,36 @@
                                 </td>
                             </tr>
                         @endforeach
-                    @endisset
+                    @else
+                        <tr>
+                            <td>
+                                <input type="hidden" name="UserDepartment[position][0][]" value="2" class="txt-position">
+                                <select title="" class="form-control" name="UserDepartment[user_id][0][]" id="select_leader" data-url="{{ route('users.list') }}">
+                                    <option></option>
+                                </select>
+                            </td>
+                            <td>TELE LEADER</td>
+                            <td>
+                                <button type="button" class="btn-delete-user btn btn-sm btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--outline-2x m-btn--pill" title="Delete">
+                                    <i class="la la-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="hidden" name="UserDepartment[position][1][]" value="3" class="txt-position">
+                                <select title="" class="form-control" name="UserDepartment[user_id][1][]" id="select_mananger" data-url="{{ route('users.list') }}">
+                                    <option></option>
+                                </select>
+                            </td>
+                            <td>TELE MANAGER</td>
+                            <td>
+                                <button type="button" class="btn-delete-user btn btn-sm btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--outline-2x m-btn--pill" title="Delete">
+                                    <i class="la la-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    @endif
                     </tbody>
                 </table>
             </div>
