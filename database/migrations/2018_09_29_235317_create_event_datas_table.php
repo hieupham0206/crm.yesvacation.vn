@@ -30,7 +30,7 @@ class CreateEventDatasTable extends Migration
 
             $table->text('note')->nullable();
 
-            $table->tinyInteger('deal')->comment('-1: Không; 1: Có');
+            $table->tinyInteger('state')->nullable()->comment('1: Không Deal; 2: Deal; 3: Busy; 4: Overflow');
 
             $table->timestamps();
         });

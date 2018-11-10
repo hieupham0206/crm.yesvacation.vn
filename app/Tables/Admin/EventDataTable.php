@@ -2,6 +2,7 @@
 
 namespace App\Tables\Admin;
 
+use App\Enums\EventDataState;
 use App\Models\EventData;
 use App\Tables\DataTable;
 
@@ -38,24 +39,36 @@ class EventDataTable extends DataTable
         $this->column = $this->getColumn();
         $eventDatas   = $this->getModels();
         $dataArray    = [];
-        $modelName    = (new EventData)->classLabel(true);
+//        $modelName    = (new EventData)->classLabel(true);
 
-        $canUpdateEventData = can('update-eventData');
-        $canDeleteEventData = can('delete-eventData');
+//        $canUpdateEventData = can('update-eventData');
+//        $canDeleteEventData = can('delete-eventData');
 
         /** @var EventData[] $eventDatas */
         foreach ($eventDatas as $eventData) {
-            $btnEdit = $btnDelete = '';
+//            $btnEdit = $btnDelete = '';
+            $btnNotDeal = '
+				<button type="button" data-state="'.EventDataState::NOT_DEAL.'" data-message="" data-title="Hủy deal khách hàng ' . $eventData->lead->name . ' !!!" 
+				data-url="' . route('event_datas.change_state', $eventData->id, false) . '" class="btn btn-sm btn-danger btn-change-event-status m-btn m-btn--icon m-btn--icon-only m-btn--pill">
+							<i class="fa fa-trash"></i>
+						</button>
+			';
             $btnDeal = '
-				<button type="button" data-state="1" data-message="" data-title="Chốt deal khách hàng ' . $eventData->lead->name . ' !!!" 
+				<button type="button" data-state="'.EventDataState::DEAL.'" data-message="" data-title="Chốt deal khách hàng ' . $eventData->lead->name . ' !!!" 
 				data-url="' . route('event_datas.change_state', $eventData->id, false) . '" class="btn btn-sm btn-success btn-change-event-status m-btn m-btn--icon m-btn--icon-only m-btn--pill">
 							<i class="fa fa-check"></i>
 						</button>
 			';
-            $btnNotDeal = '
-				<button type="button" data-state="-1" data-message="" data-title="Hủy deal khách hàng ' . $eventData->lead->name . ' !!!" 
+            $btnBusy = '
+				<button type="button" data-state="'.EventDataState::BUSY.'" data-message="" data-title="Hủy deal khách hàng ' . $eventData->lead->name . ' !!!" 
+				data-url="' . route('event_datas.change_state', $eventData->id, false) . '" class="btn btn-sm btn-success btn-change-event-status m-btn m-btn--icon m-btn--icon-only m-btn--pill">
+							<i class="fa fa-street-view"></i>
+						</button>
+			';
+            $btnOverflow = '
+				<button type="button" data-state="'.EventDataState::OVERFLOW.'" data-message="" data-title="Hủy deal khách hàng ' . $eventData->lead->name . ' !!!" 
 				data-url="' . route('event_datas.change_state', $eventData->id, false) . '" class="btn btn-sm btn-danger btn-change-event-status m-btn m-btn--icon m-btn--icon-only m-btn--pill">
-							<i class="fa fa-trash"></i>
+							<i class="fa fa-ban"></i>
 						</button>
 			';
 
@@ -74,7 +87,7 @@ class EventDataTable extends DataTable
 
             $dataArray[] = [
 //                '<label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand"><input type="checkbox" value="' . $eventData->id . '"><span></span></label>',
-                $eventData->created_at,
+                "<a class='link-event-data m-link m--font-brand' href='javascript:void(0)' data-event-id='{$eventData->id}'>{$eventData->created_at}</a>",
                 $eventData->lead->title,
                 $eventData->lead->name,
                 $eventData->lead->phone,
@@ -82,7 +95,7 @@ class EventDataTable extends DataTable
                 $eventData->note,
                 $eventData->to,
                 $eventData->rep,
-                $btnDeal . $btnNotDeal
+                $btnBusy . $btnOverflow . $btnDeal . $btnNotDeal
             ];
         }
 

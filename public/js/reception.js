@@ -150,9 +150,15 @@ $(function () {
 	}
 
 	function toggleFormEventData() {
-		var disabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+		var disabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
-		$('#event_data_form').find('input, textarea').prop('disabled', disabled);
+		if (disabled) {
+			$('#event_data_section').hide();
+			$('#event_data_form').find('input, textarea').prop('disabled', disabled);
+		} else {
+			$('#event_data_section').show();
+			$('#event_data_form').find('input, textarea').prop('disabled', disabled);
+		}
 	}
 
 	function clearFormEventData() {
@@ -216,6 +222,53 @@ $(function () {
 		});
 	});
 
+	$body.on('click', '#btn_reappointment', function () {
+		var leadId = $('#txt_lead_id').val();
+		var url = route('appointments.cancel', $('#txt_appointment_id').val());
+
+		blockPage();
+		axios.post(url, {}).then(function (result) {
+			var obj = result['data'];
+			if (obj.message) {
+				flash(obj.message);
+			}
+			$('#modal_md').showModal({
+				url: route('leads.form_change_state', leadId), params: {
+					typeCall: 4,
+					callId: ''
+				}, method: 'get'
+			});
+		}).catch(function (e) {
+			return console.log(e);
+		}).finally(function () {
+			unblock();
+		});
+	});
+
+	$body.on('click', '.link-event-data', function () {
+		var eventDataId = $(this).data('id');
+		$('#txt_event_data_id').val(eventDataId);
+		toggleFormEventData();
+	});
+
+	$body.on('click', '#btn_cancel_appointment', function () {
+		var url = route('appointments.cancel', $('#txt_appointment_id').val());
+
+		blockPage();
+		axios.post(url, {}).then(function (result) {
+			var obj = result['data'];
+			if (obj.message) {
+				flash(obj.message);
+			}
+			$('#modal_md').modal('hide');
+			tableAppointment.reload();
+		}).catch(function (e) {
+			return console.log(e);
+		}).finally(function () {
+			unblock();
+		});
+	});
+
 	$btnShowUp.on('click', function () {
 		// toggleFormEventData(false)
 		$('#queue_section').show();
@@ -267,78 +320,12 @@ $(function () {
 		});
 	});
 
-	$('body').on('click', '#btn_reappointment', function () {
-		var leadId = $('#txt_lead_id').val();
-		var url = route('appointments.cancel', $('#txt_appointment_id').val());
-
-		blockPage();
-		axios.post(url, {}).then(function (result) {
-			var obj = result['data'];
-			if (obj.message) {
-				flash(obj.message);
-			}
-			$('#modal_md').showModal({
-				url: route('leads.form_change_state', leadId), params: {
-					typeCall: 4,
-					callId: ''
-				}, method: 'get'
-			});
-		}).catch(function (e) {
-			return console.log(e);
-		}).finally(function () {
-			unblock();
-		});
-	});
-	$('body').on('click', '#btn_cancel_appointment', function () {
-		var url = route('appointments.cancel', $('#txt_appointment_id').val());
-
-		blockPage();
-		axios.post(url, {}).then(function (result) {
-			var obj = result['data'];
-			if (obj.message) {
-				flash(obj.message);
-			}
-			$('#modal_md').modal('hide');
-			tableAppointment.reload();
-		}).catch(function (e) {
-			return console.log(e);
-		}).finally(function () {
-			unblock();
-		});
-	});
-
 	$('#event_data_form').on('submit', function (e) {
 		e.preventDefault();
-		//todo:  Sau khi [LEAD] Show Up, Reception có thể điền thêm các thông tin để hoàn tất thủ tục như: <Voucher>; <TO>; <REP>; <Note>. Sau khi chuyển qua EVENT DATA, tất cả các thông tin bên APPOINTMENT sẽ bị ẩn đi.
 
 		var eventDataFormData = new FormData($('#event_data_form')[0]);
-		var leadDatas = $('#leads_form').serializeArray();
-		var _iteratorNormalCompletion = true;
-		var _didIteratorError = false;
-		var _iteratorError = undefined;
 
-		try {
-			for (var _iterator = leadDatas[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-				var leadData = _step.value;
-
-				eventDataFormData.append(leadData.name, leadData.value);
-			}
-		} catch (err) {
-			_didIteratorError = true;
-			_iteratorError = err;
-		} finally {
-			try {
-				if (!_iteratorNormalCompletion && _iterator.return) {
-					_iterator.return();
-				}
-			} finally {
-				if (_didIteratorError) {
-					throw _iteratorError;
-				}
-			}
-		}
-
-		$('#event_data_form').submitForm({ url: route('event_datas.store'), formData: eventDataFormData }).then(function () {
+		$('#event_data_form').submitForm({ url: route('event_datas.update', $('#txt_event_data_id').val()), formData: eventDataFormData }).then(function () {
 			tableAppointment.reload();
 			tableEventData.reload();
 		});

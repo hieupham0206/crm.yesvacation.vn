@@ -68,8 +68,14 @@ $(function() {
 		})
 	}
 
-	function toggleFormEventData(disabled = true) {
-		$('#event_data_form').find('input, textarea').prop('disabled', disabled)
+	function toggleFormEventData(disabled = false) {
+		if (disabled) {
+			$('#event_data_section').hide()
+			$('#event_data_form').find('input, textarea').prop('disabled', disabled)
+		} else {
+			$('#event_data_section').show()
+			$('#event_data_form').find('input, textarea').prop('disabled', disabled)
+		}
 	}
 
 	function clearFormEventData() {
@@ -131,6 +137,49 @@ $(function() {
 		})
 	})
 
+	$body.on('click', '#btn_reappointment', function() {
+		let leadId = $('#txt_lead_id').val()
+		let url = route('appointments.cancel', $('#txt_appointment_id').val())
+
+		blockPage()
+		axios.post(url, {}).then(result => {
+			let obj = result['data']
+			if (obj.message) {
+				flash(obj.message)
+			}
+			$('#modal_md').showModal({
+				url: route('leads.form_change_state', leadId), params: {
+					typeCall: 4,
+					callId: '',
+				}, method: 'get',
+			})
+		}).catch(e => console.log(e)).finally(() => {
+			unblock()
+		})
+	})
+
+	$body.on('click', '.link-event-data', function() {
+		let eventDataId = $(this).data('id')
+		$('#txt_event_data_id').val(eventDataId)
+		toggleFormEventData()
+	})
+
+	$body.on('click', '#btn_cancel_appointment', function() {
+		let url = route('appointments.cancel', $('#txt_appointment_id').val())
+
+		blockPage()
+		axios.post(url, {}).then(result => {
+			let obj = result['data']
+			if (obj.message) {
+				flash(obj.message)
+			}
+			$('#modal_md').modal('hide')
+			tableAppointment.reload()
+		}).catch(e => console.log(e)).finally(() => {
+			unblock()
+		})
+	})
+
 	$btnShowUp.on('click', function() {
 		// toggleFormEventData(false)
 		$('#queue_section').show()
@@ -176,53 +225,12 @@ $(function() {
 		})
 	})
 
-	$('body').on('click', '#btn_reappointment', function() {
-		let leadId = $('#txt_lead_id').val()
-		let url = route('appointments.cancel', $('#txt_appointment_id').val())
-
-		blockPage()
-		axios.post(url, {}).then(result => {
-			let obj = result['data']
-			if (obj.message) {
-				flash(obj.message)
-			}
-			$('#modal_md').showModal({
-				url: route('leads.form_change_state', leadId), params: {
-					typeCall: 4,
-					callId: '',
-				}, method: 'get',
-			})
-		}).catch(e => console.log(e)).finally(() => {
-			unblock()
-		})
-	})
-	$('body').on('click', '#btn_cancel_appointment', function() {
-		let url = route('appointments.cancel', $('#txt_appointment_id').val())
-
-		blockPage()
-		axios.post(url, {}).then(result => {
-			let obj = result['data']
-			if (obj.message) {
-				flash(obj.message)
-			}
-			$('#modal_md').modal('hide')
-			tableAppointment.reload()
-		}).catch(e => console.log(e)).finally(() => {
-			unblock()
-		})
-	})
-
 	$('#event_data_form').on('submit', function(e) {
 		e.preventDefault()
-		//todo:  Sau khi [LEAD] Show Up, Reception có thể điền thêm các thông tin để hoàn tất thủ tục như: <Voucher>; <TO>; <REP>; <Note>. Sau khi chuyển qua EVENT DATA, tất cả các thông tin bên APPOINTMENT sẽ bị ẩn đi.
 
 		let eventDataFormData = new FormData($('#event_data_form')[0])
-		let leadDatas = $('#leads_form').serializeArray()
-		for (let leadData of leadDatas) {
-			eventDataFormData.append(leadData.name, leadData.value)
-		}
 
-		$('#event_data_form').submitForm({url: route('event_datas.store'), formData: eventDataFormData}).then(() => {
+		$('#event_data_form').submitForm({url: route('event_datas.update', $('#txt_event_data_id').val()), formData: eventDataFormData}).then(() => {
 			tableAppointment.reload()
 			tableEventData.reload()
 		})

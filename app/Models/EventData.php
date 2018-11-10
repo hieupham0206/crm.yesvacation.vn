@@ -10,7 +10,7 @@ class EventData extends \App\Models\Base\EventData
 		'code',
 		'time_in',
 		'time_out',
-		'deal',
+		'state',
 		'to',
 		'rep',
 		'note',

@@ -173,6 +173,7 @@
                                         @method('put')
                                     @endisset
                                     <div class="form-group m-form__group row">
+                                        <input type="hidden" name="id" id="txt_event_data_id">
                                         <div class="col-sm-12 col-md-6 m-form__group-sub">
                                             <label for="txt_voucher">{{ $lead->label('Voucher') }}</label>
                                             <input class="form-control" name="voucher" type="text" id="txt_voucher" value="" placeholder="{{ __('Enter value') }}" disabled>
