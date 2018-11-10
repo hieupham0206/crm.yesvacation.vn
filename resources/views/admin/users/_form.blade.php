@@ -39,7 +39,7 @@
         <div class="form-group m-form__group row">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('name') ? 'has-danger' : ''}}">
                 <label for="txt_name">{{ $user->label('name') }}</label>
-                <input type="text" name="name" id="txt_name" class="form-control m-input" placeholder="{{ __('Enter value') }}" value="{{ $user->name ?? old('name') }}" autocomplete="off">
+                <input type="text" name="name" id="txt_name" class="form-control m-input" placeholder="{{ __('Enter value') }}" required value="{{ $user->name ?? old('name') }}" autocomplete="off">
                 <span class="m-form__help"></span>
                 {!! $errors->first('name', '<div class="form-control-feedback">:message</div>') !!}
             </div>
@@ -51,7 +51,7 @@
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 m-form__group-sub {{ $errors->has('role_id') ? 'has-danger' : ''}}">
                 <label for="select_role">{{ $user->label('Role') }}</label>
-                <select name="role_id" id="select_role" class="form-control select2-ajax" data-url="{{ route('roles.list') }}">
+                <select name="role_id" id="select_role" class="form-control select2-ajax" data-url="{{ route('roles.list') }}" required>
                     <option></option>
                     @if (isset($roles) && $roles)
                         <option value="{{ $roles[0]['id'] }}" selected>{{ $roles[0]['name'] }}</option>

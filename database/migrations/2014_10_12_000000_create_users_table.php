@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('username')->unique();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email')->nullable();
             $table->tinyInteger('state')->default(\App\Enums\UserState::ACTIVE)->comment('-1: Chưa kích hoạt; 1: Đã kích hoạt');
 
             $table->string('phone', 12)->nullable();
