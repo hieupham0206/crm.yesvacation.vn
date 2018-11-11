@@ -169,9 +169,7 @@
                                 <div class="m-portlet__body">
                                     {{--<div class="m-scrollable m-scroller ps ps--active-y" data-scrollable="true" data-height="300" data-scrollbar-shown="true">--}}
                                     @csrf
-                                    @isset($method)
-                                        @method('put')
-                                    @endisset
+                                    @method('put')
                                     <div class="form-group m-form__group row">
                                         <input type="hidden" name="id" id="txt_event_data_id">
                                         <div class="col-sm-12 col-md-6 m-form__group-sub">

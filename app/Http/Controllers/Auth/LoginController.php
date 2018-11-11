@@ -183,6 +183,6 @@ class LoginController extends Controller
             return redirect(route('reception'));
         }
 
-        return redirect('home');
+        return redirect('/');
     }
 }

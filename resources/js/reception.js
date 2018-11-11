@@ -159,7 +159,7 @@ $(function() {
 	})
 
 	$body.on('click', '.link-event-data', function() {
-		let eventDataId = $(this).data('id')
+		let eventDataId = $(this).data('event-id')
 		$('#txt_event_data_id').val(eventDataId)
 		toggleFormEventData()
 	})
@@ -238,11 +238,16 @@ $(function() {
 	$('#event_data_form').on('submit', function(e) {
 		e.preventDefault()
 
-		let eventDataFormData = new FormData($('#event_data_form')[0])
+		$(this).confirmation(function(confirm) {
+			if (confirm && (typeof confirm === 'object' && confirm.value)) {
+				let eventDataFormData = new FormData($('#event_data_form')[0])
 
-		$('#event_data_form').submitForm({url: route('event_datas.update', $('#txt_event_data_id').val()), formData: eventDataFormData}).then(() => {
-			tableAppointment.reload()
-			tableEventData.reload()
+				$('#event_data_form').submitForm({url: route('event_datas.update', $('#txt_event_data_id').val()), formData: eventDataFormData}).then(() => {
+					toggleFormEventData(true)
+					tableAppointment.reload()
+					tableEventData.reload()
+				})
+			}
 		})
 	})
 

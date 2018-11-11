@@ -248,7 +248,7 @@ $(function () {
 	});
 
 	$body.on('click', '.link-event-data', function () {
-		var eventDataId = $(this).data('id');
+		var eventDataId = $(this).data('event-id');
 		$('#txt_event_data_id').val(eventDataId);
 		toggleFormEventData();
 	});
@@ -334,11 +334,16 @@ $(function () {
 	$('#event_data_form').on('submit', function (e) {
 		e.preventDefault();
 
-		var eventDataFormData = new FormData($('#event_data_form')[0]);
+		$(this).confirmation(function (confirm) {
+			if (confirm && (typeof confirm === 'undefined' ? 'undefined' : _typeof(confirm)) === 'object' && confirm.value) {
+				var eventDataFormData = new FormData($('#event_data_form')[0]);
 
-		$('#event_data_form').submitForm({ url: route('event_datas.update', $('#txt_event_data_id').val()), formData: eventDataFormData }).then(function () {
-			tableAppointment.reload();
-			tableEventData.reload();
+				$('#event_data_form').submitForm({ url: route('event_datas.update', $('#txt_event_data_id').val()), formData: eventDataFormData }).then(function () {
+					toggleFormEventData(true);
+					tableAppointment.reload();
+					tableEventData.reload();
+				});
+			}
 		});
 	});
 
