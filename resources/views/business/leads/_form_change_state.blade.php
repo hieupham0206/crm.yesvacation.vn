@@ -14,6 +14,7 @@
                 <strong></strong>
             </div>
             <div class="form-group row">
+                <input type="hidden" name="typeCall" value="{{ $typeCall }}">
                 <div class="col-md-12 m-form__group-sub">
                     <label for="select_state_modal">{{ $lead->label('state') }}</label>
                     <select name="state" class="form-control select" id="select_state_modal">
@@ -41,15 +42,15 @@
                     <label for="select_time">{{ $lead->label('time') }}</label>
                     <select name="time" id="select_time">
                         <option value="10:00">10 AM</option>
-                        <option value="10:00">11 AM</option>
-                        <option value="10:00">12 AM</option>
-                        <option value="15:00">1 PM</option>
-                        <option value="15:00">2 PM</option>
+                        <option value="11:00">11 AM</option>
+                        <option value="12:00">12 AM</option>
+                        <option value="13:00">1 PM</option>
+                        <option value="14:00">2 PM</option>
                         <option value="15:00">3 PM</option>
-                        <option value="15:00">4 PM</option>
-                        <option value="15:00">5 PM</option>
+                        <option value="16:00">4 PM</option>
+                        <option value="17:00">5 PM</option>
                         <option value="18:00">6 PM</option>
-                        <option value="18:00">7 PM</option>
+                        <option value="19:00">7 PM</option>
                     </select>
                 </div>
             </div>

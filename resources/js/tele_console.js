@@ -183,6 +183,7 @@ $(function() {
 
 	$body.on('click', '.btn-callback-call', function() {
 		$('#section_appointment_feature').hide()
+		console.log($(this).data('type-call'))
 		recall.call(this, 'callbacks', 'Callback Call')
 	})
 

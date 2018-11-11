@@ -90,7 +90,7 @@ class HistoryCallTable extends DataTable
 //                    <i class="fa fa-trash"></i>
 //                </button>';
 //            }
-            $btnCall = ' <button type="button" data-lead-id="' . $historyCall->lead_id . '" data-type-call="' . HistoryCallType::HISTORY . '" 
+            $btnCall = ' <button type="button" id="btn_history_call_' . $historyCall->id . '_' . $historyCall->lead_id . '" data-id="'.$historyCall->id.'" data-lead-id="' . $historyCall->lead_id . '" data-type-call="' . HistoryCallType::HISTORY . '" 
                 class="btn btn-sm btn-history-call btn-primary m-btn m-btn--icon m-btn--icon-only m-btn--pill" title="' . __('Call') . '">
                     <i class="fa fa-phone"></i>
                 </button>';
