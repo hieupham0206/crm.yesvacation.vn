@@ -251,12 +251,12 @@ $(function () {
 		}
 	});
 
-	$body.on('click', '.link-lead-name', function () {
-		var leadId = $(this).data('lead-id');
-		fetchLead(leadId, 0);
-		$('#txt_lead_id').val(leadId);
-		reloadLeadRelatedTable();
-	});
+	// $body.on('click', '.link-lead-name', function() {
+	// 	let leadId = $(this).data('lead-id')
+	// 	fetchLead(leadId, 0)
+	// 	$('#txt_lead_id').val(leadId)
+	// 	reloadLeadRelatedTable()
+	// })
 
 	function recall(table, callTypeText) {
 		var leadId = $(this).data('lead-id');
