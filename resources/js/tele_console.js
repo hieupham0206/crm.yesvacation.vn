@@ -88,8 +88,14 @@ $(function() {
 		e.preventDefault()
 		mApp.block('#modal_md')
 		let formData = new FormData($(this)[0])
+		let url = $(this).prop('action')
 
-		$(this).submitForm({formData: formData}).then(() => {
+		axios({
+			method: 'post',
+			url: url,
+			data: formData,
+			config: {headers: {'Content-Type': 'multipart/form-data'}},
+		}).then(() => {
 			$(this).resetForm()
 			resetCallClock()
 			$('#span_customer_no').text(++totalCustomer)
@@ -112,6 +118,26 @@ $(function() {
 				wantToReCall = false
 			} else {
 				waitClock()
+			}
+		}).finally(() => {
+			mApp.unblock('#modal_md')
+		}).catch(result => {
+			let response = result.response
+			let errors = response.data.errors
+			let message = response.data.message
+
+			if (errors !== undefined) {
+				let html = ''
+				Object.entries(errors).forEach(
+					([key, values]) => {
+						for (let value of values) {
+							html += `<li>${value}</li>`
+						}
+					},
+				)
+				$(this).find('.alert').show().find('strong').html(html)
+			} else {
+				$(this).find('.alert').show().find('strong').html(message)
 			}
 		})
 	})

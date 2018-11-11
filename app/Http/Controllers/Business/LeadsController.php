@@ -478,6 +478,17 @@ class LeadsController extends Controller
         $callId = $request->get('call_id', 1);
         $table  = $request->get('table', 1);
 
+        //check thoi gian hẹn hop lệ hay không
+        if ($typeCall == 4 || $newState == 8) {
+            $datetime = Carbon::createFromFormat('d-m-Y H:i', "$date $time");
+
+            if ($datetime->isPast()) {
+                return response()->json([
+                    'message' => 'Ngày hẹn không hợp lệ.',
+                ], 500);
+            }
+        }
+
         if ($newState) {
             $userId = auth()->id();
 

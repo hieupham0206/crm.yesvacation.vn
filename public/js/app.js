@@ -1442,7 +1442,6 @@ var cloudTeamCore = function ($, lang) {
 					formData.append(key, value);
 				});
 			}
-
 			if (returnEarly !== undefined) {
 				return axios({
 					method: method,

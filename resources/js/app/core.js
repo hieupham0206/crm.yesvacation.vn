@@ -807,7 +807,6 @@ let cloudTeamCore = (function($, lang) {
 					},
 				)
 			}
-
 			if (returnEarly !== undefined) {
 				return axios({
 					method: method,
