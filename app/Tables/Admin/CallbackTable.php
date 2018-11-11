@@ -90,7 +90,7 @@ class CallbackTable extends DataTable
      */
     public function getModels()
     {
-        $callBacks = Callback::query();
+        $callBacks = Callback::query()->whereState(-1);
 
         $this->totalFilteredRecords = $this->totalRecords = $callBacks->count();
 

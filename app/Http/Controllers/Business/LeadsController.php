@@ -554,13 +554,17 @@ class LeadsController extends Controller
             session(['startCallTime' => now()->addSecond()]);
 
             //nếu gọi callback hoặc appointment => xóa thong tin
-//            if ($table) {
-//                if ($table === 'callbacks') {
-//                    Callback::destroy([$callId]);
-//                } elseif ($table === 'appoinments') {
+            if ($table) {
+                if ($table === 'callbacks') {
+                    /** @noinspection NullPointerExceptionInspection */
+                    Callback::find($callId)->update([
+                        'state' => 1,
+                    ]);
+                }
+//                elseif ($table === 'appoinments') {
 //                    Appointment::destroy([$callId]);
 //                }
-//            }
+            }
 
             return response()->json([
                 'message' => __('Data edited successfully'),
