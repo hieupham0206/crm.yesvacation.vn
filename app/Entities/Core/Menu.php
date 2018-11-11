@@ -35,12 +35,15 @@ class Menu
                     'activeClass' => self::getMenuActiveClass($modules),
                 ];
             } else {
-                $menus[] = [
-                    'name'        => __(ucfirst(camel2words($moduleKey))),
-                    'icon'        => $menuModule['icon'],
-                    'activeClass' => self::getMenuItemActiveClass($moduleKey),
-                    'route'       => route($menuModule['route']),
-                ];
+//                $moduleKey = str_slug($moduleKey);
+                if (can("view-{$moduleKey}")) {
+                    $menus[] = [
+                        'name'        => __(ucfirst(camel2words($moduleKey))),
+                        'icon'        => $menuModule['icon'],
+                        'activeClass' => self::getMenuItemActiveClass($moduleKey),
+                        'route'       => route($menuModule['route']),
+                    ];
+                }
             }
         }
 

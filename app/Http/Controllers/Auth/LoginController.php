@@ -39,7 +39,7 @@ class LoginController extends Controller
         return [
             $this->username() => $request->get('username'),
             'password'        => $request->password,
-            'state'           => 1
+            'state'           => 1,
         ];
     }
 
@@ -81,7 +81,7 @@ class LoginController extends Controller
             //send OTP
             if ( ! $otp->generate()->send($phone)) {
                 throw ValidationException::withMessages([
-                    'otp_error' => __('auth.Something wrong, please try again later')
+                    'otp_error' => __('auth.Something wrong, please try again later'),
                 ]);
             }
 
@@ -117,7 +117,7 @@ class LoginController extends Controller
 
         if ( ! $otp->validate($otpText)) {
             throw ValidationException::withMessages([
-                'otp' => __('auth.OTP is not valid')
+                'otp' => __('auth.OTP is not valid'),
             ]);
         }
 
@@ -148,12 +148,12 @@ class LoginController extends Controller
 
         if ( ! $otp->generate()->send($phone)) {
             throw ValidationException::withMessages([
-                'otp_error' => __('auth.Something wrong, please try again later')
+                'otp_error' => __('auth.Something wrong, please try again later'),
             ]);
         }
 
         return response()->json([
-            'message' => "OTP đã gửi lại cho số điện thoại $phone"
+            'message' => "OTP đã gửi lại cho số điện thoại $phone",
         ]);
     }
 
@@ -170,5 +170,19 @@ class LoginController extends Controller
         //note: Validate phone exist
 
         return view('auth.otp', compact('phone', 'username'));
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        /** @var User $user */
+        if ($user->hasRole([5, 6])) {
+            return redirect(route('tele_console'));
+        }
+
+        if ($user->hasRole([10])) {
+            return redirect(route('reception'));
+        }
+
+        return redirect('home');
     }
 }
