@@ -117,28 +117,28 @@
                 {!! $errors->first('note', '<div class="form-control-feedback">:message</div>') !!}
             </div>
         </div>
-        <div class="form-group m-form__group row">
-            <div class="col-lg-12">
-                <div class="m-portlet m-portlet--head-sm m-portlet--collapse portlet-search" data-portlet="true">
-                    <a href="javascript:void(0)" class="m-portlet__nav-link m-portlet__nav-link--icon portlet-toggle-link">
-                        <div class="m-portlet__head">
-                            <div class="m-portlet__head-caption">
-                                <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text">@lang('Direct permission')</h3>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <div class="m-portlet__body open">
-                        <div class="form-group m-form__group row">
-                            <div class="col-md-12">
-                                @include('admin.roles._permission_table', ['groups' => $groups, 'isCreate' => ! $user->exists, 'disabled' => false ])
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{--<div class="form-group m-form__group row">--}}
+            {{--<div class="col-lg-12">--}}
+                {{--<div class="m-portlet m-portlet--head-sm m-portlet--collapse portlet-search" data-portlet="true">--}}
+                    {{--<a href="javascript:void(0)" class="m-portlet__nav-link m-portlet__nav-link--icon portlet-toggle-link">--}}
+                        {{--<div class="m-portlet__head">--}}
+                            {{--<div class="m-portlet__head-caption">--}}
+                                {{--<div class="m-portlet__head-title">--}}
+                                    {{--<h3 class="m-portlet__head-text">@lang('Direct permission')</h3>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</a>--}}
+                    {{--<div class="m-portlet__body open">--}}
+                        {{--<div class="form-group m-form__group row">--}}
+                            {{--<div class="col-md-12">--}}
+                                {{--@include('admin.roles._permission_table', ['groups' => $groups, 'isCreate' => ! $user->exists, 'disabled' => false ])--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+        {{--</div>--}}
     </div>
     <div class="m-portlet__foot m-portlet__foot--fit m-portlet__foot-no-border">
         <div class="m-form__actions m-form__actions--right">
