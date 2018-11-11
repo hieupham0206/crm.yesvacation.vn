@@ -48,25 +48,25 @@ class EventDataTable extends DataTable
         foreach ($eventDatas as $eventData) {
 //            $btnEdit = $btnDelete = '';
             $btnNotDeal = '
-				<button type="button" data-state="'.EventDataState::NOT_DEAL.'" data-message="" data-title="Hủy deal khách hàng ' . $eventData->lead->name . ' !!!" 
+				<button type="button" data-state="'.EventDataState::NOT_DEAL.'" data-message="" title="Not deal" data-title="Hủy deal khách hàng ' . $eventData->lead->name . ' !!!" 
 				data-url="' . route('event_datas.change_state', $eventData->id, false) . '" class="btn btn-sm btn-danger btn-change-event-status m-btn m-btn--icon m-btn--icon-only m-btn--pill">
 							<i class="fa fa-trash"></i>
 						</button>
 			';
             $btnDeal = '
-				<button type="button" data-state="'.EventDataState::DEAL.'" data-message="" data-title="Chốt deal khách hàng ' . $eventData->lead->name . ' !!!" 
+				<button type="button" data-state="'.EventDataState::DEAL.'" data-message="" title="Deal" data-title="Chốt deal khách hàng ' . $eventData->lead->name . ' !!!" 
 				data-url="' . route('event_datas.change_state', $eventData->id, false) . '" class="btn btn-sm btn-success btn-change-event-status m-btn m-btn--icon m-btn--icon-only m-btn--pill">
 							<i class="fa fa-check"></i>
 						</button>
 			';
             $btnBusy = '
-				<button type="button" data-state="'.EventDataState::BUSY.'" data-message="" data-title="Hủy deal khách hàng ' . $eventData->lead->name . ' !!!" 
+				<button type="button" data-state="'.EventDataState::BUSY.'" data-message="" title="Busy" data-title="Hủy deal khách hàng ' . $eventData->lead->name . ' !!!" 
 				data-url="' . route('event_datas.change_state', $eventData->id, false) . '" class="btn btn-sm btn-success btn-change-event-status m-btn m-btn--icon m-btn--icon-only m-btn--pill">
 							<i class="fa fa-street-view"></i>
 						</button>
 			';
             $btnOverflow = '
-				<button type="button" data-state="'.EventDataState::OVERFLOW.'" data-message="" data-title="Hủy deal khách hàng ' . $eventData->lead->name . ' !!!" 
+				<button type="button" data-state="'.EventDataState::OVERFLOW.'" data-message="" title="Overflow" data-title="Hủy deal khách hàng ' . $eventData->lead->name . ' !!!" 
 				data-url="' . route('event_datas.change_state', $eventData->id, false) . '" class="btn btn-sm btn-danger btn-change-event-status m-btn m-btn--icon m-btn--icon-only m-btn--pill">
 							<i class="fa fa-ban"></i>
 						</button>

@@ -200,28 +200,38 @@ $(function() {
 	})
 
 	$btnQueue.on('click', function() {
-		let url = route('appointments.do_queue', $('#txt_appointment_id').val())
+		$(this).confirmation(function(confirm) {
+			if (confirm && (typeof confirm === 'object' && confirm.value)) {
+				let url = route('appointments.do_queue', $('#txt_appointment_id').val())
 
-		axios.post(url, {}).then(result => {
-			let obj = result['data']
-			flash(obj.message)
-		}).catch(e => console.log(e)).finally(() => {
-			unblock()
+				axios.post(url, {}).then(result => {
+					let obj = result['data']
+					flash(obj.message)
+					tableEventData.reload()
+				}).catch(e => console.log(e)).finally(() => {
+					unblock()
+				})
+			}
 		})
 	})
 
 	$btnNotQueue.on('click', function() {
-		let url = route('appointments.do_queue', $('#txt_appointment_id').val())
+		$(this).confirmation(function(confirm) {
+			if (confirm && (typeof confirm === 'object' && confirm.value)) {
+				let url = route('appointments.do_queue', $('#txt_appointment_id').val())
 
-		axios.post(url, {
-			notQueue: true
-		}).then(result => {
-			url = route('appointments.form_change_appointment')
-			$('#modal_md').showModal({
-				url: url, method: 'get',
-			})
-		}).catch(e => console.log(e)).finally(() => {
-			unblock()
+				axios.post(url, {
+					notQueue: true
+				}).then(result => {
+					url = route('appointments.form_change_appointment')
+					$('#modal_md').showModal({
+						url: url, method: 'get',
+					})
+				}).catch(e => console.log(e)).finally(() => {
+					unblock()
+				})
+			}
+
 		})
 	})
 

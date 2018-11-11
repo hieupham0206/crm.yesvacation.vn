@@ -76,6 +76,8 @@ module.exports = __webpack_require__(64);
 /***/ 64:
 /***/ (function(module, exports) {
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 $(function () {
 	var userId = $('#txt_user_id').val();
 	var $body = $('body'),
@@ -291,32 +293,41 @@ $(function () {
 	});
 
 	$btnQueue.on('click', function () {
-		var url = route('appointments.do_queue', $('#txt_appointment_id').val());
+		$(this).confirmation(function (confirm) {
+			if (confirm && (typeof confirm === 'undefined' ? 'undefined' : _typeof(confirm)) === 'object' && confirm.value) {
+				var url = route('appointments.do_queue', $('#txt_appointment_id').val());
 
-		axios.post(url, {}).then(function (result) {
-			var obj = result['data'];
-			flash(obj.message);
-		}).catch(function (e) {
-			return console.log(e);
-		}).finally(function () {
-			unblock();
+				axios.post(url, {}).then(function (result) {
+					var obj = result['data'];
+					flash(obj.message);
+					tableEventData.reload();
+				}).catch(function (e) {
+					return console.log(e);
+				}).finally(function () {
+					unblock();
+				});
+			}
 		});
 	});
 
 	$btnNotQueue.on('click', function () {
-		var url = route('appointments.do_queue', $('#txt_appointment_id').val());
+		$(this).confirmation(function (confirm) {
+			if (confirm && (typeof confirm === 'undefined' ? 'undefined' : _typeof(confirm)) === 'object' && confirm.value) {
+				var url = route('appointments.do_queue', $('#txt_appointment_id').val());
 
-		axios.post(url, {
-			notQueue: true
-		}).then(function (result) {
-			url = route('appointments.form_change_appointment');
-			$('#modal_md').showModal({
-				url: url, method: 'get'
-			});
-		}).catch(function (e) {
-			return console.log(e);
-		}).finally(function () {
-			unblock();
+				axios.post(url, {
+					notQueue: true
+				}).then(function (result) {
+					url = route('appointments.form_change_appointment');
+					$('#modal_md').showModal({
+						url: url, method: 'get'
+					});
+				}).catch(function (e) {
+					return console.log(e);
+				}).finally(function () {
+					unblock();
+				});
+			}
 		});
 	});
 
